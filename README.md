@@ -10,35 +10,35 @@ Biz Matrix is a static decision-support website that helps Indian founders compa
 - Preview-only browser print/PDF generation.
 - Responsive four-column footer with email-only contact.
 - Static route directories for About, Contact, and the ten requested legal/support routes.
-- GitHub Pages deployment workflow publishes `github-pages-deployment/`.
+- GitHub Pages publishes the repository root using its existing GitHub Pages/Jekyll deployment.
 
 Premium content is not delivered in this static release. The visible gate is not server-side authorization and must not be represented as secure paid-content protection.
 
-**Payment integration is intentionally disabled in the current release. Premium access is contact-based.** Unlock requests use `mailto:nexifydigital03@gmail.com`. The separate `saas-frontend/` and `saas-backend/` folders contain future payment-integration code and are not part of the GitHub Pages artifact.
+**Payment integration is intentionally disabled in the current release. Premium access is contact-based.** Unlock requests use `mailto:nexifydigital03@gmail.com`. The separate `saas-frontend/` and `saas-backend/` folders contain future payment-integration code and are excluded from the GitHub Pages artifact.
 
 ## Run locally
 
-No package installation is necessary. From the project root, serve the static deployment folder using any local static-file server, for example:
+No package installation is necessary. From the project root, serve the site using any local static-file server, for example:
 
 ```sh
-npx serve github-pages-deployment
+npx serve .
 ```
 
-Then open the URL printed by the server. Opening `github-pages-deployment/index.html` directly also works for basic checks, but a local server is required to verify clean directory routes.
+Then open the URL printed by the server. A local server is required to verify clean directory routes.
 
 ## Build and preview
 
-There is no compile/build step. The production-ready static files are already in `github-pages-deployment/`.
+There is no compile/build step. The production-ready static files are in the repository root; `github-pages-deployment/` is retained as a reference copy.
 
 ```sh
-npx serve github-pages-deployment
+npx serve .
 ```
 
-The deployment workflow uploads this folder directly. It does not install Node dependencies or include `saas-backend/`, `saas-frontend/`, prototypes, or source documents.
+The existing GitHub Pages/Jekyll deployment publishes the repository root. `_config.yml` excludes `saas-backend/`, `saas-frontend/`, the reference artifact, and non-site project files.
 
 ## GitHub Pages deployment
 
-The workflow at `.github/workflows/deploy.yml` deploys on pushes to `main` or `master`, and can also be started manually from GitHub Actions. In the GitHub repository, select **Settings → Pages → GitHub Actions** as the publishing source.
+The repository is already configured to publish the `main` branch through its GitHub Pages/Jekyll deployment. Keep this existing publishing method; adding a second Pages artifact deployment would race with it and can republish stale root content.
 
 The website and legal links use relative paths, so they support both user-site and repository-site Pages URLs without a Vite base-path setting. Legal paths are static directory indexes and can be opened directly, for example `/Biz-structure/privacy-policy/`.
 

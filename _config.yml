@@ -1,0 +1,8 @@
+exclude:
+  - .github
+  - "Business Structure Decision & Registration Planning System.html"
+  - README.md
+  - README-CASHFREE.md
+  - github-pages-deployment
+  - saas-backend
+  - saas-frontend
