@@ -42,6 +42,21 @@ The repository is already configured to publish the `main` branch through its Gi
 
 The website and legal links use relative paths, so they support both user-site and repository-site Pages URLs without a Vite base-path setting. Legal paths are static directory indexes and can be opened directly, for example `/Biz-structure/privacy-policy/`.
 
+### Custom domain: `bizmatrix.in`
+
+The repository root `CNAME` file sets `bizmatrix.in` as the GitHub Pages custom domain. In **Repository Settings → Pages**, confirm the custom domain is `bizmatrix.in` and enable **Enforce HTTPS** after GitHub finishes provisioning the certificate.
+
+At the domain registrar, configure the apex (`@`) with all four GitHub Pages A records:
+
+```text
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+```
+
+Optionally point `www` to `BizNexa.github.io` with a CNAME record. Remove conflicting/default records for these hostnames. DNS propagation and certificate provisioning can take up to 24 hours. The current domain did not resolve in the DNS check when this release was prepared, so DNS still needs to be configured and verified.
+
 ## Routes
 
 - `/about/`
