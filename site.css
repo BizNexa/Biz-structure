@@ -18,15 +18,21 @@ h1{font-size:clamp(30px,5vw,44px);line-height:1.12;margin:0 0 12px;letter-spacin
 .page-copy{padding:25px 0}
 .page-copy h2{font-size:21px;margin:22px 0 8px}
 .page-copy p{margin:0 0 14px;color:#334155}
-.site-footer{background:var(--navy);color:#dbe4f1;padding:34px max(20px,calc((100% - 1120px)/2)) 20px}
-.footer-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
-.site-footer h2{margin:0 0 12px;color:#fff;font-size:12px;letter-spacing:.08em}
-.site-footer p,.site-footer a{font-size:13px;line-height:1.6}
-.site-footer p{margin:0;color:#b8c4d6}
-.site-footer ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.site-footer a{display:inline-flex;min-height:44px;align-items:center;color:#dbeafe;text-decoration:none}
+.site-footer{background:#0b1020;color:#dbe4f1;padding:14px max(18px,calc((100% - 1080px)/2)) 8px}
+.footer-grid{display:grid;grid-template-columns:1.35fr 1fr 1fr .95fr;gap:10px 22px;align-items:start}
+.site-footer h2{margin:0 0 4px;color:#c4b5fd;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.site-footer p{margin:0;color:#9aa8bd;font-size:10.5px;line-height:1.4}
+.site-footer ul{list-style:none;padding:0;margin:0}
+.site-footer a{display:inline-block;min-height:0;padding:1px 0;color:#c4b5fd;text-decoration:none;font-size:11px;line-height:1.25}
 .site-footer a:hover{text-decoration:underline;color:#fff}
-.footer-bottom{margin-top:24px;padding-top:15px;border-top:1px solid #334155;color:#9aabc2;font-size:12px}
-@media(max-width:900px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.footer-bottom{margin-top:8px;padding-top:7px;border-top:1px solid rgba(148,163,184,.28);color:#94a3b8;font-size:10px;text-align:center}
+.footer-bottom p{margin:0;color:#94a3b8;font-size:10px}
+.footer-bottom p+p{margin-top:1px}
+.legal-table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14.5px}
+.legal-table th,.legal-table td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.legal-table th{background:#f8fafc;color:#334155;font-size:12.5px}
+.page-copy ul,.page-copy ol{margin:0 0 14px;padding-left:20px;color:#334155}
+.page-copy li{margin:4px 0}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.site-header{align-items:flex-start;flex-direction:column}}
-@media(max-width:520px){.footer-grid{grid-template-columns:1fr;gap:22px}.site-footer{padding-top:26px}.page-shell{margin:28px auto}}
+@media(max-width:520px){.footer-grid{grid-template-columns:1fr 1fr;gap:16px 14px}.site-footer{padding-top:22px}.page-shell{margin:28px auto}.legal-table{display:block;overflow-x:auto;font-size:13px}}
