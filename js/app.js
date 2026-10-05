@@ -1560,10 +1560,23 @@ function items(){let i=0,a=[];for(const[g,rs]of G)for(const r0 of rs){i++;const 
 let F="all",SS=0,SI=0,QS="";const done={};
 function rcard(x){const{r,i,v,y}=x,d=done[i];return `<div class="oc v${v}${d?" dn":""}"><div class="oh"><span class="no">${i}</span><h3>${r.n}</h3><span class="b ${L[v][1]}">${L[v][0]}</span>${r.add?'<span class="b m">Added</span>':""}</div><p class="vb ${VS[i]||"B"}">${VT[VS[i]||"B"]}${SR[i]?" · Sources: "+SR[i]:""}</p>${y.length?`<p class="why"><b>Why it applies:</b> ${y.join("; ")}.</p>`:""}<p class="lb">Purpose</p><p>${r.d}</p><p class="lb">Key provisions</p><p>${prov(i)}</p><p class="lb">Authority</p><p>${auth(i)}</p><p class="lb">Relevant state(s) / industry</p><p>${r.r}</p><div class="ft"><span><b>State-specific:</b> ${r.s}</span><span><b>Industry-specific:</b> ${r.i}</span><button class="rdone${d?" on":""}" data-d="${i}">${d?"✓ Obtained":"Mark as obtained"}</button></div></div>`}
 const stats=()=>{const a=items(),n=v=>a.filter(x=>x.v===v).length,m=a.filter(x=>x.v===2);return{a,n,m,dn:m.filter(x=>done[x.i]).length}};
-function regPreview() {
-  const all = items().filter(x => x.v !== 0).sort((a, b) => [2, 1, 3].indexOf(a.v) - [2, 1, 3].indexOf(b.v) || a.i - b.i);
-  const visibleItems = all.filter(x => x.r.preview).slice(0, previewLimit(all.length));
+const publicRegistrationData = JSON.parse(JSON.stringify({ groups: G, provisions: P, descriptions: D2, stateFlags: S2, verification: VS, sourceRefs: SR }));
+function resetRegistrationContent() { hydrateRegistrations(publicRegistrationData); }
+
+function regPreview(forReport = false) {
+  const premium = AccessProvider.isPremium();
+  const all = items().filter(x => premium && !forReport && F === '0' ? x.v === 0 : x.v !== 0).sort((a, b) => [2, 1, 3, 0].indexOf(a.v) - [2, 1, 3, 0].indexOf(b.v) || a.i - b.i);
+  const visibleItems = (premium ? all : all.filter(x => x.r.preview).slice(0, previewLimit(all.length))).map(x => ({ ...x, provisions: prov(x.i), authority: auth(x.i), verification: VT[VS[x.i] || 'B'], sources: SR[x.i] || '', obtained: Boolean(done[x.i]) }));
   return { visibleItems, totalItems: all.length, remainingCount: all.length - visibleItems.length };
+}
+
+function hydrateRegistrations(data) {
+  if (!Array.isArray(data.groups)) throw new Error('Registration data is unavailable.');
+  G.splice(0, G.length, ...data.groups);
+  for (const [target, source] of [[P, data.provisions], [D2, data.descriptions], [S2, data.stateFlags], [VS, data.verification], [SR, data.sourceRefs]]) {
+    for (const key of Object.keys(target)) delete target[key];
+    Object.assign(target, source || {});
+  }
 }
 
 function render() {
@@ -1572,7 +1585,8 @@ function render() {
   $("navReg").textContent = n(2);
   $("rgProf").innerHTML = '<b>Profile used:</b> ' + [EN(), ...REGQ.map(q => optionLabel(q, state.answers[q.id]))].map(x => `<span class="ch">${escapeHtml(x)}</span>`).join('');
   $("rgKpi").innerHTML = [[2, 'Mandatory', n(2)], [1, 'Conditional', n(1)], [3, 'Advisory', n(3)], [0, 'Not applicable', n(0)]].map(([v, title, total]) => `<button type="button" class="card rk k${v}" data-kf="${v}"><span>${title}</span><b>${total}</b></button>`).join('') + `<div class="card rk k4"><span>Readiness (mandatory)</span><b>${m.length ? Math.round(dn / m.length * 100) : 0}%</b><small>${dn} of ${m.length} obtained</small></div>`;
-  $("rgBar").innerHTML = [2, 1, 3].map(v => `<i class="${L[v][1]}" style="width:${preview.totalItems ? n(v) / preview.totalItems * 100 : 0}%"></i>`).join('');
+  const applicableCount = n(2) + n(1) + n(3);
+  $("rgBar").innerHTML = [2, 1, 3].map(v => `<i class="${L[v][1]}" style="width:${applicableCount ? n(v) / applicableCount * 100 : 0}%"></i>`).join('');
   $("rgChips").innerHTML = [['all', 'All applicable'], ['2', 'Mandatory'], ['1', 'Conditional'], ['3', 'Advisory'], ['0', 'Not applicable']].map(([v, title]) => `<button type="button" data-rf="${v}" aria-pressed="${F === v}" class="${F === v ? 'on' : ''}">${title}</button>`).join('') + `<button type="button" data-rs="s" aria-pressed="${Boolean(SS)}" class="${SS ? 'on' : ''}">State-specific only</button><button type="button" data-rs="i" aria-pressed="${Boolean(SI)}" class="${SI ? 'on' : ''}">Industry-specific only</button>`;
   const query = QS.toLowerCase();
   let html = previewNotice(preview);
@@ -1582,14 +1596,14 @@ function render() {
     matches += rows.length;
     if (rows.length) html += `<h2 class="gh">${L[status][0]} (${rows.length})</h2><p class="gn">${NT[status]}</p><div class="og">${rows.map(rcard).join('')}</div>`;
   }
-  if (!matches) html += '<p class="empty-preview">No preview registrations match these filters.</p>';
+  if (!matches) html += '<p class="empty-preview">No registrations match these filters.</p>';
   $("rgOut").innerHTML = html + LockedPremiumSection(preview.remainingCount, 'registration reviews');
 }
 
-function snap(){const{n,m,dn}=stats(),nx=regPreview().visibleItems.find(x=>x.v===2&&!done[x.i]),an=state.answers;
-$("snap").innerHTML=[[2,"Mandatory registrations",n(2),"Open the planner →"],[1,"Conditional registrations",n(1),"Confirm thresholds →"],[4,"Registration readiness",(m.length?Math.round(dn/m.length*100):0)+"%",dn+" of "+m.length+" mandatory obtained"],[3,"Next registration to obtain",nx?nx.r.n:"Full report required","From your mandatory list"]].map(([k,t,v,s])=>`<div class="card rk k${k}" data-kf="${k===4||k===3?2:k}"><span>${t}</span><b style="font-size:${String(v).length>8?"14px":"30px"}">${v}</b><small>${s}</small></div>`).join("");
+function snap(){const{n,m,dn}=stats(),nx=regPreview(true).visibleItems.find(x=>x.v===2&&!done[x.i]),an=state.answers;
+$("snap").innerHTML=[[2,"Mandatory registrations",n(2),"Open the planner →"],[1,"Conditional registrations",n(1),"Confirm thresholds →"],[4,"Registration readiness",(m.length?Math.round(dn/m.length*100):0)+"%",dn+" of "+m.length+" mandatory obtained"],[3,"Next registration to obtain",nx?nx.r.n:AccessProvider.isPremium()?"All mandatory items obtained":"Full report required","From your mandatory list"]].map(([k,t,v,s])=>`<div class="card rk k${k}" data-kf="${k===4||k===3?2:k}"><span>${t}</span><b style="font-size:${String(v).length>8?"14px":"30px"}">${v}</b><small>${s}</small></div>`).join("");
 $("heroPills").innerHTML=[S[an.sector],an.state,n(2)+" mandatory registrations"].map(x=>`<span class="pill">${x}</span>`).join("")}
-function printHtml(){return registrationPrintHtml(regPreview())}
+function printHtml(){return registrationPrintHtml(regPreview(true))}
 function actionText(){return "Review the registration preview."}
 
 function lu(){}
@@ -1601,7 +1615,7 @@ else if(b.dataset.rs){if(b.dataset.rs==="s")SS=!SS;else SI=!SI;render()}
 else if(b.dataset.d){done[b.dataset.d]=!done[b.dataset.d];render();snap()}
 else if(b.dataset.kf){F=b.dataset.kf;render();activateTab("registrations")}});
 $("rgQ").addEventListener("input",ev=>{QS=ev.target.value;render()});
-return{render,snap,lu,printHtml,actionText,getPreview:regPreview,reset(){for(const k in done)delete done[k];F="all";SS=SI=0;QS="";$("rgQ").value=""}}})();
+return{render,snap,lu,printHtml,actionText,getPreview:regPreview,hydrate:hydrateRegistrations,resetContent:resetRegistrationContent,reset(){for(const k in done)delete done[k];F="all";SS=SI=0;QS="";$("rgQ").value=""}}})();
 function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),6000)}
 function printNow(){
  try{
@@ -1654,7 +1668,7 @@ function pdfNow(){
   const blob=doc.output("blob");
   if(!blob||!blob.size)throw new Error("Empty PDF generated");
   const url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download="Biz_Matrix_35_Percent_Preview.pdf";a.style.display="none";document.body.appendChild(a);a.click();
+  a.href=url;a.download=AccessProvider.isPremium()?"Biz_Matrix_Full_Report.pdf":"Biz_Matrix_35_Percent_Preview.pdf";a.style.display="none";document.body.appendChild(a);a.click();
   setTimeout(()=>{a.remove();URL.revokeObjectURL(url)},2000);
   toast("PDF report generated successfully. Check your browser Downloads folder.");
  }catch(e){

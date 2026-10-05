@@ -1,9 +1,9 @@
 {
-  "name": "biz-structure-cashfree-backend",
+  "name": "biz-matrix-phonepe-backend",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "start": "node server.js", "dev": "node --watch server.js" },
-  "engines": { "node": ">=20" },
-  "dependencies": { "cashfree-pg": "^5.0.0", "cors": "^2.8.5", "dotenv": "^16.6.1", "express": "^4.21.2" }
+  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "test": "node --test test/*.test.js" },
+  "engines": { "node": ">=22.13" },
+  "dependencies": { "@phonepe-pg/pg-sdk-node": "2.0.6", "cors": "^2.8.5", "dotenv": "^16.6.1", "express": "^4.21.2", "express-rate-limit": "^8.2.1" }
 }

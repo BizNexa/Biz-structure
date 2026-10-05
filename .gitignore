@@ -9,3 +9,8 @@ Thumbs.db
 .vscode/
 *.log
 *.tmp
+saas-backend/private/
+saas-backend/data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

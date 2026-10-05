@@ -2,8 +2,9 @@ const APP_CONFIG = Object.freeze({
   productName: 'Biz Matrix',
   supportEmail: 'nexifydigital03@gmail.com',
   freePreviewPercent: 35,
-  premiumMode: 'contact',
-  paymentEnabled: false
+  premiumMode: 'phonepe',
+  paymentEnabled: true,
+  pricePaise: 4900
 });
 
 function previewLimit(total) {
@@ -12,7 +13,7 @@ function previewLimit(total) {
 
 function getPreviewItems(items, sectionKey, totalItems = items.length) {
   const total = Math.max(items.length, totalItems);
-  const visibleItems = items.slice(0, previewLimit(total));
+  const visibleItems = AccessProvider.isPremium() ? items : items.slice(0, previewLimit(total));
   return { visibleItems, totalItems: total, remainingCount: total - visibleItems.length, sectionKey };
 }
 
@@ -26,31 +27,38 @@ function createUnlockEmail() {
   return `mailto:${APP_CONFIG.supportEmail}?subject=${encodeURIComponent('Biz Matrix - Full Report Access Request')}&body=${encodeURIComponent(body)}`;
 }
 
-const AccessProvider = Object.freeze({ getUnlockHref: createUnlockEmail, requestUnlock: () => { window.location.href = createUnlockEmail(); } });
+const AccessProvider = Object.freeze({
+  isPremium: () => window.BizPayments?.isPremium() === true,
+  getUnlockHref: createUnlockEmail,
+  requestUnlock: () => window.BizPayments?.openCheckout()
+});
 
 function previewNotice(preview) {
-  return `<p class="preview-count">35% free preview: ${preview.visibleItems.length} of ${preview.totalItems} items</p>`;
+  return `<p class="preview-count">${AccessProvider.isPremium() ? 'Full report' : '35% free preview'}: ${preview.visibleItems.length} of ${preview.totalItems} items</p>`;
 }
 
 function LockedPremiumSection(remainingCount, label = 'items') {
   if (!remainingCount) return '';
-  return `<aside class="locked-premium" aria-label="Full report access"><h3>Full Report</h3><p>${remainingCount} additional ${escapeHtml(label)} are included in the full report.</p><a class="btn primary" href="${escapeHtml(createUnlockEmail())}">Contact Us to Unlock</a></aside>`;
+  return `<aside class="locked-premium" aria-label="Full report access"><h3>Full Report</h3><p>${remainingCount} additional ${escapeHtml(label)} are included in the full report.</p><button type="button" class="btn primary" data-buy>Unlock for &#8377;49</button></aside>`;
 }
 
 function analysisPreview(e) {
   const ownership = state.answers.ownership;
   return getPreviewItems([
     ['Structural compatibility gate', ownership === 'shares' ? 'Share-capital ownership selected: LLP and Partnership are excluded from the primary recommendation.' : ownership === 'partners' ? 'Partner-contribution ownership selected: share-capital company structures are excluded from the primary recommendation.' : 'Direct single-owner control selected: the engine evaluates proprietorship and OPC routes.'],
-    ['Legal identity', e.legal], ['Liability', e.liability]
+    ['Legal identity', e.legal], ['Liability', e.liability],
+    ['Founders and membership', e.members], ['Ownership and management', e.ownership],
+    ['Funding routes', e.funding], ['Tax framework', e.tax], ['Compliance burden', e.compliance],
+    ['Audit requirements', e.audit], ['Best-fit use cases', e.best]
   ], 'analysis', 10);
 }
 
 function summaryPreview(e) {
-  return getPreviewItems([['Liability', e.liability, 'shield'], ['Compliance', e.compliance, 'calendar']], 'summary', 8);
+  return getPreviewItems([['Liability', e.liability, 'shield'], ['Compliance', e.compliance, 'calendar'], ['Legal status', e.legal, 'file'], ['Membership', e.members, 'file'], ['Ownership', e.ownership, 'file'], ['Funding', e.funding, 'file'], ['Audit', e.audit, 'file'], ['Tax', e.tax, 'file']], 'summary', 8);
 }
 
 function overviewPreview(e) {
-  return getPreviewItems([['Ownership model', e.ownership]], 'overview', 4);
+  return getPreviewItems([['Ownership model', e.ownership], ['Funding routes', e.funding], ['Tax framework', e.tax], ['Audit requirements', e.audit]], 'overview', 4);
 }
 
 function documentsPreview(e) {
@@ -62,16 +70,18 @@ function compliancePreview(e) {
 }
 
 function matrixPreview() {
-  return getPreviewItems([
-    ['Legal Status', 'Separate legal entity', 'Separate legal entity', 'No separate legal identity', 'No separate legal entity', 'Separate legal entity', 'Separate legal entity', 'Separate legal entity'],
-    ['Liability', 'Limited', 'Limited, subject to exceptions', 'Unlimited', 'Unlimited joint & several', 'Limited', 'Limited', 'Limited']
-  ], 'matrix', 8);
+  const keys = ['private_limited', 'llp', 'sole', 'partnership', 'opc', 'public_limited', 'section8'];
+  return getPreviewItems([['Legal Status', 'legal'], ['Liability', 'liability'], ['Membership', 'members'], ['Ownership', 'ownership'], ['Funding', 'funding'], ['Compliance', 'compliance'], ['Audit', 'audit'], ['Tax', 'tax']].map(([label, field]) => [label, ...keys.map(key => ENTITIES[key]?.[field] || '')]), 'matrix', 8);
 }
 
 function actionsPreview(e) {
   return getPreviewItems([
     ['Confirm the structural decision', `Review the ${e.name} recommendation against founder, liability, funding and compliance requirements.`],
-    ['Prepare incorporation documents', 'Prepare the documents in your preview checklist and request the full report for the remaining requirements.']
+    ['Prepare incorporation documents', 'Prepare the documents in the checklist and confirm their applicability to your proposed entity.'],
+    ['Complete entity formation', `Follow the ${e.name} formation route, including constitutional documents, ownership and management requirements.`],
+    ['Complete applicable registrations', 'Review mandatory registrations first, then conditional and advisory registrations. Confirm the cited provisions, authority and verification route.'],
+    ['Create the compliance calendar', 'Record each initial, annual and event-based obligation with its timing, scope and control.'],
+    ['Review before commencement', 'Resolve outstanding documents and registrations, verify current official requirements and retain the full PDF with your planning records.']
   ], 'actions', 6);
 }
 
@@ -87,6 +97,7 @@ function metricCards(e) {
 function renderDashboard() {
   const e = ENTITIES[state.rec.key];
   document.getElementById('printBtn').disabled = false;
+  document.getElementById('printBtn').innerHTML = `<span class="nav-icon" aria-hidden="true">${ICONS.file}</span>${AccessProvider.isPremium() ? 'Download Full PDF' : 'Download Preview PDF'}`;
   document.getElementById('heroTitle').textContent = e.name;
   document.getElementById('heroDesc').textContent = e.best;
   document.getElementById('recTitle').textContent = e.name;
@@ -96,7 +107,7 @@ function renderDashboard() {
   document.getElementById('ringFg').style.strokeDashoffset = circumference - state.rec.fit / 100 * circumference;
   document.getElementById('recPills').innerHTML = `<span class="pill green">Current fit ${state.rec.fit}/100</span><span class="pill gray">FY 2026-27</span>`;
   const driverPreview = getPreviewItems(drivers(state.answers, state.rec.key), 'drivers');
-  document.getElementById('drivers').innerHTML = driverPreview.visibleItems.map((text, i) => `<div class="driver"><div class="driver-num">${i + 1}</div><div class="driver-text">${escapeHtml(text)}</div></div>`).join('') + `<p class="driver-text">${driverPreview.remainingCount} additional drivers in the full report.</p>`;
+  document.getElementById('drivers').innerHTML = driverPreview.visibleItems.map((text, i) => `<div class="driver"><div class="driver-num">${i + 1}</div><div class="driver-text">${escapeHtml(text)}</div></div>`).join('') + (driverPreview.remainingCount ? `<p class="driver-text">${driverPreview.remainingCount} additional drivers in the full report.</p>` : '');
   metricCards(e);
   document.getElementById('executive').textContent = `${e.name} is the current best structural fit based on the information provided. Verify applicable requirements before incorporation or commencement.`;
   const overview = overviewPreview(e);
@@ -117,15 +128,16 @@ function renderAnalysis(e) {
 }
 
 function renderDocs(e) {
+  const previous = state.docs;
   state.docs = {};
   const preview = documentsPreview(e);
   const groups = new Map();
   preview.visibleItems.forEach(doc => {
-    state.docs[doc.id] = false;
+    state.docs[doc.id] = previous[doc.id] === true;
     if (!groups.has(doc.group)) groups.set(doc.group, []);
     groups.get(doc.group).push(doc);
   });
-  document.getElementById('documents').innerHTML = previewNotice(preview) + [...groups].map(([name, docs]) => `<div class="doc-group"><h4>${escapeHtml(name)}</h4>${docs.map(doc => `<label class="check"><input type="checkbox" data-doc="${doc.id}"><span>${escapeHtml(docText(doc.item))}</span></label>`).join('')}</div>`).join('') + LockedPremiumSection(preview.remainingCount, 'documents');
+  document.getElementById('documents').innerHTML = previewNotice(preview) + [...groups].map(([name, docs]) => `<div class="doc-group"><h4>${escapeHtml(name)}</h4>${docs.map(doc => `<label class="check${state.docs[doc.id] ? ' done' : ''}"><input type="checkbox" data-doc="${doc.id}"${state.docs[doc.id] ? ' checked' : ''}><span>${escapeHtml(docText(doc.item))}</span></label>`).join('')}</div>`).join('') + LockedPremiumSection(preview.remainingCount, 'documents');
   updateDocs();
   document.querySelectorAll('[data-doc]').forEach(input => {
     input.onchange = () => { state.docs[input.dataset.doc] = input.checked; input.closest('.check').classList.toggle('done', input.checked); updateDocs(); };
@@ -135,7 +147,7 @@ function renderDocs(e) {
 function updateDocs() {
   const total = Object.keys(state.docs).length;
   const completed = Object.values(state.docs).filter(Boolean).length;
-  document.getElementById('docCount').textContent = `${completed} / ${total} preview items`;
+  document.getElementById('docCount').textContent = `${completed} / ${total} ${AccessProvider.isPremium() ? 'items' : 'preview items'}`;
   document.getElementById('docProgress').style.width = `${total ? completed / total * 100 : 0}%`;
 }
 
@@ -162,26 +174,30 @@ function renderAction(e) {
 }
 
 function registrationPrintHtml(preview) {
-  return `<table class="print-table"><thead><tr><th>No.</th><th>Registration</th><th>Status</th><th>Purpose / provisions</th><th>Scope</th></tr></thead><tbody>${preview.visibleItems.map(x => `<tr><td>${x.i}</td><td>${escapeHtml(x.r.n)}</td><td>${{ 2: 'Mandatory', 1: 'Conditional', 3: 'Advisory' }[x.v]}</td><td>${escapeHtml(x.r.d)}<br>${escapeHtml(x.y.join('; '))}</td><td>${escapeHtml(x.r.r)}</td></tr>`).join('')}</tbody></table>${printGate(preview, 'registration reviews')}`;
+  return `<table class="print-table"><thead><tr><th>No.</th><th>Registration</th><th>Status</th><th>Purpose / provisions</th><th>Scope / verification</th></tr></thead><tbody>${preview.visibleItems.map(x => `<tr><td>${x.i}</td><td>${escapeHtml(x.r.n)}${x.obtained ? ' [Obtained]' : ''}</td><td>${{ 2: 'Mandatory', 1: 'Conditional', 3: 'Advisory' }[x.v]}</td><td>${escapeHtml(x.r.d)}<br>${escapeHtml(x.y.join('; '))}<br>${escapeHtml(x.provisions)}</td><td>${escapeHtml(x.r.r)}<br>${escapeHtml(x.authority)}<br>${escapeHtml(x.verification)}<br>${escapeHtml(x.sources)}</td></tr>`).join('')}</tbody></table>${printGate(preview, 'registration reviews')}`;
 }
 
 function printGate(preview, label) {
-  return `<p class="print-preview-note">35% free preview: ${preview.visibleItems.length} of ${preview.totalItems} items. ${preview.remainingCount} additional ${escapeHtml(label)} in the full report. Contact ${APP_CONFIG.supportEmail}. Official website: https://bizmatrix.in/</p>`;
+  if (AccessProvider.isPremium()) return '';
+  return `<p class="print-preview-note">35% free preview: ${preview.visibleItems.length} of ${preview.totalItems} items. ${preview.remainingCount} additional ${escapeHtml(label)} in the full report. Full report: Rs. 49 at https://bizmatrix.in/</p>`;
 }
 
 function buildPrint(e) {
   const section = (title, html) => `<div class="print-page"><div class="print-section-title">${title}</div>${html}</div>`;
   const cards = preview => `<div class="print-grid2">${preview.visibleItems.map(([title, text]) => `<div class="pcard"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(text)}</p></div>`).join('')}</div>`;
-  const summary = summaryPreview(e), overview = overviewPreview(e), analysis = analysisPreview(e), docs = documentsPreview(e), comp = compliancePreview(e), matrix = matrixPreview(), actions = actionsPreview(e);
-  document.getElementById('printReport').innerHTML = `<div class="print-page print-cover"><div><div class="print-brand"><div class="print-mark">BM</div><div><b>Biz Matrix</b><div class="print-small">FY 2026-27 - 35% Free Preview</div></div></div><div class="print-title">${escapeHtml(e.name)}</div><div class="print-sub">Business Structure &amp; Registration Intelligence - Preview Report</div><div class="print-kpis">${summary.visibleItems.map(([title, text]) => `<div class="pkpi"><div class="pkpi-label">${escapeHtml(title)}</div><div class="pkpi-value">${escapeHtml(text)}</div></div>`).join('')}</div><div class="pcard"><h4>Executive Decision</h4><p>${escapeHtml(e.name)} is the current structural fit based on your answers.</p></div><div class="pcard"><h4>Important limitation</h4><p>Preliminary decision support only. Verify current law and applicable requirements before acting.</p></div><div class="pcard"><h4>Full report access</h4><p>${APP_CONFIG.supportEmail}</p><p>https://bizmatrix.in/</p></div></div></div>`
-    + section('Executive Summary Preview', cards(summary) + printGate(summary, 'summary items') + cards(overview) + printGate(overview, 'executive summary items'))
+  const summary = summaryPreview(e), overview = overviewPreview(e), analysis = analysisPreview(e), docs = documentsPreview(e), comp = compliancePreview(e), matrix = matrixPreview(), actions = actionsPreview(e), alternatives = alternativesPreview();
+  const premium = AccessProvider.isPremium(), suffix = premium ? '' : ' Preview';
+  const decisionDrivers = getPreviewItems(drivers(state.answers, state.rec.key), 'drivers');
+  document.getElementById('printReport').innerHTML = `<div class="print-page print-cover"><div><div class="print-brand"><div class="print-mark">BM</div><div><b>Biz Matrix</b><div class="print-small">FY 2026-27 - ${premium ? 'Full Report' : '35% Free Preview'}</div></div></div><div class="print-title">${escapeHtml(e.name)}</div><div class="print-sub">Business Structure &amp; Registration Intelligence - ${premium ? 'Full' : 'Preview'} Report</div><div class="print-kpis">${summary.visibleItems.map(([title, text]) => `<div class="pkpi"><div class="pkpi-label">${escapeHtml(title)}</div><div class="pkpi-value">${escapeHtml(text)}</div></div>`).join('')}</div><div class="pcard"><h4>Executive Decision</h4><p>${escapeHtml(e.name)} is the current structural fit based on your answers.</p></div><div class="pcard"><h4>Important limitation</h4><p>Preliminary decision support only. Verify current law and applicable requirements before acting.</p></div><div class="pcard"><h4>${premium ? 'Official website' : 'Full report: Rs. 49'}</h4><p>https://bizmatrix.in/</p><p>${APP_CONFIG.supportEmail}</p></div></div></div>`
+    + section('Executive Summary' + suffix, cards(summary) + printGate(summary, 'summary items') + cards(overview) + printGate(overview, 'executive summary items') + cards({visibleItems: decisionDrivers.visibleItems.map((text, i) => [`Decision driver ${i + 1}`, text])}) + printGate(decisionDrivers, 'decision drivers'))
     + section('Assessment Inputs', `<div class="print-grid2">${ALLQ.map(q => `<div class="pcard"><h4>${escapeHtml(q.cat)}</h4><p>${escapeHtml(optionLabel(q, state.answers[q.id]))}</p></div>`).join('')}</div>`)
-    + section('Detailed Analysis Preview', cards(analysis) + printGate(analysis, 'analysis items'))
-    + section('Document Checklist Preview', `<div class="print-grid2">${docs.visibleItems.map(doc => `<div class="pcard"><h4>${escapeHtml(doc.group)}</h4><p>${state.docs[doc.id] ? '[Done]' : '[ ]'} ${escapeHtml(docText(doc.item))}</p></div>`).join('')}</div>` + printGate(docs, 'documents'))
-    + section('Compliance Preview', `<table class="print-table"><thead><tr><th>Category</th><th>Timing</th><th>Obligation</th><th>Action</th></tr></thead><tbody>${comp.visibleItems.map(x => `<tr>${[x[0], x[1], x[2], x[3]].map(text => `<td>${escapeHtml(text)}</td>`).join('')}</tr>`).join('')}</tbody></table>` + printGate(comp, 'compliance obligations'))
-    + section('Registration Preview', RG.printHtml())
-    + section('Entity Matrix Preview', `<table class="print-table"><thead><tr>${MATRIX_COLUMNS.map(x => `<th>${escapeHtml(x)}</th>`).join('')}</tr></thead><tbody>${matrix.visibleItems.map(row => `<tr>${row.map(x => `<td>${escapeHtml(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>` + printGate(matrix, 'comparison rows'))
-    + section('Action Plan Preview', cards(actions) + printGate(actions, 'action steps'));
+    + section('Detailed Analysis' + suffix, cards(analysis) + printGate(analysis, 'analysis items'))
+    + section('Alternative Structures' + suffix, (alternatives.totalItems ? cards({visibleItems: alternatives.visibleItems.map(([key]) => [ENTITIES[key].name, ENTITIES[key].best])}) : '<p>No structurally compatible alternative.</p>') + printGate(alternatives, 'alternative structures'))
+    + section('Document Checklist' + suffix, `<div class="print-grid2">${docs.visibleItems.map(doc => `<div class="pcard"><h4>${escapeHtml(doc.group)}</h4><p>${state.docs[doc.id] ? '[Done]' : '[ ]'} ${escapeHtml(docText(doc.item))}</p></div>`).join('')}</div>` + printGate(docs, 'documents'))
+    + section('Compliance' + suffix, `<table class="print-table"><thead><tr><th>Category</th><th>Timing</th><th>Obligation</th><th>Action</th>${premium ? '<th>Applicability</th><th>Control</th>' : ''}</tr></thead><tbody>${comp.visibleItems.map(x => `<tr>${(premium ? [x[0], x[1], x[2], x[3], x[4] || 'Subject to applicable conditions.', x[5] || 'Verify current requirements.'] : [x[0], x[1], x[2], x[3]]).map(text => `<td>${escapeHtml(text)}</td>`).join('')}</tr>`).join('')}</tbody></table>` + printGate(comp, 'compliance obligations'))
+    + section('Registrations' + suffix, RG.printHtml())
+    + section('Entity Matrix' + suffix, `<table class="print-table"><thead><tr>${MATRIX_COLUMNS.map(x => `<th>${escapeHtml(x)}</th>`).join('')}</tr></thead><tbody>${matrix.visibleItems.map(row => `<tr>${row.map(x => `<td>${escapeHtml(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>` + printGate(matrix, 'comparison rows'))
+    + section('Action Plan' + suffix, cards(actions) + printGate(actions, 'action steps'));
 }
 
 function renderConflict() {

@@ -8,7 +8,6 @@ const requireTool = createRequire(path.join(toolRoot, 'package.json'));
 const acorn = requireTool('acorn');
 const root = path.resolve(__dirname, '..');
 const sourceFile = process.argv[2];
-if (!sourceFile) throw new Error('Pass the commercial HTML source path.');
 
 function walk(node, visit) {
   if (!node || typeof node !== 'object') return;
@@ -126,15 +125,15 @@ async function main() {
   renderers.forEach(name => replace(functions.get(name), ''));
   const registrationCode = fs.readFileSync(path.join(__dirname, 'registration-preview.js'), 'utf8');
   replace(functions.get('render'), registrationCode);
-  replace(functions.get('printHtml'), 'function printHtml(){return registrationPrintHtml(regPreview())}');
+  replace(functions.get('printHtml'), 'function printHtml(){return registrationPrintHtml(regPreview(true))}');
   replace(functions.get('actionText'), 'function actionText(){return "Review the registration preview."}');
   const snap = functions.get('snap');
-  replace(snap, code.slice(snap.start, snap.end).replace('nx=m.find(x=>!done[x.i])', 'nx=regPreview().visibleItems.find(x=>x.v===2&&!done[x.i])').replace('nx?nx.r.n:"All mandatory items obtained"', 'nx?nx.r.n:"Full report required"'));
+  replace(snap, code.slice(snap.start, snap.end).replace('nx=m.find(x=>!done[x.i])', 'nx=regPreview(true).visibleItems.find(x=>x.v===2&&!done[x.i])').replace('nx?nx.r.n:"All mandatory items obtained"', 'nx?nx.r.n:AccessProvider.isPremium()?"All mandatory items obtained":"Full report required"'));
   patches.sort((a, b) => b.start - a.start);
   for (const patch of patches) code = code.slice(0, patch.start) + patch.value + code.slice(patch.end);
   code = code.replace('/^Startup/.test(r.n)', '(r.startup||/^Startup/.test(r.n||""))');
-  code = code.replace('return{render,snap,lu,printHtml,actionText,reset()', 'return{render,snap,lu,printHtml,actionText,getPreview:regPreview,reset()');
-  code = code.replace('Business_Structure_and_Registration_Report.pdf', 'Biz_Matrix_35_Percent_Preview.pdf');
+  code = code.replace('return{render,snap,lu,printHtml,actionText,reset()', 'return{render,snap,lu,printHtml,actionText,getPreview:regPreview,hydrate:hydrateRegistrations,resetContent:resetRegistrationContent,reset()');
+  code = code.replace('a.download="Business_Structure_and_Registration_Report.pdf"', 'a.download=AccessProvider.isPremium()?"Biz_Matrix_Full_Report.pdf":"Biz_Matrix_35_Percent_Preview.pdf"');
   acorn.parse(code, { ecmaVersion: 'latest' });
 
   for (const script of scripts) script.parentNode.childNodes = script.parentNode.childNodes.filter(n => n !== script);
@@ -144,7 +143,7 @@ async function main() {
   const head = elements(document, n => n.tagName === 'head')[0];
   setText(elements(document, n => n.tagName === 'title')[0], 'Biz Matrix | Business Structure & Registration Intelligence');
   setAttr(elements(document, n => n.tagName === 'meta' && attr(n, 'name') === 'description')[0], 'content', 'Biz Matrix business structure and registration intelligence for India, FY 2026-27. Free 35% report preview.');
-  append(head, '<meta name="robots" content="index,follow"><link rel="canonical" href="https://bizmatrix.in/"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/preview.css">');
+  append(head, '<meta name="robots" content="index,follow"><link rel="canonical" href="https://bizmatrix.in/"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/preview.css"><link rel="stylesheet" href="css/payments.css">');
   const footers = elements(oldDocument, n => n.tagName === 'footer' && attr(n, 'class') === 'site-footer');
   for (const [id, footer] of [['assessment', footers[0]], ['dashboard', footers[1]]]) {
     const target = elements(document, n => attr(n, 'id') === id)[0];
@@ -159,12 +158,12 @@ async function main() {
   setAttr(elements(document, n => attr(n, 'id') === 'menuBtn')[0], 'aria-label', 'Open navigation');
   setAttr(elements(document, n => attr(n, 'id') === 'menuBtn')[0], 'aria-expanded', 'false');
   const topbar = elements(document, n => attr(n, 'class') === 'topbar')[0];
-  const banner = parseFragment('<div class="preview-status"><span class="preview-badge">35% Free Preview</span><a href="contact/">Request Full Report</a></div>').childNodes[0];
+  const banner = parseFragment('<div class="preview-status"><span class="preview-badge" id="accessBadge">35% Free Preview</span><div class="purchase-actions"><button class="btn" type="button" data-restore>Restore Access</button><button class="btn primary" type="button" data-buy>Unlock for &#8377;49</button><button class="btn hidden" type="button" data-receipt>Purchase Receipt</button></div></div>').childNodes[0];
   banner.parentNode = topbar.parentNode;
   topbar.parentNode.childNodes.splice(topbar.parentNode.childNodes.indexOf(topbar) + 1, 0, banner);
   append(elements(document, n => attr(n, 'id') === 'panel-comparison')[0], '<div id="matrixGate"></div>');
   const body = elements(document, n => n.tagName === 'body')[0];
-  append(body, '<script src="js/pdf.min.js"></script><script src="js/preview.js"></script><script src="js/app.js"></script>');
+  append(body, '<script src="js/config.js"></script><script src="js/pdf.min.js"></script><script src="js/preview.js"></script><script src="js/app.js"></script><script src="js/payments.js"></script>');
   fs.mkdirSync(path.join(root, 'css'), { recursive: true });
   fs.writeFileSync(path.join(root, 'css/app.css'), css);
   fs.writeFileSync(path.join(root, 'js/pdf.min.js'), vendor);
@@ -172,4 +171,8 @@ async function main() {
   fs.writeFileSync(path.join(root, 'index.html'), serialize(document).replace(/[ \t]+$/gm, ''));
   console.log(JSON.stringify({ questions: 19, totalRegistrations, registrationLimit, entities: Object.fromEntries(Object.entries(entities).map(([key, e]) => [key, { docs: e.docs.flatMap(g => g[1]).length, docsTotal: e.docsTotal, compliance: e.comp.length, compTotal: e.compTotal }])) }, null, 2));
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+module.exports = { walk, literal };
+if (require.main === module) {
+  if (!sourceFile) throw new Error('Pass the commercial HTML source path.');
+  main().catch(error => { console.error(error); process.exitCode = 1; });
+}

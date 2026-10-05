@@ -3,6 +3,7 @@ exclude:
   - "Business Structure Decision & Registration Planning System.html"
   - README.md
   - README-CASHFREE.md
+  - README-PHONEPE.md
   - github-pages-deployment
   - saas-backend
   - saas-frontend
