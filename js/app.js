@@ -11,149 +11,436 @@ route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="
 document.querySelectorAll('[data-icon]').forEach(x=>x.innerHTML=ICONS[x.dataset.icon]);
 
 const ENTITIES={
-private_limited:{
-name:"Private Limited Company",legal:"Separate legal entity",liability:"Limited to unpaid share capital",compliance:"High",members:"Minimum 2 shareholders + 2 directors; maximum 200 shareholders",audit:"Mandatory regardless of turnover or capital",funding:"Equity, preference shares, CCPS, ESOPs, debentures, VC, angel and PE funding are identified in the source.",ownership:"Shareholders own through shares; Board of Directors manages company affairs.",tax:"For Tax Year 2026–27, the Finance Act 2026 rate schedule provides a 25% / 30% domestic-company framework, with separate concessional regimes subject to their conditions. The engine does not treat an old-section label as a substitute for the new Act transition mapping.",best:"Startups, scale-ups, funded businesses and businesses expecting outside investors.",
-docs:[
-["Directors & Shareholders",["PAN of directors/shareholders","Aadhaar / identity proof","Recent photographs","Address proof","Email and mobile details","Specimen signature","Class 3 DSC"]],
-["Registered Office",["Utility bill","Property tax receipt where applicable","Owner NOC","Rent / lease agreement where applicable"]],
-["Company Information",["3–4 proposed names","Business activity description","Authorized and paid-up capital","Shareholding pattern"]],
-["Constitutional Documents",["MOA","AOA","DIR-2","INC-9","First-director resolution"]]
-],
-comp:[
-["Initial","Within 30 days","First Board Meeting","First Board meeting within 30 days of incorporation."],
-["Initial","Within 30 days","First Auditor / ADT-1","Appointment of first auditor and related filing requirements."],
-["Initial","Within 30 days","Registered Office","Establish registered office within the applicable period."],
-["Initial","Within 60 days","Share Certificates","Issue share certificates within the prescribed period."],
-["Initial","Within 180 days","INC-20A","Commencement declaration after subscription money is paid."],
-["Annual","FY 2026–27","AOC-4","Annual financial statement filing."],
-["Annual","FY 2026–27","MGT-7","Annual return filing."],
-["Annual","Applicable cycle","DIR-3 KYC","Director KYC according to the applicable regime."],
-["Tax","Tax Year 2026–27","Company income-tax return","Use the form prescribed under the Income-tax Rules, 2026 once notified."],
-["Event Based","As event occurs","Corporate Change Filings","Changes in directors, office, share capital and other reportable events may require MCA filings."]
-]},
-llp:{
-name:"Limited Liability Partnership",legal:"Separate legal entity",liability:"Limited to agreed contribution, subject to applicable exceptions",compliance:"Moderate",members:"Minimum 2 partners; no upper limit",audit:"Mandatory when the applicable turnover/contribution threshold is crossed",funding:"Partner contribution and loans; no ordinary equity-share funding route.",ownership:"Partners hold interests through capital contribution and the LLP Agreement.",tax:"For Tax Year 2026–27, the Finance Act 2026 rate schedule specifies 30% on the whole of total income for a firm; applicable surcharge, cess and AMT must be evaluated separately.",best:"Professional firms, consultancies, bootstrapped SMEs and service businesses.",
-docs:[
-["Partners & Designated Partners",["PAN","Aadhaar / passport / identity proof","Address proof","Photograph","Class 3 DSC","DIN identification details","Resident designated partner proof"]],
-["Registered Office",["Recent utility bill","Owner NOC","Rent / lease agreement","Ownership documents where applicable"]],
-["LLP Constitution",["Subscriber sheet","Form 9 consent","LLP Agreement","Capital contribution details","Bank proof of contribution"]],
-["Special Situations",["Foreign partner documents where applicable","Apostille / notarisation where applicable","Professional certification where applicable","Business plan / project report where required"]]
-],
-comp:[
-["Initial","Within 30 days","LLP Agreement — Form 3","File the LLP Agreement through the applicable Form 3 process."],
-["Annual","30 May 2027","Form 11 — Annual Return","Reports partners, designated partners, contribution and changes."],
-["Annual","30 October 2027","Form 8 — Statement of Account & Solvency","Financial position and solvency declaration."],
-["Annual","Applicable cycle","DIR-3 KYC","Designated partner KYC according to the applicable regime."],
-["Tax","Tax Year 2026–27","Firm / LLP income-tax return","Use the form prescribed under the Income-tax Rules, 2026 once notified; due date depends on applicable audit requirements."],
-["Audit","Threshold based","Tax Audit","Audit applies when prescribed turnover/contribution conditions are met."],
-["Tax","Periodic","GST Returns","GSTR-1/GSTR-3B and annual return where applicable."],
-["Event Based","As event occurs","Partner / Agreement / Office Changes","Applicable event-based forms may be required."]
-]},
-sole:{
-name:"Sole Proprietorship",legal:"No separate legal identity from proprietor",liability:"Unlimited personal liability",compliance:"Lowest",members:"1 proprietor",audit:"Threshold-based tax audit where applicable",funding:"Owner-funded / loans; not an equity-investor structure.",ownership:"Complete direct control by proprietor.",tax:"Business income is taxed in the proprietor's individual tax framework; the source identifies ITR-3 / ITR-4 and presumptive taxation.",best:"Solo freelancers, small shopkeepers, local traders and small owner-managed businesses.",
-docs:[
-["Proprietor KYC",["PAN","Aadhaar","Government identity proof","Photograph"]],
-["Business Address",["Business address proof","Rent agreement where applicable","Landlord NOC","Utility bill"]],
-["Business Registrations",["Shop & Establishment where applicable","Udyam / MSME","GST where applicable","Trade licence where applicable","Professional Tax where applicable"]],
-["Industry Specific",["FSSAI for food businesses","Fire safety where applicable","Pollution clearance where applicable","Labour registration where applicable","Sector-specific licences"]]
-],
-comp:[
-["Tax","Annual","ITR-3 / ITR-4","Return selection depends on applicable books/presumptive-tax conditions."],
-["Tax","Quarterly where applicable","Advance Tax","Quarterly advance tax where applicable."],
-["Tax","Periodic","GST Returns","Applicable where GST registration applies."],
-["Tax","Quarterly where applicable","TDS Returns","Applicable where the proprietor deducts TDS."],
-["Audit","Threshold based","Tax Audit","Applicable when prescribed turnover/receipt conditions are crossed."],
-["State","State-specific","Professional Tax","Applicable according to state law."],
-["Employees","Threshold based","EPF / ESI","Employee registrations apply when relevant thresholds are reached."],
-["Event Based","Renewal cycle","Licences","State/activity-specific licences may require renewal."]
-]},
-partnership:{
-name:"Partnership Firm",legal:"No separate legal entity",liability:"Unlimited joint and several liability",compliance:"Moderate",members:"Minimum 2 partners; source describes maximum of 50",audit:"Threshold-based",funding:"Partner contribution / loans; cannot issue ordinary shares to equity investors.",ownership:"Partners operate according to the Partnership Deed.",tax:"For Tax Year 2026–27, the Finance Act 2026 rate schedule specifies 30% on the whole of total income for a firm; applicable surcharge, cess and AMT must be evaluated separately.",best:"Small traders, family businesses and professional partnerships.",
-docs:[
-["Partner KYC",["PAN of partners","Aadhaar / Voter ID / Passport","Residential address proof","Photographs"]],
-["Firm Constitution",["Partnership Deed","Form A / registration statement","Affidavit","Firm PAN"]],
-["Business Address",["Address proof","Rent agreement","Landlord NOC","Utility bill"]],
-["Banking & Tax",["Firm PAN","Bank statements","Current-account documentation"]]
-],
-comp:[
-["Annual","Annual","Tax Year 2026–27 return form — to be confirmed from the Income Tax Department notification before filing.","Income-tax return for the firm/LLP. For Tax Year 2026–27, use the form prescribed under the Income-tax Rules, 2026 once notified."],
-["Tax","Periodic","GST Returns","Applicable where GST registered."],
-["Tax","Quarterly where applicable","TDS Returns","Applicable where TDS provisions apply."],
-["Audit","Threshold based","Tax Audit","Applicable when prescribed turnover conditions are crossed."],
-["Records","Ongoing","Books & Financial Records","Maintain ledgers, journals, vouchers, invoices and bank records."],
-["Employees","Threshold based","EPF / ESI","Applicable where workforce thresholds are met."]
-]},
-opc:{
-name:"One Person Company",legal:"Separate legal entity",liability:"Limited to unpaid share value",compliance:"Moderate",members:"1 member + 1 nominee",audit:"Statutory audit is mandatory",funding:"Limited investor appeal compared with a Private Limited Company.",ownership:"Single member/shareholder with nominee-based succession.",tax:"OPC taxation follows the domestic-company framework. For Tax Year 2026–27, apply the Finance Act 2026 / Income-tax Act 2025 framework and applicable conditions.",best:"Individual entrepreneurs seeking corporate identity and limited liability.",
-docs:[
-["Member / Nominee",["PAN","Aadhaar / passport","Residential address proof","Photograph","Nominee consent"]],
-["Registered Office",["Ownership proof","Property tax receipt where applicable","Rent agreement","Owner NOC","Utility bill"]],
-["Constitutional Documents",["MOA","AOA","DIR-2","INC-9","Applicable professional declaration"]],
-["Digital Filing",["Class 3 DSC","DIN where applicable","SPICe+ documentation","PAN/TAN incorporation documentation"]]
-],
-comp:[
-["Initial","Within 30 days","First Auditor","First auditor appointment."],
-["Initial","Within 2 months","Share Certificate","Issue share certificate within the applicable period."],
-["Initial","Within 180 days","INC-20A","Commencement declaration."],
-["Annual","FY 2026–27","AOC-4","Annual financial statement filing."],
-["Annual","FY 2026–27","MGT-7A","Annual return for OPC."],
-["Annual","Applicable cycle","DIR-3 KYC","Director KYC according to applicable regime."],
-["Tax","Annual","Tax Year 2026–27 company return form — to be confirmed from the Income Tax Department notification before filing.","Tax Year 2026–27 company return form — confirm the new prescribed form before filing."],
-["Audit","Annual","Statutory Audit","Mandatory statutory audit."]
-]},
-public_limited:{
-name:"Public Limited Company",legal:"Separate legal entity",liability:"Limited to amount unpaid on shares",compliance:"Very High",members:"Minimum 7 members and 3 directors",audit:"Corporate statutory audit requirements apply",funding:"Public issues, rights issues and private placements subject to applicable law.",ownership:"Share-capital / shareholding ownership with broader transferability subject to law and Articles.",tax:"The supplied source does not provide a separate Public Limited tax-rate table; this engine does not invent one.",best:"Businesses requiring broader capital access and potential public-market funding.",
-docs:[
-["Shareholders & Directors",["Identity proof","PAN","DSC","DIN","Address proof"]],
-["Registered Office",["Recent utility bill","Owner NOC / consent letter"]],
-["Constitution",["MOA","AOA"]]
-],
-comp:[
-["Initial","Within 30 days","First Board Meeting","First Board meeting."],
-["Initial","Within 30 days","First Auditor","First auditor appointment."],
-["Initial","Within 30 days","Registered Office","Establish registered office."],
-["Initial","Within 60 days","Share Certificates","Issue share certificates."],
-["Initial","Within 180 days","Commencement of Business","Commencement declaration where applicable."],
-["Annual","Ongoing","Statutory Registers & Books","Maintain statutory registers and books."],
-["Annual","Annual","AOC-4 / MGT-7","Annual financial statement and annual return filings."]
-]},
-section8:{
-name:"Section 8 Company",legal:"Separate legal entity",liability:"Limited liability",compliance:"High",members:"Minimum 2 members and 2 directors for the private-company form described in the source",audit:"Statutory audit every financial year",funding:"Domestic donations, CSR funding, grants and foreign contributions subject to applicable approvals/conditions.",ownership:"Profits cannot be distributed as dividends and must be applied toward stated objects.",tax:"Incorporation does not itself create automatic income-tax exemption; 12AB / 80G and the applicable Tax Year 2026–27 return framework must be evaluated separately.",best:"Charitable, educational, social welfare, research, sports and environmental initiatives.",
-docs:[
-["Directors & Members",["PAN","Aadhaar / identity proof","Address proof","Photographs","Class 3 DSC"]],
-["Registered Office",["Utility bill","Ownership proof","Owner NOC","Rent agreement where applicable"]],
-["Section 8 Constitutional Documents",["MOA — INC-13","AOA","Projected statement for next 3 years","INC-9","INC-14","INC-15","DIR-2"]],
-["Foreign Funding",["FCRA registration / prior permission where applicable"]]
-],
-comp:[
-["Initial","Incorporation","Section 8 Licence","Section 8 licence is part of the incorporation framework."],
-["Annual","Each calendar year","Board Meetings","Board meetings according to applicable corporate requirements."],
-["Annual","By 30 September 2027","AGM","Annual General Meeting."],
-["Annual","By 30 October 2027","AOC-4","Audited financial statements filed with ROC."],
-["Annual","By 29 November 2027","MGT-7","Annual return filing."],
-["Annual","Annual","Statutory Audit","Mandatory statutory audit."],
-["Tax","Tax Year 2026–27","Section 8 / eligible entity income-tax return","Use the form prescribed under the Income-tax Rules, 2026 once notified; applicability depends on the entity's tax position."],
-["Tax","Ongoing","12AB / 80G","Separate tax-benefit registrations/approvals as applicable."],
-["Event Based","As applicable","FCRA","Foreign contribution requires applicable FCRA registration/prior permission."]
-]}
+  "private_limited": {
+    "name": "Private Limited Company",
+    "legal": "Separate legal entity",
+    "liability": "Limited to unpaid share capital",
+    "compliance": "High",
+    "funding": "Equity, preference shares, CCPS, ESOPs, debentures, VC, angel and PE funding are identified in the source.",
+    "ownership": "Shareholders own through shares; Board of Directors manages company affairs.",
+    "best": "Startups, scale-ups, funded businesses and businesses expecting outside investors.",
+    "docs": [
+      [
+        "Directors & Shareholders",
+        [
+          "PAN of directors/shareholders",
+          "Aadhaar / identity proof",
+          "Recent photographs",
+          "Address proof",
+          "Email and mobile details",
+          "Specimen signature",
+          "Class 3 DSC"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Initial",
+        "Within 30 days",
+        "First Board Meeting",
+        "First Board meeting within 30 days of incorporation."
+      ],
+      [
+        "Initial",
+        "Within 30 days",
+        "First Auditor / ADT-1",
+        "Appointment of first auditor and related filing requirements."
+      ],
+      [
+        "Annual",
+        "30 Sep 2027 / within 6 months of FY-end",
+        "AGM",
+        "Conduct the AGM within the statutory period, subject to applicable class-specific exemptions.",
+        "Companies other than OPC, subject to statutory exceptions.",
+        "Critical — AGM date drives AOC-4 and MGT-7 timelines."
+      ],
+      [
+        "Annual",
+        "Within 30 days of AGM",
+        "AOC-4",
+        "File the annual financial statements with ROC; use the applicable AOC-4 variant/XBRL where required.",
+        "Companies filing financial statements; OPC has the separate 180-day timing.",
+        "Critical — AGM date and correct filing variant must be controlled."
+      ]
+    ],
+    "docsTotal": 20,
+    "compTotal": 13,
+    "compCounts": {
+      "Initial": 5,
+      "Annual": 7,
+      "Event Based": 1
+    }
+  },
+  "llp": {
+    "name": "Limited Liability Partnership",
+    "legal": "Separate legal entity",
+    "liability": "Limited to agreed contribution, subject to applicable exceptions",
+    "compliance": "Moderate",
+    "funding": "Partner contribution and loans; no ordinary equity-share funding route.",
+    "ownership": "Partners hold interests through capital contribution and the LLP Agreement.",
+    "best": "Professional firms, consultancies, bootstrapped SMEs and service businesses.",
+    "docs": [
+      [
+        "Partners & Designated Partners",
+        [
+          "PAN",
+          "Aadhaar / passport / identity proof",
+          "Address proof",
+          "Photograph",
+          "Class 3 DSC",
+          "DIN identification details",
+          "Resident designated partner proof"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Initial",
+        "Within 30 days",
+        "LLP Agreement — Form 3",
+        "File the LLP Agreement through the applicable Form 3 process."
+      ],
+      [
+        "Annual",
+        "30 May 2027",
+        "Form 11 — Annual Return",
+        "File the LLP annual return reporting partners, designated partners, contribution and relevant changes.",
+        "All LLPs, including dormant/non-operational LLPs.",
+        "Critical — cannot be omitted merely because the LLP is inactive."
+      ],
+      [
+        "Tax",
+        "Tax Year 2026–27",
+        "Firm / LLP income-tax return",
+        "Use the form prescribed under the Income-tax Rules, 2026 once notified; due date depends on applicable audit requirements."
+      ]
+    ],
+    "docsTotal": 20,
+    "compTotal": 9,
+    "compCounts": {
+      "Initial": 1,
+      "Annual": 3,
+      "Tax": 3,
+      "Audit": 1,
+      "Event Based": 1
+    }
+  },
+  "sole": {
+    "name": "Sole Proprietorship",
+    "legal": "No separate legal identity from proprietor",
+    "liability": "Unlimited personal liability",
+    "compliance": "Lowest",
+    "funding": "Owner-funded / loans; not an equity-investor structure.",
+    "ownership": "Complete direct control by proprietor.",
+    "best": "Solo freelancers, small shopkeepers, local traders and small owner-managed businesses.",
+    "docs": [
+      [
+        "Proprietor KYC",
+        [
+          "PAN",
+          "Aadhaar",
+          "Government identity proof",
+          "Photograph"
+        ]
+      ],
+      [
+        "Business Address",
+        [
+          "Business address proof",
+          "Rent agreement where applicable"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Annual",
+        "31 Aug 2027 / 31 Oct 2027 where audited",
+        "Income-tax return — proprietor",
+        "File the Tax Year 2026–27 return using the applicable prescribed form under the Income-tax Rules, 2026.",
+        "Proprietor; non-audit business/profession cases normally 31 Aug 2027, audited cases generally 31 Oct 2027.",
+        "Critical — use the FY 2026–27 new-law form and audit status."
+      ],
+      [
+        "Tax",
+        "Quarterly where applicable",
+        "Advance Tax",
+        "Quarterly advance tax where applicable."
+      ],
+      [
+        "Audit",
+        "Threshold based",
+        "Tax Audit",
+        "Applicable when prescribed turnover/receipt conditions are crossed."
+      ]
+    ],
+    "docsTotal": 18,
+    "compTotal": 9,
+    "compCounts": {
+      "Annual": 2,
+      "Tax": 3,
+      "Audit": 1,
+      "State": 1,
+      "Employees": 1,
+      "Event Based": 1
+    }
+  },
+  "partnership": {
+    "name": "Partnership Firm",
+    "legal": "No separate legal entity",
+    "liability": "Unlimited joint and several liability",
+    "compliance": "Moderate",
+    "funding": "Partner contribution / loans; cannot issue ordinary shares to equity investors.",
+    "ownership": "Partners operate according to the Partnership Deed.",
+    "best": "Small traders, family businesses and professional partnerships.",
+    "docs": [
+      [
+        "Partner KYC",
+        [
+          "PAN of partners",
+          "Aadhaar / Voter ID / Passport",
+          "Residential address proof",
+          "Photographs"
+        ]
+      ],
+      [
+        "Firm Constitution",
+        [
+          "Partnership Deed"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Annual",
+        "31 Aug 2027 / 31 Oct 2027 where audited",
+        "Partnership firm income-tax return",
+        "File the Tax Year 2026–27 return under the new-law framework using the prescribed form.",
+        "Partnership firms; audited cases generally follow the 31 Oct 2027 return date.",
+        "Critical — reconcile deed, partner remuneration/interest and tax-audit status."
+      ],
+      [
+        "Tax",
+        "Periodic",
+        "GST Returns",
+        "Applicable where GST registered."
+      ]
+    ],
+    "docsTotal": 15,
+    "compTotal": 7,
+    "compCounts": {
+      "Annual": 2,
+      "Tax": 2,
+      "Audit": 1,
+      "Records": 1,
+      "Employees": 1
+    }
+  },
+  "opc": {
+    "name": "One Person Company",
+    "legal": "Separate legal entity",
+    "liability": "Limited to unpaid share value",
+    "compliance": "Moderate",
+    "funding": "Limited investor appeal compared with a Private Limited Company.",
+    "ownership": "Single member/shareholder with nominee-based succession.",
+    "best": "Individual entrepreneurs seeking corporate identity and limited liability.",
+    "docs": [
+      [
+        "Member / Nominee",
+        [
+          "PAN",
+          "Aadhaar / passport",
+          "Residential address proof",
+          "Photograph",
+          "Nominee consent"
+        ]
+      ],
+      [
+        "Registered Office",
+        [
+          "Ownership proof"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Initial",
+        "Within 30 days",
+        "First Auditor",
+        "First auditor appointment."
+      ],
+      [
+        "Annual",
+        "180 days from FY-end",
+        "AOC-4",
+        "File the OPC annual financial statements within 180 days from the financial year-end.",
+        "OPC.",
+        "Critical — separate OPC timing from other companies."
+      ]
+    ],
+    "docsTotal": 19,
+    "compTotal": 8,
+    "compCounts": {
+      "Initial": 3,
+      "Annual": 4,
+      "Audit": 1
+    }
+  },
+  "public_limited": {
+    "name": "Public Limited Company",
+    "legal": "Separate legal entity",
+    "liability": "Limited to amount unpaid on shares",
+    "compliance": "Very High",
+    "funding": "Public issues, rights issues and private placements subject to applicable law.",
+    "ownership": "Share-capital / shareholding ownership with broader transferability subject to law and Articles.",
+    "best": "Businesses requiring broader capital access and potential public-market funding.",
+    "docs": [
+      [
+        "Shareholders & Directors",
+        [
+          "Identity proof",
+          "PAN",
+          "DSC"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Initial",
+        "Within 30 days",
+        "First Board Meeting",
+        "First Board meeting."
+      ],
+      [
+        "Initial",
+        "Within 30 days",
+        "First Auditor",
+        "First auditor appointment."
+      ],
+      [
+        "Annual",
+        "As required during FY",
+        "Statutory Registers, Minutes & Books",
+        "Maintain statutory registers, Board/committee minutes, books and governance records throughout the year.",
+        "Public company and applicable corporate classes; listed status adds SEBI/LODR requirements.",
+        "High — records should be contemporaneous and reconciled before annual filings."
+      ],
+      [
+        "Annual",
+        "30 Sep 2027 / within 6 months of FY-end",
+        "AGM",
+        "Conduct AGM within the statutory period; complete annual governance actions and approvals.",
+        "Public company; listed companies have additional SEBI/LODR calendar obligations.",
+        "Critical — AGM date drives annual filing dates."
+      ]
+    ],
+    "docsTotal": 9,
+    "compTotal": 12,
+    "compCounts": {
+      "Initial": 5,
+      "Annual": 7
+    }
+  },
+  "section8": {
+    "name": "Section 8 Company",
+    "legal": "Separate legal entity",
+    "liability": "Limited liability",
+    "compliance": "High",
+    "funding": "Domestic donations, CSR funding, grants and foreign contributions subject to applicable approvals/conditions.",
+    "ownership": "Profits cannot be distributed as dividends and must be applied toward stated objects.",
+    "best": "Charitable, educational, social welfare, research, sports and environmental initiatives.",
+    "docs": [
+      [
+        "Directors & Members",
+        [
+          "PAN",
+          "Aadhaar / identity proof",
+          "Address proof",
+          "Photographs",
+          "Class 3 DSC"
+        ]
+      ]
+    ],
+    "comp": [
+      [
+        "Initial",
+        "Incorporation",
+        "Section 8 Licence",
+        "Section 8 licence is part of the incorporation framework."
+      ],
+      [
+        "Annual",
+        "As required under Companies Act / SS-1",
+        "Board Meetings",
+        "Hold and document Board meetings according to the applicable company class, exemptions and Secretarial Standard requirements.",
+        "Section 8 company, subject to applicable corporate exemptions.",
+        "High — maintain minutes and statutory records."
+      ],
+      [
+        "Annual",
+        "By 30 Sep 2027 / within 6 months of FY-end",
+        "AGM",
+        "Conduct the annual general meeting within the statutory period, subject to applicable exemptions.",
+        "Section 8 companies, subject to applicable exemptions.",
+        "Critical — AGM timing drives annual filing deadlines."
+      ]
+    ],
+    "docsTotal": 17,
+    "compTotal": 10,
+    "compCounts": {
+      "Initial": 1,
+      "Annual": 7,
+      "Tax": 1,
+      "Event Based": 1
+    }
+  }
 };
 
 const QUESTIONS=[
-{id:"objective",cat:"Business Objective",title:"What is the fundamental objective of the organisation?",desc:"This is the first structural filter because the source treats non-profit activity differently from ordinary commercial businesses.",opts:[["profit","For-profit business","Commercial business intended to generate profits."],["nonprofit","Non-profit / charitable / social initiative","Charitable, educational, social welfare, research, sports or similar objective."]]},
-{id:"founders",cat:"Ownership",title:"How many founders / owners will initially participate?",desc:"Founder count determines which structures can accommodate the proposed ownership model.",opts:[["one","1 founder","Single entrepreneur / owner."],["two_to_six","2–6 founders / owners","Closely held multi-owner business."],["seven_plus","7 or more founders / members","Seven or more does not by itself require a Public Limited Company."]]},
-{id:"liability",cat:"Risk & Liability",title:"How important is personal asset protection?",desc:"The source differentiates structures sharply on limited versus unlimited liability.",opts:[["critical","Critical — personal assets should generally be protected","Limited liability is a core requirement."],["preferred","Preferred but flexibility matters","Limited liability is important, but other factors also matter."],["acceptable","Unlimited liability is acceptable","I understand and accept personal exposure."]]},
-{id:"funding",cat:"Funding",title:"What is your expected funding strategy?",desc:"The source identifies substantial differences between share-based structures and partner/proprietor structures.",opts:[["vc","VC / angel / institutional equity","External investors, dilution and equity fundraising."],["bank","Bank finance / debt / self-funded","No immediate equity-investor requirement."],["public","Public issue / eventual listing","Broader public-market capital access."]]},
-{id:"compliance",cat:"Compliance Capacity",title:"How much compliance infrastructure can you maintain?",desc:"This measures whether the business can support the recurring governance burden described in the source.",opts:[["low","Low","Prefer the simplest possible compliance structure."],["moderate","Moderate","Can manage regular tax and statutory filings."],["high","High","Can maintain corporate records, audits, meetings and annual filings."]]},
-{id:"business",cat:"Business Model",title:"Which business model best describes you?",desc:"Different structures in the source are associated with different business profiles.",opts:[["startup","Startup / scalable growth","Growth, investment, ownership transfer and scale matter."],["professional","Professional / consultancy / service","Partner-driven expertise and flexible profit sharing."],["small","Small local / trading / owner-managed","Direct control and lower administrative burden."]]},
-{id:"ownership",cat:"Ownership Structure",title:"How should ownership legally be represented?",desc:"This is a critical routing question. A company limited by shares uses share capital. An LLP does not issue ordinary company shares; partner rights arise through contribution and the LLP Agreement.",opts:[["shares","Share-capital / shareholding ownership","Ownership should be represented through shares, shareholding percentages and share capital."],["partners","Partner contribution / LLP Agreement (no company shares)","Ownership should be represented through partner contribution and agreed partner rights — not company shares."],["single","Direct single-owner control","One person should own and control the business directly."]]},
-{id:"scale",cat:"Growth",title:"What is your expected scale?",desc:"Expected growth direction affects the value of funding and governance flexibility.",opts:[["small","Remain small / closely held","No major expansion expected."],["growth","Growth / expansion","Expect more customers, employees, capital or owners."],["large","Large / public-market oriented","Long-term public capital or listing possibility."]]},
-{id:"turnover",cat:"Financial Scale",title:"What is your expected annual turnover?",desc:"Turnover is relevant for GST and audit analysis in the source.",opts:[["under20","Below ₹20 lakh","Early-stage / small turnover."],["20to40","₹20 lakh – ₹40 lakh","GST and audit analysis may depend on business type and other conditions."],["40plus","Above ₹40 lakh","Relevant for GST and certain LLP audit thresholds."]]},
-{id:"employees",cat:"Employees",title:"Will you employ staff?",desc:"Employee registrations such as EPF and ESI are identified in the source as threshold / applicability-based.",opts:[["none","No employees initially","Founder / partner driven operation."],["small","Small team","Employees but initially a small workforce."],["large","Growing workforce","Employee-related registrations should be actively planned."]]},
-{id:"activity",cat:"Industry",title:"Does your activity trigger specialised registrations?",desc:"This identifies whether the business may need additional licences beyond entity registration.",opts:[["general","General commercial / professional activity","No specialised licence currently identified."],["food","Food business","FSSAI becomes relevant."],["import","Import / export","IEC becomes relevant."],["regulated","Regulated / sector-specific activity","Additional regulatory approval may be required."]]},
-{id:"foreign",cat:"Foreign / Cross-border",title:"Is foreign investment or foreign contribution contemplated?",desc:"The source discusses FDI and, for Section 8, FCRA considerations.",opts:[["none","No","Domestic ownership / funding only."],["investment","Foreign investment","Foreign investor / FDI possibility."],["contribution","Foreign contribution / donation","Particularly relevant to non-profit organisations."]]}
+{id:"objective",cat:"Business Objective",title:"What is the main purpose of the business?",desc:"This helps separate normal commercial businesses from non-profit or charitable organisations.",opts:[["profit","For-profit business","The business is intended to earn and distribute commercial profits."],["nonprofit","Non-profit / charitable / social initiative","The organisation will pursue charitable, educational, social, research, sports or similar objectives."]]},
+{id:"founders",cat:"Ownership",title:"How many owners will start the business?",desc:"The number of owners helps identify structures that can legally accommodate the ownership model.",opts:[["one","1 owner","Single entrepreneur / owner."],["two_to_six","2–6 owners","Closely held multi-owner business."],["seven_plus","7 or more owners / members","A larger ownership group; this does not by itself require a Public Limited Company."]]},
+{id:"liability",cat:"Risk & Liability",title:"Do you want to protect your personal assets?",desc:"Choose how important limited personal liability is to you as the owner or founder.",opts:[["critical","Yes — this is very important","I want a structure that generally separates business liability from my personal assets."],["preferred","Yes — preferably","Asset protection is important, but I also want flexibility and simpler administration."],["acceptable","No — personal liability is acceptable","I understand that some structures can expose my personal assets to business liabilities."]]},
+{id:"funding",cat:"Funding",title:"How do you plan to fund the business?",desc:"Funding plans can strongly influence the most suitable legal structure.",opts:[["vc","Investors / equity funding","VC, angel, institutional or other external equity investment."],["bank","Own funds / bank finance / loans","Founder funds, bank finance or debt without an immediate equity-investor requirement."],["public","Public issue / possible listing","Long-term public-market capital or listing is contemplated."]]},
+{id:"compliance",cat:"Compliance Capacity",title:"How much compliance can you handle?",desc:"Choose the level of ongoing governance and filing work you are comfortable maintaining.",opts:[["low","Keep it simple","I prefer the lowest practical compliance burden."],["moderate","Regular compliance is fine","I can manage regular tax and statutory filings."],["high","I can manage detailed compliance","I can maintain corporate records, audits, meetings and annual filings."]]},
+{id:"business",cat:"Business Model",title:"Which best describes your business?",desc:"The business model helps match the structure to how you expect to operate and grow.",opts:[["startup","Startup / scalable business","Growth, investment, ownership transfer and scale matter."],["professional","Professional / consultancy / service","Expertise-led business with partner-driven operations or services."],["small","Small local / owner-managed business","Direct control and lower administrative burden are important."]]},
+{id:"ownership",cat:"Ownership Structure",title:"How do you want ownership to be held?",desc:"Select the legal form in which ownership should be represented.",opts:[["shares","Through shares / shareholding","Ownership should be represented through shares and shareholding percentages."],["partners","Through partner contribution / LLP Agreement","Ownership should be represented through partner contribution and agreed partner rights — not company shares."],["single","Directly in one person's name","One person should own and control the business directly."]]},
+{id:"scale",cat:"Growth",title:"How do you expect the business to grow?",desc:"Your expected scale helps determine how valuable funding flexibility and stronger governance may become.",opts:[["small","Remain small / closely held","No major expansion is expected."],["growth","Grow and expand","More customers, capital, owners or operations are expected."],["large","Large / public-market oriented","Long-term public capital or large-scale institutional growth is contemplated."]]},
+{id:"foreign",cat:"Foreign / Cross-border",title:"Will there be foreign investment or foreign contribution?",desc:"Foreign ownership, investment or contribution can create additional FEMA/FCRA requirements.",opts:[["none","No","Domestic ownership and funding only."],["investment","Foreign investment","A foreign investor or FDI possibility is contemplated."],["contribution","Foreign contribution / donation","Foreign contribution or donation may be received, particularly for non-profit activity."]]}
 ];
 
+const REGQ=[
+{id:"sector",type:"select",cat:"Industry sector",title:"Which industry sector best describes the business?",desc:"The sector decides which industry-specific licences, environmental, safety and regulatory registrations apply.",opts:Object.entries({mfg:"Manufacturing",trd:"Trading and Retail",svc:"IT, Technology and Professional Services",food:"Food and Beverage",pha:"Pharma, Cosmetics and Medical Products",hc:"Healthcare, Hospitals and Diagnostics",re:"Real Estate, Construction and Infrastructure",agr:"Agriculture, Agri-inputs and Food Processing",fin:"Banking, NBFC, FinTech and Financial Services",ins:"Insurance and Insurance Intermediaries",tel:"Telecom, Media, Broadcasting and Digital Content",edu:"Education, Training and EdTech",hos:"Hospitality, Hotels, Restaurants and Tourism",trn:"Transport, Logistics, Warehousing and Courier",auto:"Automotive and Auto Components",chem:"Chemicals, Petrochemicals and Fertilisers",gems:"Gems, Jewellery and Precious Metals",renew:"Renewable Energy, Solar and Power Projects",min:"Mining, Minerals and Natural Resources",sec:"Security, Facility and Manpower Services",waste:"Waste Management and Recycling",text:"Textiles, Apparel and Footwear",aero:"Aerospace and Defence",biotech:"Biotechnology and Life Sciences",ecom:"E-commerce and Online Marketplace",import:"Import / Export and International Trade",print:"Printing, Packaging and Publishing",other:"Other regulated / sector-specific activity"}).map(x=>[x[0],x[1],""])},
+{id:"state",type:"select",cat:"State / UT",title:"In which state or UT will the business operate?",desc:"Professional Tax, Labour Welfare Fund, Shops and Establishments, excise and many licences are state-specific.",opts:["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar","Chandigarh","Dadra, Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"].map(x=>[x,x,""])},
+{id:"supply",cat:"Nature of supply",title:"What will the business supply?",desc:"GST thresholds differ for goods and services.",opts:[["g","Goods","Trading or manufacturing of goods."],["s","Services","Professional, technology or other services."],["b","Both goods and services","Mixed supplies."]]},
+{id:"workforce",cat:"Workforce",title:"How many employees will the business have?",desc:"EPF, ESIC, factory and labour registrations depend on headcount thresholds.",opts:[["0","Fewer than 10","Small team."],["10","10 to 19","ESIC threshold reached."],["20","20 or more","EPF and several labour thresholds reached."]]},
+{id:"ec",cat:"ESIC wage test",title:"Will any employee earn up to Rs. 21,000 per month?",desc:"ESIC covers employees up to the wage ceiling (Rs. 25,000 for persons with disability).",opts:[["y","Yes","At least one employee within the ceiling."],["n","No","All employees earn above the ceiling."]]},
+{id:"contract",cat:"Contract labour",title:"Will you engage workers through contractors?",desc:"Contract labour licensing under the OSH Code applies from 50 contract workers.",opts:[["y","Yes","Outsourced or contract workforce."],["n","No","Direct employees only."]]},
+{id:"premises",cat:"Premises",title:"Where will the business operate from?",desc:"Premises decide Shops and Establishments, trade licence and Fire NOC.",opts:[["r","Rented or owned commercial premises","Shop, office or warehouse."],["f","Factory or industrial premises","Manufacturing or processing unit."],["h","Home-based or online only","No separate commercial premises."]]},
+{id:"interstate",cat:"Inter-state supply",title:"Will you supply goods to customers in other states?",desc:"Inter-state supply of goods requires GST registration regardless of turnover.",opts:[["y","Yes","Inter-state sales."],["n","No","Supply within one state only."]]},
+{id:"packaged",cat:"Packaged goods",title:"Will you sell pre-packaged goods?",desc:"Packaged commodities attract Legal Metrology registration and labelling rules.",opts:[["y","Yes","Packed goods under a brand or label."],["n","No","Loose goods or services only."]]},
+{id:"plant",type:"multi",cat:"Plant and safety",title:"Will operations involve any of the following? Select all that apply.",desc:"These trigger boiler, hazardous waste and explosives or petroleum licences.",opts:[["b","Boiler or steam equipment","Boilers Act, 2025."],["h","Hazardous chemicals, waste or effluent","Pollution control authorisations."],["x","Explosives, petroleum or gas","PESO licences."],["n","None of these","No plant-related licences expected."]]}];
+const ALLQ=QUESTIONS.concat(REGQ);
+
+const DOC_NOTES={
+  "PAN": "Identifies the applicant/entity for tax and statutory registrations.",
+  "Aadhaar": "Supports identity/KYC verification; use another accepted identity document where applicable.",
+  "Identity proof": "Confirms the identity of the proposed owner, director, member or partner.",
+  "Address proof": "Confirms residential or official address; use a current accepted document.",
+  "Recent photographs": "Used for applicant/director/member identification and incorporation records.",
+  "Photograph": "Recent photograph for KYC and incorporation records.",
+  "Email and mobile details": "Required for communication, OTPs and statutory portal access where applicable.",
+  "Class 3 DSC": "Enables secure digital signing of MCA and other electronic statutory filings.",
+  "PAN of directors/shareholders": "KYC and tax identification for proposed company stakeholders.",
+  "PAN of partners": "KYC and tax identification for each partner.",
+  "Ownership proof": "Evidence that the applicant has a lawful right to use the premises.",
+  "Partnership Deed": "Defines partner rights, capital, profit sharing, remuneration and operating terms.",
+  "Nominee consent": "Records the nominee's consent required for an OPC."
+};
+function docText(item){const note=DOC_NOTES[item];return note?`${item} — ${note}`:item;}
+
+
 let state={i:0,answers:{},scores:{},rec:null,docs:{}};
+window.addEventListener("error",ev=>{console.error("Application error:",ev.error||ev.message);if(typeof toast==="function")toast("A temporary error occurred. Please use Back or New Assessment and try again.");});
+window.addEventListener("unhandledrejection",ev=>{console.error("Unhandled promise rejection:",ev.reason);});
 
 function score(a){
   /*
@@ -344,167 +631,54 @@ function alternativeStructures(a,k){
   if(a.objective==="profit")blocked.add("section8");
   return state.rec.ranking.filter(([key])=>key!==k && !blocked.has(key)).slice(0,3);
 }
-function optionLabel(q,v){const o=q.opts.find(x=>x[0]===v);return o?o[1]:"—"}
 
 
 
+function optionLabel(q,v){if(q.type==="multi")return(v||[]).map(x=>(q.opts.find(o=>o[0]===x)||[0,x])[1]).join(", ")||"—";const o=q.opts.find(x=>x[0]===v);return o?o[1]:"—"}
 function renderQuestion(){
- const q=QUESTIONS[state.i],selected=state.answers[q.id],pct=((state.i+1)/QUESTIONS.length)*100;
- document.getElementById("qCount").textContent=`Question ${state.i+1} of ${QUESTIONS.length}`;
- document.getElementById("qCat").textContent=q.cat;
- document.getElementById("qProgress").style.width=pct+"%";
- document.getElementById("question").innerHTML=`
-   <h2 class="q-title">${q.title}</h2>
-   <p class="q-desc">${q.desc}</p>
-   <div class="options">${q.opts.map(o=>`
-     <label class="option ${selected===o[0]?'selected':''}">
-       <input type="radio" name="${q.id}" value="${o[0]}" style="display:none" ${selected===o[0]?'checked':''}>
-       <span class="dot"></span>
-       <span><div class="option-title">${o[1]}</div><div class="option-detail">${o[2]}</div></span>
-     </label>`).join("")}</div>`;
- document.querySelectorAll(".option").forEach(card=>card.addEventListener("click",()=>{
-   const input=card.querySelector("input");state.answers[q.id]=input.value;
-   document.querySelectorAll(`input[name="${q.id}"]`).forEach(x=>x.closest(".option").classList.remove("selected"));
-   input.checked=true;card.classList.add("selected");
- }));
- document.getElementById("prevQ").disabled=state.i===0;
- document.getElementById("nextQ").textContent=state.i===QUESTIONS.length-1?"Generate Intelligence Dashboard →":"Continue →";
+ const q=ALLQ[state.i],sel=state.answers[q.id],pct=((state.i+1)/ALLQ.length)*100,p2=state.i>=QUESTIONS.length,g=id=>document.getElementById(id);
+ g("qCount").textContent=`Question ${state.i+1} of ${ALLQ.length}`;
+ g("qCat").textContent=(p2?"Part 2 · Registration Profile · ":"Part 1 · Business Structure · ")+q.cat;
+ g("qMsg").innerHTML=""; g("qProgress").style.width=pct+"%";g("pt1").className="part "+(p2?"done":"on");g("pt2").className="part "+(p2?"on":"");
+ const on=v=>q.type==="multi"?(sel||[]).includes(v):sel===v;
+ const body=q.type==="select"?`<select class="selbox" id="selq"><option value="">Select…</option>${q.opts.map(o=>`<option value="${o[0]}" ${sel===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select>`:`<div class="options">${q.opts.map(o=>`<label class="option ${on(o[0])?"selected":""}" data-v="${o[0]}"><span class="dot"></span><span><div class="option-title">${o[1]}</div><div class="option-detail">${o[2]}</div></span></label>`).join("")}</div>`;
+ g("question").innerHTML=(state.i===QUESTIONS.length?`<div class="banner"><b>Part 1 complete.</b> Your structure answers are used to personalise the registration engine. Answer ${REGQ.length} short registration-profile questions to identify the registrations and licences that may apply to you.</div>`:"")+`<h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>${body}`;
+ if(q.type==="select")g("selq").onchange=ev=>{state.answers[q.id]=ev.target.value};
+ else document.querySelectorAll(".option").forEach(c=>c.addEventListener("click",()=>{const v=c.dataset.v;
+  if(q.type==="multi"){let a=(state.answers[q.id]||[]).slice();a=a.includes(v)?a.filter(x=>x!==v):(v==="n"?["n"]:a.filter(x=>x!=="n").concat(v));state.answers[q.id]=a;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",a.includes(o.dataset.v)))}
+  else{state.answers[q.id]=v;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",o===c))}}));
+ g("prevQ").disabled=state.i===0;
+ g("nextQ").textContent=state.i===ALLQ.length-1?"Generate Combined Intelligence Dashboard →":"Continue →";
 }
 document.getElementById("prevQ").onclick=()=>{if(state.i>0){state.i--;renderQuestion()}};
 document.getElementById("nextQ").onclick=()=>{
- if(!state.answers[QUESTIONS[state.i].id]){alert("Please select an option before continuing.");return}
- if(state.i<QUESTIONS.length-1){state.i++;renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}
+ const g=id=>document.getElementById(id),m=g("qMsg");m.innerHTML="";
+ const v=state.answers[ALLQ[state.i].id];
+ if(!v||(Array.isArray(v)&&!v.length)){m.innerHTML='<div class="warnbox">Please answer this question before continuing.</div>';return}
+ if(state.i===QUESTIONS.length-1&&state.ackKey!==JSON.stringify(state.answers)){
+  let bad=false;try{state.scores=score(state.answers);bad=recommendation().conflict}catch(e){}
+  if(bad){m.innerHTML='<div class="warnbox"><b>Your Part 1 answers conflict.</b> They do not produce a compatible structure (for example, a single owner seeking VC funding). You can go back and revise them, or continue to the registration questions anyway.<div style="margin-top:9px;display:flex;gap:8px"><button class="btn" id="cBack">Revise my answers</button><button class="btn primary" id="cGo">Continue anyway</button></div></div>';
+   g("cBack").onclick=()=>{m.innerHTML="";state.i=Math.max(0,state.i-1);renderQuestion()};
+   g("cGo").onclick=()=>{state.ackKey=JSON.stringify(state.answers);g("nextQ").click()};return}}
+ if(state.i<ALLQ.length-1){state.i++;renderQuestion();}
  else{generate()}
 };
 
-function metricCards(e){
- const items=[
- ["Liability",e.liability,"shield"],["Compliance",e.compliance,"calendar"],["Funding",e.funding.split(".")[0],"target"],["Audit",e.audit,"file"],
- ["Legal Identity",e.legal,"shield"],["Members",e.members,"grid"],["Ownership",e.ownership,"compare"],["Priority",priority(state.rec.key),"route"]
- ];
- document.getElementById("metrics").innerHTML=items.map(x=>`
- <div class="card metric"><div class="ico" style="width:22px;height:22px">${ICONS[x[2]]}</div><div class="metric-label">${x[0]}</div><div class="metric-value">${x[1]}</div></div>`).join("");
-}
+
+
 function priority(k){return {private_limited:"Incorporation",llp:"LLP Agreement",sole:"Core registrations",partnership:"Partnership Deed",opc:"OPC incorporation",public_limited:"Corporate incorporation",section8:"Section 8 licence"}[k]}
 
-function renderDashboard(){
- const e=ENTITIES[state.rec.key],a=state.answers;
- document.getElementById("heroTitle").textContent=e.name;
- document.getElementById("heroDesc").textContent=e.best+". "+e.legal+". "+e.liability+".";
- document.getElementById("recTitle").textContent=e.name;
- document.getElementById("recDesc").textContent=e.name+" is the current structural fit based on your stated ownership, liability, funding, compliance and growth requirements.";
- document.getElementById("score").textContent=state.rec.fit;
- const ring=2*Math.PI*78;document.getElementById("ringFg").style.strokeDashoffset=ring-(state.rec.fit/100)*ring;
- document.getElementById("recPills").innerHTML=`<span class="pill green">● Current fit ${state.rec.fit}/100</span><span class="pill blue">FY 2026–27</span><span class="pill gray">${e.compliance} compliance</span>`;
- document.getElementById("drivers").innerHTML=drivers(a,state.rec.key).map((x,i)=>`<div class="driver"><div class="driver-num">${i+1}</div><div class="driver-text">${x}</div></div>`).join("");
- // Risk / change sections were intentionally removed from the dashboard UI.
- // Do not write to those retired DOM nodes; doing so prevents the dashboard
- // from rendering after the final questionnaire step.
- metricCards(e);
- document.getElementById("executive").textContent=`Based on the answers provided, the engine identifies ${e.name} as the current structural fit. The assessment considers the organisation's objective, founder count, liability preference, funding strategy, compliance capacity, ownership model and expected scale. The source positions this structure for ${e.best.toLowerCase()}.`;
- document.getElementById("overviewCards").innerHTML=[
- ["Ownership model",e.ownership],["Funding compatibility",e.funding],["Tax position",e.tax],["Audit position",e.audit]
- ].map(x=>`<div class="card text-card"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("");
- document.getElementById("answers").innerHTML=QUESTIONS.map(q=>`<div class="answer-item"><div class="answer-cat">${q.cat}</div><div class="answer-val">${optionLabel(q,a[q.id])}</div></div>`).join("");
- renderAnalysis(e);renderDocs(e);renderCompliance(e);renderRegs(a);renderMatrix();renderAction(e);
- buildPrint(e);
- document.getElementById("assessment").classList.add("hidden");
- document.getElementById("dashboard").classList.remove("hidden");
- window.scrollTo({top:0,behavior:"smooth"});
-}
-function renderAnalysis(e){
- const blocks=[
- ["Structural compatibility gate", state.answers.ownership==="shares" ? "Share-capital ownership selected: LLP and Partnership are excluded because they are partner/contribution-based structures, not ordinary share-capital companies." : state.answers.ownership==="partners" ? "Partner-contribution ownership selected: share-capital company structures are excluded from the primary recommendation path." : "Direct single-owner control selected: the engine evaluates proprietorship / OPC routes before other forms."],
- ["Legal identity",e.legal],["Liability",e.liability],["Members / ownership",e.members],["Ownership mechanics",e.ownership],
- ["Funding implications",e.funding],["Tax position",e.tax],["Compliance burden",e.compliance],["Audit position",e.audit],["Business suitability",e.best]
- ];
- document.getElementById("analysis").innerHTML=blocks.map((x,i)=>`<div class="analysis-item"><h4>${String(i+1).padStart(2,"0")} • ${x[0]}</h4><p>${x[1]}</p></div>`).join("");
- document.getElementById("alternatives").innerHTML=alternativeStructures(state.answers,state.rec.key).map((x,i)=>{
-  const e2=ENTITIES[x[0]];
-  return `<div class="alt"><div class="alt-title">${i+1}. ${e2.name}</div><div class="alt-desc"><b>Why it may fit:</b> ${e2.best}</div><div class="alt-desc"><b>Liability:</b> ${e2.liability}</div><div class="alt-desc"><b>Compliance:</b> ${e2.compliance}</div><div class="alt-desc"><b>Funding:</b> ${e2.funding}</div></div>`
-}).join("") || `<div class="alt"><div class="alt-title">No structurally compatible alternative</div><div class="alt-desc">The selected requirements create a narrow structural route. Review the current recommendation with a qualified professional before implementation.</div></div>`;
-}
-function renderDocs(e){
- state.docs={};let html="";
- e.docs.forEach((g,gi)=>{html+=`<div class="card doc-group"><h4>${g[0]}</h4>${g[1].map((item,ii)=>{let id=gi+"_"+ii;state.docs[id]=false;return `<label class="check"><input type="checkbox" data-doc="${id}"><span>${item}</span></label>`}).join("")}</div>`});
- document.getElementById("documents").innerHTML=html;updateDocs();
- document.querySelectorAll("[data-doc]").forEach(x=>x.onchange=()=>{state.docs[x.dataset.doc]=x.checked;x.closest(".check").classList.toggle("done",x.checked);updateDocs()});
-}
-function updateDocs(){let t=Object.keys(state.docs).length,d=Object.values(state.docs).filter(Boolean).length;document.getElementById("docCount").textContent=`${d} / ${t}`;document.getElementById("docProgress").style.width=(t?d/t*100:0)+"%"}
-function renderCompliance(e){
- const f=document.getElementById("compFilter").value;
- const arr=e.comp.filter(x=>f==="all"||x[0]===f);
- document.getElementById("compliance").innerHTML=arr.map((x,i)=>`<div class="time-item"><div class="time-num">${i+1}</div><div class="time-body"><div class="time-top"><div class="time-title">${x[2]}</div><div class="time-type">${x[0]}</div></div><div class="time-date">${x[1]}</div><div class="time-detail">${x[3]}</div></div></div>`).join("");
-}
+
+
+
+
+
 document.getElementById("compFilter").onchange=()=>state.rec&&renderCompliance(ENTITIES[state.rec.key]);
 
-function renderRegs(a){
-  /* General registration overview — not restricted to any one state. */
-  const regs=[
-    ["GST", a.turnover==="40plus"?"Priority review":a.turnover==="20to40"?"Threshold review":"Conditional",
-      "Evaluate GST registration based on turnover, supply type and compulsory-registration provisions.",
-      "Check aggregate turnover • taxable/exempt supplies • inter-State activity • e-commerce • reverse charge • special categories."],
-    ["Professional Tax", "State-specific",
-      "Professional Tax may apply depending on the state, nature of activity, profession and employer/employee structure.",
-      "Check state rules • professional/employer applicability • employee payroll • registration and payment requirements."],
-    ["EPF", a.employees==="none"?"Conditional":"Workforce review",
-      "EPF is generally an employee-linked compliance requirement and should be evaluated based on workforce and establishment coverage.",
-      "Check employee count • establishment coverage • eligible employees • contractor/workforce arrangements."],
-    ["ESI", a.employees==="none"?"Conditional":"Workforce review",
-      "ESI applicability depends on employee coverage, establishment/activity and applicable statutory conditions.",
-      "Check employee count • wage coverage • establishment/activity • applicable location and coverage rules."],
-    ["FSSAI", a.activity==="food"?"Priority review":"Conditional",
-      "Food businesses should evaluate the appropriate food registration or licence before commencing relevant activities.",
-      "Check food activity • nature of operation • turnover • manufacturing/processing/storage/distribution."],
-    ["Udyam / MSME", "Eligibility review",
-      "Udyam is an MSME registration/classification layer and does not replace entity formation, GST or sector licences.",
-      "Check enterprise classification • investment/turnover criteria • PAN/GST linkage where applicable."],
-    ["Shop & Establishment", "State / local review",
-      "Registration or intimation may apply depending on the state/local framework, establishment type, activity and workforce.",
-      "Check location • establishment type • activity • employee count • registration/intimation requirements."],
-    ["IEC", a.activity==="import"?"Priority review":"Conditional",
-      "Import Export Code should be evaluated where the business undertakes import/export activity covered by the foreign-trade framework.",
-      "Check import/export activity • entity/PAN details • bank account • product-specific permissions."],
-    ["Sector-specific licences", a.activity==="regulated"?"Priority review":"Conditional",
-      "Regulated activities may require additional approvals beyond incorporation and tax registrations.",
-      "Check sector • product/service • premises • environmental/fire/labour requirements • competent regulator." ]
-  ];
-  document.getElementById("registrations").innerHTML=regs.map(r=>`
-    <div class="card reg">
-      <div class="reg-top"><h4>${r[0]}</h4><span class="pill ${r[1].includes("Priority")?"red":r[1].includes("review")||r[1].includes("Workforce")?"amber":"blue"}">${r[1]}</span></div>
-      <p>${r[2]}</p>
-      <div class="reg-next"><b>Applicability checklist</b>${r[3]}</div>
-    </div>`).join("");
-}
-function renderMatrix(){
- const cols=["Parameter","Private Limited","LLP","Proprietorship","Partnership","OPC","Public Limited","Section 8"];
- const rows=[
- ["Legal Status","Separate legal entity","Separate legal entity","No separate legal identity","No separate legal entity","Separate legal entity","Separate legal entity","Separate legal entity"],
- ["Liability","Limited","Limited, subject to exceptions","Unlimited","Unlimited joint & several","Limited","Limited","Limited"],
- ["Minimum Members","2 shareholders + 2 directors","2 partners","1 proprietor","2 partners","1 member + nominee","7 members + 3 directors","2 members + 2 directors"],
- ["Compliance","High","Moderate","Lowest","Moderate","Moderate","Very High","High"],
- ["Audit","Mandatory","Threshold based","Threshold based","Threshold based","Mandatory","Corporate audit","Mandatory"],
- ["Funding","Equity / VC / Angel / PE","Contribution / loans","Owner / loans","Partner contribution / loans","Limited investor appeal","Public capital routes","Donations / grants / CSR / applicable foreign contribution"],
- ["Tax","22% / 25% / 30% as source states","30% + surcharge + cess","Individual tax framework","30% + surcharge + cess","Domestic company framework","Not separately specified in source","12AB / 80G subject to conditions"],
- ["Typical Suitability","Startups / scale-ups / funded","Professional / service / bootstrapped","Solo / local / small","Small / family / professional","Solo corporate entrepreneur","Broader capital / public-market scale","Non-profit / charitable / social"]
- ];
- document.getElementById("matrixHead").innerHTML="<tr>"+cols.map(x=>`<th>${x}</th>`).join("")+"</tr>";
- document.getElementById("matrixBody").innerHTML=rows.map(r=>"<tr>"+r.map(x=>`<td>${x}</td>`).join("")+"</tr>").join("");
-}
-function renderAction(e){
- const items=[
- ["Confirm the structural decision",`Review the ${e.name} recommendation against founder, liability, funding and compliance requirements.`],
- ["Prepare incorporation documents","Complete the entity-specific document checklist shown in the Document Control Room."],
- ["Complete core registration",coreAction(state.rec.key)],
- ["Set up accounting & compliance controls","Create books of account, filing ownership, document storage and deadline tracking from day one."],
- ["Complete ancillary registrations","Evaluate GST, Professional Tax, EPF/ESI, FSSAI, Udyam, Shop & Establishment, IEC and other activity/state-specific registrations."],
- ["Activate the compliance calendar","Track annual, tax, audit and event-based obligations identified in the entity-specific calendar."]
- ];
- document.getElementById("actionPlan").innerHTML=items.map((x,i)=>`<div class="action"><div class="action-num">${String(i+1).padStart(2,"0")}</div><div><h4>${x[0]}</h4><p>${x[1]}</p></div></div>`).join("");
-}
-function coreAction(k){
- return {private_limited:"Proceed through the applicable company incorporation workflow including DSC, name reservation, SPICe+ and constitutional documents.",llp:"Complete DSC, name reservation, incorporation and LLP Agreement/Form 3.",sole:"Establish the proprietorship through the applicable business registrations and banking setup.",partnership:"Prepare the Partnership Deed, registration statement and applicable Registrar of Firms documentation.",opc:"Complete OPC incorporation documentation including nominee consent and applicable incorporation filings.",public_limited:"Complete public-company incorporation with required members, directors, DSC, DIN and constitutional documents.",section8:"Complete Section 8 incorporation and licence documentation including required constitutional declarations."}[k]
-}
+
+
+
+
 
 /* TABS / NAV */
 function activateTab(tab){
@@ -512,144 +686,983 @@ function activateTab(tab){
  document.querySelectorAll(".tab-panel").forEach(x=>x.classList.add("hidden"));
  document.getElementById("panel-"+tab).classList.remove("hidden");
  if(window.innerWidth<901)document.getElementById("sidebar").classList.remove("open");
- document.getElementById("workspace").scrollIntoView({behavior:"smooth",block:"nearest"});
+
 }
 document.querySelectorAll("[data-tab]").forEach(x=>x.addEventListener("click",()=>activateTab(x.dataset.tab)));
 document.querySelectorAll("[data-jump]").forEach(x=>x.addEventListener("click",()=>activateTab(x.dataset.jump)));
 document.getElementById("menuBtn").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
 
 /* NEW */
-document.getElementById("newBtn").onclick=()=>{if(confirm("Start a new assessment? The current assessment will be cleared.")){state={i:0,answers:{},scores:{},rec:null,docs:{}};document.getElementById("dashboard").classList.add("hidden");document.getElementById("assessment").classList.remove("hidden");renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}};
+document.getElementById("newBtn").onclick=function(){const b=this;if(!b.dataset.arm){b.dataset.arm=1;b.dataset.t=b.textContent;b.textContent="Click again to confirm";setTimeout(()=>{delete b.dataset.arm;b.textContent=b.dataset.t},4000);return}
+ delete b.dataset.arm;b.textContent=b.dataset.t;state={i:0,answers:{},scores:{},rec:null,docs:{}};try{RG.reset()}catch(e){console.warn("Registration reset warning",e)};document.getElementById("dashboard").classList.add("hidden");document.getElementById("assessment").classList.remove("hidden");renderQuestion();window.scrollTo({top:0,behavior:"smooth"})};
 
 /* PRINT REPORT */
-function buildPrint(e){
- const a=state.answers;
- const drv=drivers(a,state.rec.key);
- const esc=x=>String(x??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
- const qById=id=>QUESTIONS.find(q=>q.id===id);
- const answers=QUESTIONS.map(q=>`<div class="pcard"><h4>${esc(q.cat)}</h4><p><b>${esc(optionLabel(q,a[q.id]))}</b></p><div class="print-small">${esc(q.title)}</div></div>`).join("");
- const docs=e.docs.map(g=>`<div class="pcard"><h4>${esc(g[0])}</h4><ul>${g[1].map(x=>`<li>☐ ${esc(x)}</li>`).join("")}</ul></div>`).join("");
- const comp=e.comp.map((x,i)=>`<tr><td>${i+1}. ${esc(x[2])}</td><td>${esc(x[0])}</td><td>${esc(x[1])}</td><td>${esc(x[3])}</td></tr>`).join("");
- const regs=[
-  ["GST", a.turnover==="40plus"?"Priority review":a.turnover==="20to40"?"Threshold review":"Conditional", "Evaluate GST registration based on turnover, supply type and compulsory-registration provisions.", "Check aggregate turnover • taxable/exempt supplies • inter-State activity • e-commerce • reverse charge • special categories."],
-  ["Professional Tax", "State-specific", "Professional Tax may apply depending on the state, nature of activity, profession and employer/employee structure.", "Check state rules • professional/employer applicability • employee payroll • registration and payment requirements."],
-  ["EPF", a.employees==="none"?"Conditional":"Workforce review", "EPF is generally an employee-linked compliance requirement and should be evaluated based on workforce and establishment coverage.", "Check employee count • establishment coverage • eligible employees • contractor/workforce arrangements."],
-  ["ESI", a.employees==="none"?"Conditional":"Workforce review", "ESI applicability depends on employee coverage, establishment/activity and applicable statutory conditions.", "Check employee count • wage coverage • establishment/activity • applicable location and coverage rules."],
-  ["FSSAI", a.activity==="food"?"Priority review":"Conditional", "Food businesses should evaluate the appropriate food registration or licence before commencing relevant activities.", "Check food activity • nature of operation • turnover • manufacturing/processing/storage/distribution."],
-  ["Udyam / MSME", "Eligibility review", "Udyam is an MSME registration/classification layer and does not replace entity formation, GST or sector licences.", "Check enterprise classification • investment/turnover criteria • PAN/GST linkage where applicable."],
-  ["Shop & Establishment", "State / local review", "Registration or intimation may apply depending on the state/local framework, establishment type, activity and workforce.", "Check location • establishment type • activity • employee count • registration/intimation requirements."],
-  ["IEC", a.activity==="import"?"Priority review":"Conditional", "Import Export Code should be evaluated where the business undertakes import/export activity covered by the foreign-trade framework.", "Check import/export activity • entity/PAN details • bank account • product-specific permissions."],
-  ["Sector-specific licences", a.activity==="regulated"?"Priority review":"Conditional", "Regulated activities may require additional approvals beyond incorporation and tax registrations.", "Check sector • product/service • premises • environmental/fire/labour requirements • competent regulator."]
- ];
- const registrationCards=regs.map(r=>`<div class="pcard"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h4>${esc(r[0])}</h4><span class="print-badge">${esc(r[1])}</span></div><p>${esc(r[2])}</p><div class="print-check"><b>Applicability checklist</b><br>${esc(r[3])}</div></div>`).join("");
- const analysisBlocks=[
-  ["Structural compatibility gate", a.ownership==="shares" ? "Share-capital ownership selected: LLP and Partnership are excluded because they are partner/contribution-based structures, not ordinary share-capital companies." : a.ownership==="partners" ? "Partner-contribution ownership selected: share-capital company structures are excluded from the primary recommendation path." : "Direct single-owner control selected: the engine evaluates proprietorship / OPC routes before other forms."],
-  ["Legal identity",e.legal],["Liability",e.liability],["Members / ownership",e.members],["Ownership mechanics",e.ownership],["Funding implications",e.funding],["Tax position",e.tax],["Compliance burden",e.compliance],["Audit position",e.audit],["Business suitability",e.best]
- ];
- const analysis=analysisBlocks.map((x,i)=>`<div class="pcard"><h4>${String(i+1).padStart(2,"0")} • ${esc(x[0])}</h4><p>${esc(x[1])}</p></div>`).join("");
- const alts=alternativeStructures(a,state.rec.key);
- const alternatives=alts.map((x,i)=>{const e2=ENTITIES[x[0]];return `<div class="pcard"><h4>Alternative ${i+1}: ${esc(e2.name)}</h4><p><b>Why it may fit:</b> ${esc(e2.best)}</p><p><b>Liability:</b> ${esc(e2.liability)}</p><p><b>Compliance:</b> ${esc(e2.compliance)}</p><p><b>Funding:</b> ${esc(e2.funding)}</p></div>`}).join("") || `<div class="pcard"><h4>No structurally compatible alternative</h4><p>The selected requirements create a narrow structural route. Review the current recommendation with a qualified professional before implementation.</p></div>`;
- const overview=[ ["Ownership model",e.ownership],["Funding compatibility",e.funding],["Tax position",e.tax],["Audit position",e.audit] ];
- const metrics=[["Liability",e.liability],["Compliance",e.compliance],["Funding",e.funding.split(".")[0]],["Audit",e.audit],["Legal Identity",e.legal],["Members",e.members],["Ownership",e.ownership],["Priority",priority(state.rec.key)]];
- const matrixRows=[
-  ["Legal Status","Separate legal entity","Separate legal entity","No separate legal identity","No separate legal entity","Separate legal entity","Separate legal entity","Separate legal entity"],
-  ["Liability","Limited","Limited, subject to exceptions","Unlimited","Unlimited joint & several","Limited","Limited","Limited"],
-  ["Minimum Members","2 shareholders + 2 directors","2 partners","1 proprietor","2 partners","1 member + nominee","7 members + 3 directors","2 members + 2 directors"],
-  ["Compliance","High","Moderate","Lowest","Moderate","Moderate","Very High","High"],
-  ["Audit","Mandatory","Threshold based","Threshold based","Threshold based","Mandatory","Corporate audit","Mandatory"],
-  ["Funding","Equity / VC / Angel / PE","Contribution / loans","Owner / loans","Partner contribution / loans","Limited investor appeal","Public capital routes","Donations / grants / CSR / applicable foreign contribution"],
-  ["Tax","22% / 25% / 30% as source states","30% + surcharge + cess","Individual tax framework","30% + surcharge + cess","Domestic company framework","Not separately specified in source","12AB / 80G subject to conditions"],
-  ["Typical Suitability","Startups / scale-ups / funded","Professional / service / bootstrapped","Solo / local / small","Small / family / professional","Solo corporate entrepreneur","Broader capital / public-market scale","Non-profit / charitable / social"]
- ];
- const action=[
-  ["Confirm the structural decision",`Review the ${e.name} recommendation against founder, liability, funding and compliance requirements.`],
-  ["Prepare incorporation documents","Complete the entity-specific document checklist shown in the Document Control Room."],
-  ["Complete core registration",coreAction(state.rec.key)],
-  ["Set up accounting & compliance controls","Create books of account, filing ownership, document storage and deadline tracking from day one."],
-  ["Complete ancillary registrations","Evaluate GST, Professional Tax, EPF/ESI, FSSAI, Udyam, Shop & Establishment, IEC and other activity/state-specific registrations."],
-  ["Activate the compliance calendar","Track annual, tax, audit and event-based obligations identified in the entity-specific calendar."]
- ];
- const disclaimer="Preliminary decision support only. Verify current law, thresholds, state/local rules and activity-specific requirements before implementation. This report is not legal, tax, accounting, secretarial or regulatory advice, and final responsibility for the structure, registrations, filings and compliance remains with the user.";
- document.getElementById("printReport").innerHTML=`
- <div class="print-page print-cover">
-  <div>
-   <div class="print-brand"><div class="print-mark">BI</div><div><b>Business Structure Intelligence</b><div style="font-size:7px;color:#64748b">Decision & Compliance Engine</div></div></div>
-   <div class="print-title">${esc(e.name)}</div>
-   <div class="print-sub">${esc(e.best)}</div>
-   <div class="print-kpis">${metrics.slice(0,4).map(x=>`<div class="pkpi"><div class="pkpi-label">${esc(x[0])}</div><div class="pkpi-value">${esc(x[1])}</div></div>`).join("")}</div>
-   <div class="pcard" style="margin-top:18px"><h4>Executive Decision</h4><p>Based on the answers provided, the engine identifies <b>${esc(e.name)}</b> as the current structural fit. The assessment considers objective, founder count, liability preference, funding strategy, compliance capacity, ownership model and expected scale.</p></div>
-   <div class="pcard" style="margin-top:9px;background:#fffaf0"><h4>Important limitation</h4><p>${esc(disclaimer)}</p></div>
-  </div>
-  <div class="print-foot">Assessment period: FY 2026–27 • Generated from the current browser session • Business Structure Intelligence</div>
- </div>
 
- <div class="print-page"><div class="print-section-title">1. Decision Dashboard Summary</div>
-  <div class="print-grid2">${metrics.map(x=>`<div class="pcard"><h4>${esc(x[0])}</h4><p>${esc(x[1])}</p></div>`).join("")}</div>
-  <div class="pcard" style="margin-top:10px"><h4>Recommendation</h4><p><b>${esc(e.name)}</b> is the current structural fit based on your stated ownership, liability, funding, compliance and growth requirements.</p></div>
-  <div class="pcard" style="margin-top:10px"><h4>Decision Drivers</h4>${drv.map((x,i)=>`<p><b>${i+1}.</b> ${esc(x)}</p>`).join("")}</div>
-  <div class="pcard" style="margin-top:10px"><h4>Executive Summary</h4><p>Based on the answers provided, the engine identifies ${esc(e.name)} as the current structural fit. The source positions this structure for ${esc(e.best.toLowerCase())}.</p></div>
-  <div class="print-grid2" style="margin-top:10px">${overview.map(x=>`<div class="pcard"><h4>${esc(x[0])}</h4><p>${esc(x[1])}</p></div>`).join("")}</div>
- </div>
-
- <div class="print-page"><div class="print-section-title">2. Assessment Inputs</div><div class="print-grid2">${answers}</div></div>
-
- <div class="print-page"><div class="print-section-title">3. Detailed Analysis</div><div class="print-grid2">${analysis}</div></div>
-
- <div class="print-page"><div class="print-section-title">4. Structurally Compatible Alternatives</div>${alternatives}</div>
-
- <div class="print-page"><div class="print-section-title">5. Incorporation Document Control</div><div class="print-grid2">${docs}</div></div>
-
- <div class="print-page"><div class="print-section-title">6. FY 2026–27 Compliance Calendar</div><table class="print-table"><thead><tr><th>Category</th><th>Frequency / Type</th><th>Obligation</th><th>Details</th></tr></thead><tbody>${comp}</tbody></table></div>
-
- <div class="print-page"><div class="print-section-title">7. Registration & Licensing Overview</div><div class="print-grid2">${registrationCards}</div></div>
-
- <div class="print-page"><div class="print-section-title">8. Business Structure Comparison Matrix</div><table class="print-table"><thead><tr>${["Parameter","Private Limited","LLP","Proprietorship","Partnership","OPC","Public Limited","Section 8"].map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${matrixRows.map(r=>`<tr>${r.map(x=>`<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-
- <div class="print-page"><div class="print-section-title">9. Recommended Execution Plan</div>${action.map((x,i)=>`<div class="pcard" style="margin-bottom:8px"><h4>Step ${i+1} • ${esc(x[0])}</h4><p>${esc(x[1])}</p></div>`).join("")}<div class="pcard" style="margin-top:12px;background:#fffaf0"><h4>Important limitation</h4><p>${esc(disclaimer)}</p></div><div class="print-foot">End of report • Verify the latest applicable legal and regulatory requirements before implementation.</div></div>`;
-}
-document.getElementById("printBtn").onclick=()=>window.print();
+document.getElementById("printBtn").onclick=pdfNow;
 
 
 
-function renderConflict(){
-  const a=state.answers;
-  document.getElementById("heroTitle").textContent="Compatibility Check Required";
-  document.getElementById("heroDesc").textContent="The selected answers do not produce a legally compatible structure in the current decision set. No structure has been recommended.";
-  document.getElementById("recTitle").textContent="No compatible structure identified";
-  document.getElementById("recDesc").textContent="Review the answers below. In particular, check whether the ownership model and funding strategy can operate together under the selected structure.";
-  document.getElementById("score").textContent="—";
-  document.getElementById("ringFg").style.strokeDashoffset=(2*Math.PI*78);
-  document.getElementById("recPills").innerHTML='<span class="pill amber">Compatibility review</span><span class="pill gray">No recommendation made</span>';
-  document.getElementById("drivers").innerHTML=[
-    "Ownership and funding requirements are currently incompatible.",
-    a.ownership==="single"&&a.funding==="vc"?"Single-owner control conflicts with a VC / institutional equity funding route because that funding model requires an investor-compatible ownership structure.":"One or more selected structural requirements exclude every available entity in the current decision set.",
-    "Change the conflicting answer(s) and regenerate the dashboard."
-  ].map((x,i)=>`<div class="driver"><div class="driver-num">${i+1}</div><div class="driver-text">${x}</div></div>`).join("");
-  document.getElementById("metrics").innerHTML=[
-    ["Status","Review required"],["Recommendation","None"],["Ownership",optionLabel(QUESTIONS.find(q=>q.id==="ownership"),a.ownership)],["Funding",optionLabel(QUESTIONS.find(q=>q.id==="funding"),a.funding)]
-  ].map(x=>`<div class="card metric"><div class="metric-label">${x[0]}</div><div class="metric-value">${x[1]}</div></div>`).join("");
-  document.getElementById("executive").textContent="No entity has been recommended because the selected requirements do not leave a structurally compatible option. The tool does not force a recommendation when the answers conflict.";
-  document.getElementById("overviewCards").innerHTML=[
-    ["Ownership selected",optionLabel(QUESTIONS.find(q=>q.id==="ownership"),a.ownership)],
-    ["Funding selected",optionLabel(QUESTIONS.find(q=>q.id==="funding"),a.funding)],
-    ["Next step","Review the conflicting requirements and regenerate the assessment"]
-  ].map(x=>`<div class="card text-card"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("");
-  document.getElementById("answers").innerHTML=QUESTIONS.map(q=>`<div class="answer-item"><div class="answer-cat">${q.cat}</div><div class="answer-val">${optionLabel(q,a[q.id])}</div></div>`).join("");
-  document.getElementById("analysis").innerHTML='<div class="analysis-item"><h4>01 • Compatibility result</h4><p>No legally compatible entity was found for the complete combination of answers. The engine intentionally does not select an entity merely to produce a result.</p></div><div class="analysis-item"><h4>02 • What to review</h4><p>Review the ownership representation and funding strategy first. A share-capital investor route generally requires a share-capital company structure rather than direct single-owner control.</p></div>';
-  document.getElementById("alternatives").innerHTML='<div class="alt"><div class="alt-title">No alternative shown</div><div class="alt-desc">Alternatives are not displayed because there is no compatible primary structure under the selected requirements.</div></div>';
-  document.getElementById("documents").innerHTML='<div class="card text-card"><h3>Document checklist paused</h3><p>Resolve the structural compatibility issue first. Entity-specific documents should not be generated until a compatible structure is selected.</p></div>';
-  document.getElementById("compliance").innerHTML='<div class="card text-card"><h3>Compliance calendar paused</h3><p>Entity-specific compliance obligations will be shown after a compatible structure is identified.</p></div>';
-  renderRegs(a);
-  renderMatrix();
-  document.getElementById("actionPlan").innerHTML='<div class="action"><div class="action-num">01</div><div><h4>Review conflicting answers</h4><p>Revisit ownership and funding requirements.</p></div></div><div class="action"><div class="action-num">02</div><div><h4>Regenerate assessment</h4><p>Return to the questionnaire and update the conflicting input.</p></div></div>';
-  document.getElementById("assessment").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
+
 function generate(){
-  state.scores=score(state.answers);
-  state.rec=recommendation();
-  if(state.rec.conflict){renderConflict();return;}
-  renderDashboard();
+  try{
+    state.scores=score(state.answers);
+    state.rec=recommendation();
+    if(state.rec.conflict){renderConflict();return;}
+    renderDashboard();
+  }catch(e){console.error(e);toast("Could not generate the dashboard ("+e.message+"). Please use Back to review your answers, or reload the page.")}
 }
+const RG=(()=>{
+const E=[];
+const S={mfg:"Manufacturing",trd:"Trading and Retail",svc:"IT, Technology and Professional Services",food:"Food and Beverage",pha:"Pharma, Cosmetics and Medical Products",hc:"Healthcare, Hospitals and Diagnostics",re:"Real Estate, Construction and Infrastructure",agr:"Agriculture, Agri-inputs and Food Processing",fin:"Banking, NBFC, FinTech and Financial Services",ins:"Insurance and Insurance Intermediaries",tel:"Telecom, Media, Broadcasting and Digital Content",edu:"Education, Training and EdTech",hos:"Hospitality, Hotels, Restaurants and Tourism",trn:"Transport, Logistics, Warehousing and Courier",auto:"Automotive and Auto Components",chem:"Chemicals, Petrochemicals and Fertilisers",gems:"Gems, Jewellery and Precious Metals",renew:"Renewable Energy, Solar and Power Projects",min:"Mining, Minerals and Natural Resources",sec:"Security, Facility and Manpower Services",waste:"Waste Management and Recycling",text:"Textiles, Apparel and Footwear",aero:"Aerospace and Defence",biotech:"Biotechnology and Life Sciences",ecom:"E-commerce and Online Marketplace",import:"Import / Export and International Trade",print:"Printing, Packaging and Publishing",other:"Other regulated / sector-specific activity"};
+const ST=[];
+const PT=["Maharashtra","Karnataka","West Bengal","Gujarat","Tamil Nadu","Andhra Pradesh","Telangana","Kerala","Assam","Madhya Pradesh","Odisha","Meghalaya","Tripura","Sikkim","Mizoram","Bihar","Jharkhand","Chhattisgarh","Manipur","Nagaland","Puducherry"];
+const LW=["Maharashtra","Karnataka","Gujarat","Tamil Nadu","Delhi","West Bengal","Andhra Pradesh","Telangana","Kerala","Madhya Pradesh","Punjab","Haryana","Goa","Odisha","Chhattisgarh","Himachal Pradesh","Chandigarh"];
+const DRY=["Gujarat","Bihar","Nagaland"];
+const R=(n,d,s,i,r,sec,x,add)=>({n,d,s,i,r,sec,x:(x||"").split(" "),add});
+const G=[
+  [
+    "A. Entity Formation and Corporate",
+    [
+      {
+        "n": "Entity Registration (Company / LLP / Partnership / Proprietorship)",
+        "d": "Constitutes the legal entity (Companies Act, 2013; LLP Act, 2008; Partnership Act, 1932).",
+        "s": "No",
+        "i": "No",
+        "r": "Company and LLP register with RoC (central). A partnership firm registers with the state Registrar of Firms (optional).",
+        "sec": "*",
+        "x": [
+          ""
+        ],
+        "preview": true
+      },
+      {
+        "n": "Director Identification Number (DIN)",
+        "d": "Unique ID for every director or designated partner (Companies Act, 2013, Sec. 153).",
+        "s": "No",
+        "i": "No",
+        "r": "Directors of companies and designated partners of LLPs.",
+        "sec": "*",
+        "x": [
+          "corp"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Digital Signature Certificate (DSC)",
+        "d": "Needed for MCA, GST, Income Tax and DGFT filings (IT Act, 2000).",
+        "s": "No",
+        "i": "No",
+        "r": "Nationwide.",
+        "sec": "*",
+        "x": [
+          ""
+        ],
+        "preview": true
+      },
+      {
+        "n": "Foreign Investment Reporting (RBI FIRMS portal)",
+        "d": "Entity master and reporting for FDI/ODI (FEMA, 1999; FEMA NDI Rules, 2019).",
+        "s": "No",
+        "i": "Yes",
+        "r": "Only businesses with foreign investment. Sectoral caps and routes apply.",
+        "sec": "*",
+        "x": [
+          "fgn"
+        ],
+        "preview": true
+      }
+    ]
+  ],
+  [
+    "B. Tax Registrations",
+    [
+      {
+        "n": "PAN",
+        "d": "Mandatory identifier for income tax (Income-tax Act).",
+        "s": "No",
+        "i": "No",
+        "r": "Nationwide.",
+        "sec": "*",
+        "x": [
+          ""
+        ],
+        "preview": true
+      },
+      {
+        "n": "TAN",
+        "d": "Needed to deduct or collect tax at source (earlier Sec. 203A of the 1961 Act; check the corresponding 2025 Act provision).",
+        "s": "No",
+        "i": "No",
+        "r": "Nationwide.",
+        "sec": "*",
+        "x": [
+          ""
+        ],
+        "preview": true
+      },
+      {
+        "n": "GST Registration",
+        "d": "Mandatory above threshold turnover, for inter-state supply and for specified persons (CGST Act, 2017, Sec. 22-24).",
+        "s": "Yes",
+        "i": "No",
+        "r": "State-wise, PAN-based. A separate registration is needed in each state of supply or operation.",
+        "sec": "*",
+        "x": [
+          "gst"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Professional Tax (Enrolment and Registration)",
+        "d": "Levied by states on employers and professionals (Art. 276 of the Constitution; state Acts).",
+        "s": "Yes",
+        "i": "No",
+        "r": "Levied in e.g. Maharashtra, Karnataka, West Bengal, Gujarat, Tamil Nadu, Andhra Pradesh, Telangana, Kerala, Assam, Madhya Pradesh. Not in e.g. Delhi, Haryana, Uttar Pradesh, Rajasthan.",
+        "sec": "*",
+        "x": [
+          "pt"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Customs / ICEGATE Registration and AD Code",
+        "d": "Needed for filing bills of entry and shipping bills (Customs Act, 1962).",
+        "s": "No",
+        "i": "No",
+        "r": "Importers and exporters only.",
+        "sec": "*",
+        "x": [
+          "trade"
+        ],
+        "preview": true
+      }
+    ]
+  ],
+  [
+    "C. Business and Trade Registrations",
+    [
+      {
+        "n": "Shops and Establishments Registration",
+        "d": "Regulates working hours, leave and wages for commercial establishments.",
+        "s": "Yes",
+        "i": "No",
+        "r": "State Acts, e.g. Maharashtra Shops and Establishments Act, 2017; Karnataka SE Act, 1961.",
+        "sec": "*",
+        "x": [
+          "pm"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Trade Licence (Municipal / Local Body)",
+        "d": "Permission to operate from premises (state municipal Acts).",
+        "s": "Yes",
+        "i": "No",
+        "r": "Varies by municipal corporation.",
+        "sec": "*",
+        "x": [
+          "pm"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Udyam (MSME) Registration",
+        "d": "MSME status and benefits such as priority-sector lending and delayed-payment protection (MSMED Act, 2006).",
+        "s": "No",
+        "i": "No",
+        "r": "Manufacturing and services.",
+        "sec": "*",
+        "x": [
+          "opt"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Import Export Code (IEC)",
+        "d": "10-character code from DGFT (Foreign Trade (Development and Regulation) Act, 1992).",
+        "s": "No",
+        "i": "No",
+        "r": "International trade only.",
+        "sec": "*",
+        "x": [
+          "trade"
+        ],
+        "preview": true
+      },
+      {
+        "n": "RCMC (Registration-cum-Membership Certificate)",
+        "d": "Needed to claim export benefits under the Foreign Trade Policy.",
+        "s": "No",
+        "i": "Yes",
+        "r": "Export promotion council by product, e.g. EPCH for handicrafts, APEDA for agri-products.",
+        "sec": "mfg,food,agr,pha,trd",
+        "x": [
+          "trade"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Startup India (DPIIT) Recognition",
+        "d": "Optional. Gives tax and compliance benefits.",
+        "s": "No",
+        "i": "No",
+        "r": "Nationwide.",
+        "sec": "*",
+        "x": [
+          "opt"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Trademark / Other IP Registration",
+        "d": "Optional but advisable (Trade Marks Act, 1999).",
+        "s": "No",
+        "i": "No",
+        "r": "Nationwide.",
+        "sec": "*",
+        "x": [
+          "opt"
+        ],
+        "preview": true
+      }
+    ]
+  ],
+  [
+    "D. Labour and Employment",
+    [
+      {
+        "n": "EPF Registration",
+        "d": "Provident fund for 20 or more employees, voluntary below that (EPF & MP Act, 1952, now Code on Social Security, 2020).",
+        "s": "No",
+        "i": "No",
+        "r": "Nationwide.",
+        "sec": "*",
+        "x": [
+          "e20"
+        ],
+        "preview": true
+      },
+      {
+        "n": "ESIC Registration",
+        "d": "Health and social insurance for employees earning up to Rs. 21,000 per month (ESI Act, 1948, now Social Security Code).",
+        "s": "Partly",
+        "i": "No",
+        "r": "Depends on notified areas and the 10-employee threshold.",
+        "sec": "*",
+        "x": [
+          "e10",
+          "ec"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Labour Welfare Fund Registration",
+        "d": "Employer and employee contributions to a state welfare fund.",
+        "s": "Yes",
+        "i": "No",
+        "r": "e.g. Maharashtra, Karnataka, Gujarat, Tamil Nadu, Delhi, West Bengal.",
+        "sec": "*",
+        "x": [
+          "lwf"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Contract Labour Licence / Registration",
+        "d": "Principal employer registration and contractor licence: 20 or more contract workers under CLRA, 1970; 50 or more under OSH Code, 2020.",
+        "s": "Yes",
+        "i": "Yes",
+        "r": "Construction, security, housekeeping, manufacturing and similar industries.",
+        "sec": "mfg,re,sec,trn,min,hos,food,pha",
+        "x": [
+          "e20",
+          "cl"
+        ],
+        "preview": true
+      },
+      {
+        "n": "Factory Licence and Registration",
+        "d": "Needed above the worker threshold (Factories Act, 1948: 10 with power / 20 without; OSH Code, 2020: 20 / 40).",
+        "s": "Yes",
+        "i": "Yes",
+        "r": "Manufacturing units. State Factories Rules apply.",
+        "sec": "mfg,food,pha,agr,min",
+        "x": [
+          "e10"
+        ],
+        "preview": true
+      },
+      {
+        "sec": "re,min,agr",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,re,agr,min",
+        "x": [
+          "ver"
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      }
+    ]
+  ],
+  [
+    "E. Environment, Safety and Local Compliance",
+    [
+      {
+        "sec": "mfg,food,pha,hc,hos,re,min,agr",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,re,min",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,pha,hc",
+        "x": [
+          "hw"
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "*",
+        "x": [
+          "pm"
+        ],
+        "s": "Yes",
+        "i": "No",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,trd,food,pha,agr",
+        "x": [
+          "pk"
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,food,pha,agr",
+        "x": [
+          "bl"
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,food,pha,re,min",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      }
+    ]
+  ],
+  [
+    "F. Industry-Specific Licences",
+    [
+      {
+        "sec": "food,hos,trd,agr",
+        "x": [
+          ""
+        ],
+        "s": "Partly",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "pha,hc,trd",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,trd",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "food,hos,mfg",
+        "x": [
+          "dry"
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "agr",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "agr,trd",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,trn,min",
+        "x": [
+          "px"
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "hc",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "hos,food",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "sec",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "fin",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "trn",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "min",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "re",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      }
+    ]
+  ],
+  [
+    "G. Regulated Financial and Telecom Sectors",
+    [
+      {
+        "sec": "fin",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "fin",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "fin",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "fin",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "tel",
+        "x": [
+          ""
+        ],
+        "s": "Partly",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,svc,tel",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      }
+    ]
+  ],
+  [
+    "H. Additional Registrations (Supplementing the Earlier List)",
+    [
+      {
+        "sec": "*",
+        "x": [
+          "co"
+        ],
+        "s": "No",
+        "i": "No",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "*",
+        "x": [
+          "opt"
+        ],
+        "s": "No",
+        "i": "No",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,trd",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "mfg,food,pha,hos,re,min",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "trd",
+        "x": [
+          ""
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "re,hos,hc",
+        "x": [
+          ""
+        ],
+        "s": "Yes",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "*",
+        "x": [
+          "fo"
+        ],
+        "s": "No",
+        "i": "No",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "hos",
+        "x": [
+          ""
+        ],
+        "s": "Partly",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "*",
+        "x": [
+          "np"
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "*",
+        "x": [
+          "np"
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      },
+      {
+        "sec": "*",
+        "x": [
+          "fc"
+        ],
+        "s": "No",
+        "i": "Yes",
+        "startup": false,
+        "preview": false
+      }
+    ]
+  ]
+];
+
+const PV=[];
+
+const P={
+  "1": [
+    "RoC (MCA) / State Registrar of Firms",
+    "Company: SPICe+ yields CIN, PAN, TAN and DIN together. LLP: FiLLiP, and the LLP Agreement is filed in Form 3 within 30 days. Partnership: registration is optional (Sec. 58), but an unregistered firm cannot sue third parties on contracts (Sec. 69)."
+  ],
+  "2": [
+    "MCA",
+    "Every director needs a DIN (Sec. 153), obtained through SPICe+ or Form DIR-3. LLP designated partners also need one. Periodic KYC through DIR-3 KYC is required, so confirm the current due date."
+  ],
+  "5": [
+    "Income Tax Department",
+    "Every taxpayer needs a PAN. It must be quoted for specified transactions and for GST, TDS and bank compliance. It is allotted on application in the prescribed form, or on incorporation."
+  ],
+  "6": [
+    "Income Tax Department",
+    "Any person who must deduct or collect tax at source must hold a TAN and quote it in TDS/TCS returns, challans and certificates."
+  ],
+  "7": [
+    "GST Council / State tax authority",
+    "Liability arises under Sec. 22 above aggregate turnover of Rs. 40 lakh (goods) or Rs. 20 lakh (services), with lower limits for special category states. Sec. 24 mandates registration regardless of turnover for persons such as e-commerce operators and casual or non-resident taxable persons, and for inter-state supply of goods. Apply within 30 days of liability (Sec. 25). A separate registration is needed in each state."
+  ],
+  "8": [
+    "State commercial tax / labour department",
+    "Art. 276 caps professional tax at Rs. 2,500 per person per year. Employers obtain an enrolment certificate for themselves and a registration certificate to deduct from salaries (e.g. PTEC and PTRC in Maharashtra), and file returns under the state Act."
+  ],
+  "10": [
+    "State Labour Dept / local body",
+    "Registration or intimation is required within the period set by the state Act, commonly 30 days of commencement. The certificate must be displayed. Thresholds differ: Maharashtra's 2017 Act requires registration for 10 or more workers and only intimation for fewer."
+  ],
+  "12": [
+    "Ministry of MSME",
+    "Free, self-declaration on the Udyam portal using Aadhaar and PAN. From 1 April 2025, limits are: micro up to Rs. 2.5 crore investment and Rs. 10 crore turnover; small up to Rs. 25 crore and Rs. 100 crore; medium up to Rs. 125 crore and Rs. 500 crore."
+  ],
+  "13": [
+    "DGFT",
+    "Required to import or export, subject to exceptions. One IEC per PAN, valid for life, fee Rs. 500, with details to be updated or confirmed annually."
+  ],
+  "17": [
+    "EPFO",
+    "Applies to establishments with 20 or more employees, voluntarily below that. Contribution is 12% of wages each by employer and employee on a wage ceiling of Rs. 15,000, with monthly ECR filing by the 15th."
+  ],
+  "18": [
+    "ESIC",
+    "Applies to establishments with 10 or more employees in notified areas, covering employees earning up to Rs. 21,000 per month. Employer contributes 3.25% and employee 0.75% of wages."
+  ],
+  "20": [
+    "State Labour / Licensing Officer",
+    "CLRA, 1970 applies from 20 contract workers; the OSH Code, 2020 raises this to 50. The principal employer registers the establishment and the contractor obtains a licence before engaging workers. Core activities generally cannot be contracted out under the Code."
+  ],
+  "21": [
+    "State Chief Inspector of Factories",
+    "Factories Act, 1948 applies at 10 workers with power or 20 without. The OSH Code, 2020 raises these to 20 and 40. The state approves the site plan, grants registration and licence, and licences are renewed as per state rules."
+  ]
+};
+
+
+
+const D2={
+  "2": "Unique ID for every proposed or existing director (Companies Act, 2013, ss.153-154).",
+  "3": "Needed for MCA, GST, income-tax and DGFT e-filings (IT Act, 2000, s.35).",
+  "5": "Mandatory identifier for income tax (Income-tax Act, 2025, s.262; earlier s.139A of the 1961 Act).",
+  "6": "TAN/TDCA for persons deducting TDS or collecting TCS (Income-tax Act, 2025, s.397(1); earlier s.203A).",
+  "7": "Registration under CGST Act, 2017, ss.22-25, with a fast track under Rule 14A for eligible small B2B suppliers.",
+  "12": "MSME status under MSMED Act, 2006, ss.7-8, with limits revised by S.O. 1364(E) effective 1 April 2025.",
+  "15": "Optional DPIIT recognition under Notification G.S.R. 108(E) dated 4 February 2026.",
+  "17": "Provident fund under the Code on Social Security, 2020, Ch. III, for establishments with 20 or more employees.",
+  "18": "Employees' State Insurance under the Code on Social Security, 2020, Ch. IV, for establishments with 10 or more employees.",
+  "20": "Contract labour licence under the OSH Code, 2020 where 50 or more contract workers are engaged (earlier 20 under CLRA, 1970).",
+  "21": "Factory licence under the OSH Code, 2020: 20 or more workers with power, 40 or more without (earlier 10 and 20)."
+};
+const S2={
+  "18": "No"
+};
+const VS={
+  "5": "V",
+  "6": "V",
+  "7": "V",
+  "12": "V",
+  "15": "V",
+  "17": "S",
+  "18": "S",
+  "20": "V",
+  "21": "V"
+},VT={V:"Verified (2025-26 sources)",S:"Verified (secondary): confirm on official portal",B:"Basis only: confirm threshold on portal"};
+const SR={
+  "1": "S17",
+  "5": "S7, S8",
+  "6": "S8",
+  "7": "S9",
+  "12": "S10",
+  "15": "S11",
+  "17": "S12, S13",
+  "18": "S13",
+  "20": "S2, S6",
+  "21": "S2, S3"
+};
+const DEV=[];
+const CHK=[];
+const SRC=[];
+
+const EM={private_limited:"pvt",public_limited:"pub",opc:"opc",llp:"llp",partnership:"ptn",sole:"prop",section8:"pvt"},C=["pvt","pub","opc"],CL=[...C,"llp"],Z=[0,[]];
+
+
+const EN=()=>state.rec&&state.rec.key?ENTITIES[state.rec.key].name:"Structure to be confirmed";
+const L={2:["Mandatory","m2"],1:["Conditional","m1"],3:["Advisory","m3"],0:["Not applicable","m0"]},NT={2:"Required on the basis of your profile.",1:"Depends on thresholds or facts not yet confirmed. Review before concluding.",3:"Optional but commercially advisable.",0:"Not triggered by your profile."};
+const FB="Refer to the statute cited in the purpose and confirm current rules with the issuing authority.",prov=i=>(P[i]||[0,FB])[1],auth=i=>P[i]?P[i][0]:"Issuing authority under the cited statute",$=i=>document.getElementById(i);
+function fit(r){const a=state.answers,e=EM[state.rec&&state.rec.key]||"",s=a.sector,t=a.state,T={under20:"u20","20to40":"m40","40plus":"m5"}[a.turnover]||"",w=a.workforce,cl=a.contract,ix=a.interstate,N=a.supply,pm=a.premises,ec=a.ec,pk=a.packaged,hz=a.plant||[],f=(a.activity==="import"||a.foreign==="investment")?"y":"n";let k=0,o=0,y=[];
+if(r.sec==="*")y.push("Relevant to every business");else if(!r.sec.split(",").includes(s))return Z;else y.push("Your sector ("+S[s]+") is covered");
+for(const x of r.x){
+if(x==="np"){if(a.objective!=="nonprofit")return Z;y.push("You selected a non-profit objective")}
+if(x==="fc"){if(a.foreign!=="contribution")return Z;y.push("You expect foreign contribution")}
+if(x==="co"){if(e&&!C.includes(e))return Z;y.push("Applies to companies")}
+if(x==="corp"){if(e&&!CL.includes(e))return Z;y.push("Applies to directors and designated partners")}
+if(x==="fo")return Z;
+if(x==="pt"){if(!PT.includes(t))return Z;y.push(t+" levies Professional Tax")}
+if(x==="lwf"){if(!LW.includes(t))return Z;y.push(t+" has a Labour Welfare Fund")}
+if(x==="dry"&&DRY.includes(t))return Z;
+if(x==="trade"||x==="fgn"){if(f==="n")return Z;y.push("Your activity involves trade or foreign investment")}
+if(x==="e10"||x==="e20"){const m=x==="e10"?10:20;if(+w<m)k=1;else y.push("Your workforce meets the "+m+"-employee threshold")}
+if(x==="ec"){if(ec==="n")return Z;y.push("You have employees earning up to Rs. 21,000 per month")}
+if(x==="cl"){if(cl==="n")return Z;y.push("You engage contract labour")}
+if(x==="pm"){if(pm==="r"||pm==="f")y.push("You operate from physical premises");else k=1}
+if(x==="pk"){if(pk==="y")y.push("You sell pre-packaged goods");else k=1}
+if(x==="bl"||x==="hw"||x==="px"){const c={bl:"b",hw:"h",px:"x"}[x];if(hz.includes("n")||!hz.includes(c))return Z;y.push("Your operations involve "+{b:"a boiler",h:"hazardous chemicals or effluent",x:"explosives, petroleum or gas"}[c])}
+if(x==="gst"){if(["m5","m20","o20"].includes(T))y.push("Your turnover exceeds the GST threshold");else if(T==="m40"&&(N==="s"||N==="b"))y.push("Turnover above Rs. 20 lakh crosses the threshold for services or mixed supplies");else if(ix==="y"&&N!=="s")y.push("Inter-state supply of goods requires registration");else k=1}
+if(x==="ver"){k=1;y.push("Rules are still being notified, so verify the state position")}
+if(x==="opt"){if(a.objective==="nonprofit"&&(r.startup||/^Startup/.test(r.n||"")))return Z;o=1}}
+return[o?3:k?1:2,y]}
+function items(){let i=0,a=[];for(const[g,rs]of G)for(const r0 of rs){i++;const r={...r0,d:D2[i]||r0.d,s:S2[i]||r0.s},[v,y]=fit(r);a.push({r,i,v,y,g})}return a}
+let F="all",SS=0,SI=0,QS="";const done={};
+function rcard(x){const{r,i,v,y}=x,d=done[i];return `<div class="oc v${v}${d?" dn":""}"><div class="oh"><span class="no">${i}</span><h3>${r.n}</h3><span class="b ${L[v][1]}">${L[v][0]}</span>${r.add?'<span class="b m">Added</span>':""}</div><p class="vb ${VS[i]||"B"}">${VT[VS[i]||"B"]}${SR[i]?" · Sources: "+SR[i]:""}</p>${y.length?`<p class="why"><b>Why it applies:</b> ${y.join("; ")}.</p>`:""}<p class="lb">Purpose</p><p>${r.d}</p><p class="lb">Key provisions</p><p>${prov(i)}</p><p class="lb">Authority</p><p>${auth(i)}</p><p class="lb">Relevant state(s) / industry</p><p>${r.r}</p><div class="ft"><span><b>State-specific:</b> ${r.s}</span><span><b>Industry-specific:</b> ${r.i}</span><button class="rdone${d?" on":""}" data-d="${i}">${d?"✓ Obtained":"Mark as obtained"}</button></div></div>`}
+const stats=()=>{const a=items(),n=v=>a.filter(x=>x.v===v).length,m=a.filter(x=>x.v===2);return{a,n,m,dn:m.filter(x=>done[x.i]).length}};
+function regPreview() {
+  const all = items().filter(x => x.v !== 0).sort((a, b) => [2, 1, 3].indexOf(a.v) - [2, 1, 3].indexOf(b.v) || a.i - b.i);
+  const visibleItems = all.filter(x => x.r.preview).slice(0, previewLimit(all.length));
+  return { visibleItems, totalItems: all.length, remainingCount: all.length - visibleItems.length };
+}
+
+function render() {
+  const { n, m, dn } = stats();
+  const preview = regPreview();
+  $("navReg").textContent = n(2);
+  $("rgProf").innerHTML = '<b>Profile used:</b> ' + [EN(), ...REGQ.map(q => optionLabel(q, state.answers[q.id]))].map(x => `<span class="ch">${escapeHtml(x)}</span>`).join('');
+  $("rgKpi").innerHTML = [[2, 'Mandatory', n(2)], [1, 'Conditional', n(1)], [3, 'Advisory', n(3)], [0, 'Not applicable', n(0)]].map(([v, title, total]) => `<button type="button" class="card rk k${v}" data-kf="${v}"><span>${title}</span><b>${total}</b></button>`).join('') + `<div class="card rk k4"><span>Readiness (mandatory)</span><b>${m.length ? Math.round(dn / m.length * 100) : 0}%</b><small>${dn} of ${m.length} obtained</small></div>`;
+  $("rgBar").innerHTML = [2, 1, 3].map(v => `<i class="${L[v][1]}" style="width:${preview.totalItems ? n(v) / preview.totalItems * 100 : 0}%"></i>`).join('');
+  $("rgChips").innerHTML = [['all', 'All applicable'], ['2', 'Mandatory'], ['1', 'Conditional'], ['3', 'Advisory'], ['0', 'Not applicable']].map(([v, title]) => `<button type="button" data-rf="${v}" aria-pressed="${F === v}" class="${F === v ? 'on' : ''}">${title}</button>`).join('') + `<button type="button" data-rs="s" aria-pressed="${Boolean(SS)}" class="${SS ? 'on' : ''}">State-specific only</button><button type="button" data-rs="i" aria-pressed="${Boolean(SI)}" class="${SI ? 'on' : ''}">Industry-specific only</button>`;
+  const query = QS.toLowerCase();
+  let html = previewNotice(preview);
+  let matches = 0;
+  for (const status of F === 'all' ? [2, 1, 3] : [+F]) {
+    const rows = preview.visibleItems.filter(x => x.v === status && (!SS || x.r.s !== 'No') && (!SI || x.r.i === 'Yes') && (!query || (x.r.n + x.r.d + x.r.r).toLowerCase().includes(query)));
+    matches += rows.length;
+    if (rows.length) html += `<h2 class="gh">${L[status][0]} (${rows.length})</h2><p class="gn">${NT[status]}</p><div class="og">${rows.map(rcard).join('')}</div>`;
+  }
+  if (!matches) html += '<p class="empty-preview">No preview registrations match these filters.</p>';
+  $("rgOut").innerHTML = html + LockedPremiumSection(preview.remainingCount, 'registration reviews');
+}
+
+function snap(){const{n,m,dn}=stats(),nx=regPreview().visibleItems.find(x=>x.v===2&&!done[x.i]),an=state.answers;
+$("snap").innerHTML=[[2,"Mandatory registrations",n(2),"Open the planner →"],[1,"Conditional registrations",n(1),"Confirm thresholds →"],[4,"Registration readiness",(m.length?Math.round(dn/m.length*100):0)+"%",dn+" of "+m.length+" mandatory obtained"],[3,"Next registration to obtain",nx?nx.r.n:"Full report required","From your mandatory list"]].map(([k,t,v,s])=>`<div class="card rk k${k}" data-kf="${k===4||k===3?2:k}"><span>${t}</span><b style="font-size:${String(v).length>8?"14px":"30px"}">${v}</b><small>${s}</small></div>`).join("");
+$("heroPills").innerHTML=[S[an.sector],an.state,n(2)+" mandatory registrations"].map(x=>`<span class="pill">${x}</span>`).join("")}
+function printHtml(){return registrationPrintHtml(regPreview())}
+function actionText(){return "Review the registration preview."}
+
+function lu(){}
+
+
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-rf],[data-rs],[data-d],[data-kf]");if(!b)return;
+if(b.dataset.rf){F=b.dataset.rf;render()}
+else if(b.dataset.rs){if(b.dataset.rs==="s")SS=!SS;else SI=!SI;render()}
+else if(b.dataset.d){done[b.dataset.d]=!done[b.dataset.d];render();snap()}
+else if(b.dataset.kf){F=b.dataset.kf;render();activateTab("registrations")}});
+$("rgQ").addEventListener("input",ev=>{QS=ev.target.value;render()});
+return{render,snap,lu,printHtml,actionText,getPreview:regPreview,reset(){for(const k in done)delete done[k];F="all";SS=SI=0;QS="";$("rgQ").value=""}}})();
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),6000)}
+function printNow(){
+ try{
+  if(!state.rec||!state.rec.key){toast(state.rec&&state.rec.conflict?"No compatible structure was identified. Revise the assessment before printing.":"Please complete the assessment first.");return}
+  buildPrint(ENTITIES[state.rec.key]);
+  const report=document.getElementById("printReport");
+  if(!report||!report.innerHTML.trim())throw new Error("Print report could not be prepared");
+  // Give the browser one rendering cycle before opening the native print dialog.
+  requestAnimationFrame(()=>setTimeout(()=>{
+   try{window.print()}catch(e){toast("Print could not be opened. Press Ctrl+P (Cmd+P on Mac) to print or save as PDF.");return}
+  },60));
+ }catch(e){console.error("Print error:",e);toast("Print preparation failed. Press Ctrl+P (Cmd+P on Mac) to print or save as PDF.")}
+}
+const pdfClean=s=>String(s==null?"":s).replace(/₹/g,"Rs. ").replace(/→/g,"->").replace(/[✓✔]/g,"Yes").replace(/☐/g,"[ ]").replace(/≥/g,">=").replace(/[^\x09\x0A\x20-\x7E\xA0-\xFF\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026]/g,"");
+function pdfNow(){
+ if(!state.rec||!state.rec.key){toast(state.rec&&state.rec.conflict?"No compatible structure was identified, so the report cannot be built. Revise your Part 1 answers and regenerate.":"Please complete the assessment first.");return}
+ try{
+  if(!window.jspdf||typeof window.jspdf.jsPDF!=="function")throw new Error("PDF engine unavailable");
+  buildPrint(ENTITIES[state.rec.key]);
+  const report=document.getElementById("printReport");
+  if(!report||!report.innerHTML.trim())throw new Error("PDF report could not be prepared");
+  const doc=new window.jspdf.jsPDF({unit:"pt",format:"a4"}),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=40,tx=e=>pdfClean(e.textContent.replace(/\s+/g," ").trim());
+  let y=M,rows=[];
+  const need=n=>{if(y+n>H-50){doc.addPage();y=M}};
+  const tbl=(o,fs)=>{doc.autoTable({startY:y,margin:{left:M,right:M,top:M,bottom:50},theme:"grid",styles:{fontSize:fs||8,cellPadding:4,valign:"top",overflow:"linebreak",textColor:[30,41,59],lineColor:[203,213,225]},headStyles:{fillColor:[11,18,32],textColor:255},alternateRowStyles:{fillColor:[248,250,252]},didParseCell:d=>{d.cell.text=(d.cell.text||[]).map(pdfClean)},...o});y=doc.lastAutoTable.finalY+14};
+  const flush=()=>{if(rows.length){tbl({body:rows,columnStyles:{0:{cellWidth:120,fontStyle:"bold",textColor:[29,78,216]}}});rows=[]}};
+  const pc=el=>{const h=el.querySelector("h4");rows.push([h?tx(h):"",[...el.children].filter(c=>c.tagName!=="H4").map(c=>c.tagName==="UL"?[...c.children].map(li=>"- "+tx(li)).join("\n"):tx(c)).join("\n")])};
+  report.querySelectorAll(".print-page").forEach(pg=>{
+   if(pg.classList.contains("print-cover")){
+    doc.setFillColor(11,18,32);doc.rect(0,0,W,175,"F");
+    doc.setTextColor(147,197,253);doc.setFontSize(9);doc.text("STRUCTURE & REGISTRATION INTELLIGENCE  |  FY 2026-27",M,50);
+    doc.setTextColor(255);doc.setFontSize(26);doc.text(doc.splitTextToSize(pdfClean(pg.querySelector(".print-title").textContent),W-2*M),M,92);
+    doc.setFontSize(11);doc.setTextColor(203,213,225);doc.text(doc.splitTextToSize(pdfClean(pg.querySelector(".print-sub").textContent),W-2*M),M,118);
+    doc.setFontSize(9);doc.text("Prepared on "+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}),M,158);
+    y=200;tbl({body:[...pg.querySelectorAll(".pkpi")].map(k=>[tx(k.querySelector(".pkpi-label")),tx(k.querySelector(".pkpi-value"))]),columnStyles:{0:{cellWidth:120,fontStyle:"bold"}}});
+    pg.querySelectorAll(".pcard").forEach(pc);flush();doc.addPage();y=M;return}
+   const st=pg.querySelector(".print-section-title");
+   if(st){need(70);doc.setFontSize(14);doc.setFont(undefined,"bold");doc.setTextColor(11,18,32);doc.text(tx(st),M,y+12);doc.setDrawColor(184,137,43);doc.setLineWidth(2);doc.line(M,y+19,W-M,y+19);doc.setFont(undefined,"normal");y+=36}
+   [...pg.children].forEach(el=>{
+    if(el===st||el.classList.contains("print-foot"))return;
+    if(el.classList.contains("print-grid2"))el.querySelectorAll(".pcard").forEach(pc);
+    else if(el.classList.contains("pcard"))pc(el);
+    else if(el.tagName==="TABLE"){flush();const nc=el.rows[0].cells.length,reg=nc===5&&/Registration/.test(el.rows[0].textContent),comp6=nc===6&&/Default timing/.test(el.rows[0].textContent);tbl({html:el,columnStyles:reg?{0:{cellWidth:24},1:{cellWidth:92},2:{cellWidth:56},4:{cellWidth:84}}:comp6?{0:{cellWidth:48},1:{cellWidth:70},2:{cellWidth:86},3:{cellWidth:105},4:{cellWidth:120},5:{cellWidth:85}}:undefined},nc>=7?6.5:8)}
+    else{flush();const t=tx(el);if(t){need(34);doc.setFontSize(9);doc.setTextColor(51,65,85);const ln=doc.splitTextToSize(t,W-2*M);doc.text(ln,M,y+8);y+=ln.length*11+10}}
+   });flush();y+=8
+  });
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(100,116,139);doc.setDrawColor(226,232,240);doc.setLineWidth(.5);doc.line(M,H-36,W-M,H-36);doc.text("Business Structure & Registration Intelligence | Preliminary decision support. Verify current law before acting.",M,H-24);doc.text("Page "+i+" of "+n,W-M,H-24,{align:"right"})}
+  window.__lastPdf=doc;
+  const blob=doc.output("blob");
+  if(!blob||!blob.size)throw new Error("Empty PDF generated");
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="Biz_Matrix_35_Percent_Preview.pdf";a.style.display="none";document.body.appendChild(a);a.click();
+  setTimeout(()=>{a.remove();URL.revokeObjectURL(url)},2000);
+  toast("PDF report generated successfully. Check your browser Downloads folder.");
+ }catch(e){
+  console.error("PDF error:",e);
+  toast("PDF download could not be completed. Opening the print dialog so you can choose Save as PDF.");
+  setTimeout(printNow,120);
+ }
+}
+window.addEventListener("beforeprint",()=>{if(state.rec&&state.rec.key)buildPrint(ENTITIES[state.rec.key])});
+
 renderQuestion();

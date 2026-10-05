@@ -5,14 +5,17 @@ Biz Matrix is a static decision-support website that helps Indian founders compa
 ## Current release
 
 - Static HTML, CSS, and vanilla JavaScript; no frontend framework or package install is required.
-- 12-question business assessment and entity recommendation.
-- Seven dashboard sections with a centralized two-item free preview and contact-to-unlock placeholders.
-- Preview-only browser print/PDF generation.
+- Updated 19-question business assessment and entity recommendation from the supplied FY 2026-27 commercial HTML.
+- Seven dashboard sections with a centralized 35% free preview and contact-to-unlock placeholders.
+- Registration applicability across the source's 62 registration rules, with limited public details.
+- Preview-only browser print and downloadable PDF generation.
 - Responsive four-column footer with email-only contact.
 - Static route directories for About, Contact, and the ten requested legal/support routes.
 - GitHub Pages publishes the repository root using its existing GitHub Pages/Jekyll deployment.
 
 Premium content is not delivered in this static release. The visible gate is not server-side authorization and must not be represented as secure paid-content protection.
+
+The preview limit is `floor(total items * 35 / 100)` for each report section. Whole items are rounded down so the preview never exceeds 35%. Filters operate on the same preview selection; switching categories or searching does not reveal more items. Compliance preview entries are distributed across the available lifecycle categories. The registration preview also uses a fixed limited catalogue so filters cannot progressively expose the complete dataset. Assessment questions, the user's own answers, and the recommended entity remain available.
 
 **Payment integration is intentionally disabled in the current release. Premium access is contact-based.** Unlock requests use `mailto:nexifydigital03@gmail.com`. The separate `saas-frontend/` and `saas-backend/` folders contain future payment-integration code and are excluded from the GitHub Pages artifact.
 
@@ -29,6 +32,18 @@ Then open the URL printed by the server. A local server is required to verify cl
 ## Build and preview
 
 There is no compile/build step. The production-ready static files are in the repository root; `github-pages-deployment/` is retained as a reference copy.
+
+The current production files are `index.html`, `css/app.css`, `css/preview.css`, `js/app.js`, `js/preview.js`, and `js/pdf.min.js`. The PDF libraries from the supplied file are bundled locally with their license notices. The unrelated payment frontend is not loaded.
+
+To import a replacement commercial HTML file and verify the preview, install the development-only parsers and DOM checker outside the publishing directory:
+
+```powershell
+npm.cmd install --no-save --prefix "$env:TEMP\bizmatrix-tools" acorn@8.19.0 parse5@8.0.1 linkedom@0.18.13
+node tools/import-commercial.cjs 'C:\path\to\commercial.html'
+node tools/verify-preview.cjs
+```
+
+The import strips locked document, compliance and registration descriptions before writing public assets. `tools/` is excluded from GitHub Pages. Keep the complete commercial source outside this public repository.
 
 ```sh
 npx serve .

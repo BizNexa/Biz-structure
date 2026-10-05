@@ -1,383 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0f172a">
-<meta name="description" content="Professional Business Structure Intelligence & Compliance Planning Tool for India - FY 2026-27">
-<meta name="robots" content="index,follow">
-<title>Biz Matrix | Business Structure Intelligence</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-<style>
-:root{
-  --navy:#0b1220;--navy2:#111c31;--blue:#2563eb;--blue2:#1d4ed8;
-  --cyan:#0891b2;--green:#059669;--amber:#d97706;--red:#dc2626;
-  --ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--soft:#f8fafc;--white:#fff;
-  --shadow:0 10px 35px rgba(15,23,42,.07);--shadow2:0 18px 55px rgba(15,23,42,.10);
-  --radius:18px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:#f4f7fb;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.btn,.tab,.nav-btn{min-height:44px}
-.hidden{display:none!important}
-.app{min-height:100vh}
-.layout{display:flex;min-height:100vh}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:linear-gradient(180deg,#09111f,#0f1b2e);color:#fff;padding:24px 16px;z-index:50;overflow:auto}
-.brand{display:flex;gap:11px;align-items:center;padding:4px 8px 25px}
-.brand-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:grid;place-items:center;font-weight:900;box-shadow:0 8px 22px rgba(37,99,235,.3)}
-.brand-title{font-size:14px;font-weight:850;line-height:1.25}
-.brand-sub{font-size:10px;color:#94a3b8;margin-top:3px}
-.nav-label{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#64748b;font-weight:800;padding:14px 10px 7px}
-.nav-btn{width:100%;border:0;background:transparent;color:#aebbd0;text-align:left;padding:11px 12px;border-radius:11px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;margin:2px 0}
-.nav-btn:hover{background:rgba(255,255,255,.06);color:#fff}
-.nav-btn.active{background:#1d4ed8;color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.22)}
-.nav-icon{width:18px;height:18px;display:grid;place-items:center;flex:none}
-.side-bottom{position:absolute;left:16px;right:16px;bottom:18px}
-.side-note{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);padding:12px;border-radius:13px;color:#94a3b8;font-size:10px;line-height:1.6}
-.main{margin-left:250px;width:calc(100% - 250px);min-width:0}
-.topbar{height:72px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:40}
-.page-title{font-size:16px;font-weight:850}.page-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.top-actions{display:flex;gap:8px;align-items:center}
-.btn{border:1px solid var(--line);background:#fff;color:#334155;border-radius:10px;padding:9px 13px;font-weight:750;font-size:11px;display:inline-flex;align-items:center;gap:7px}
-.btn:hover{background:#f8fafc}
-.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
-.btn.dark{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn.success{background:var(--green);border-color:var(--green);color:#fff}
-.content{padding:26px 30px 50px;max-width:1540px;margin:auto}
-.hero{background:linear-gradient(135deg,#0b1220,#172b4d 65%,#0e7490);border-radius:24px;color:#fff;padding:28px 30px;box-shadow:var(--shadow2);position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-110px;border:45px solid rgba(255,255,255,.035)}
-.hero-grid{display:grid;grid-template-columns:1fr auto;gap:25px;align-items:center;position:relative;z-index:2}
-.kicker{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:850;color:#93c5fd}
-.hero h1{font-size:31px;line-height:1.1;margin:8px 0 8px;letter-spacing:-.03em}
-.hero p{max-width:790px;color:#cbd5e1;line-height:1.65;font-size:12px;margin:0}
-.hero-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.hero .btn{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.14);color:#fff}.hero .btn.primary{background:#3b82f6;border-color:#3b82f6}
-.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
-.metrics{margin-top:17px}
-.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-.metric{padding:17px 18px;min-height:112px;position:relative;overflow:hidden}.metric .ico{position:absolute;right:14px;top:14px;color:#cbd5e1}.metric-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;font-weight:850;color:#94a3b8}.metric-value{font-size:17px;font-weight:900;line-height:1.3;margin-top:11px;max-width:85%}.metric-small{font-size:10px;color:var(--muted);margin-top:5px}
-.section{margin-top:18px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:12px}.section-title{font-size:16px;font-weight:900}.section-sub{font-size:10px;color:var(--muted);margin-top:3px}
-.recommend{padding:22px}.recommend-grid{display:grid;grid-template-columns:210px 1fr 270px;gap:24px;align-items:center}
-.score-wrap{display:flex;justify-content:center}.ring{width:175px;height:175px;position:relative}.ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:12}.ring-bg{stroke:#e8eef7}.ring-fg{stroke:#2563eb;stroke-linecap:round;stroke-dasharray:490;transition:stroke-dashoffset .7s ease}.ring-text{position:absolute;inset:0;display:grid;place-items:center;text-align:center}.ring-number{font-size:38px;font-weight:950;line-height:1}.ring-caption{font-size:9px;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.1em;margin-top:5px}
-.recommend-label{font-size:9px;color:var(--blue);font-weight:900;text-transform:uppercase;letter-spacing:.13em}.recommend h2{font-size:27px;margin:6px 0 7px;letter-spacing:-.025em}.recommend p{font-size:12px;color:var(--muted);line-height:1.7;margin:0}.pillrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
-.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:850}.pill.blue{background:#eff6ff;color:#1d4ed8}.pill.green{background:#ecfdf5;color:#047857}.pill.amber{background:#fffbeb;color:#b45309}.pill.red{background:#fef2f2;color:#b91c1c}.pill.gray{background:#f1f5f9;color:#475569}
-.driver-box{background:#0f172a;border-radius:15px;color:#fff;padding:18px}.driver-box h3{font-size:14px;margin:5px 0 12px}.driver{display:flex;gap:8px;margin:9px 0}.driver-num{width:21px;height:21px;flex:none;border-radius:7px;background:#1d4ed8;display:grid;place-items:center;font-size:9px;font-weight:900}.driver-text{font-size:10px;color:#cbd5e1;line-height:1.55}
-.tabs{display:flex;gap:3px;overflow:auto;border-bottom:1px solid var(--line);padding:0 5px;background:#fff;border-radius:18px 18px 0 0}.tab{border:0;background:transparent;padding:14px 14px 12px;color:#64748b;font-size:10px;font-weight:850;white-space:nowrap;border-bottom:2px solid transparent}.tab.active{color:#1d4ed8;border-color:#2563eb}
-.tab-panel{padding:22px}.summary-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:18px}
-.text-card{padding:20px}.text-card h3{font-size:15px;margin:0 0 7px}.text-card p{font-size:11px;color:var(--muted);line-height:1.7;margin:0}
-.answer-list{display:grid;gap:9px}.answer-item{border-bottom:1px solid #eef2f7;padding-bottom:8px}.answer-item:last-child{border-bottom:0}.answer-cat{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;font-weight:850}.answer-val{font-size:10px;font-weight:750;margin-top:2px}
-.analysis-grid{display:grid;grid-template-columns:1.4fr .7fr;gap:18px}.analysis-list{display:grid;gap:10px}.analysis-item{padding:15px;border:1px solid var(--line);border-radius:14px}.analysis-item h4{font-size:11px;margin:0}.analysis-item p{font-size:10px;color:var(--muted);line-height:1.65;margin:5px 0 0}
-.alt-list{display:grid;gap:9px}.alt{border:1px solid var(--line);border-radius:13px;padding:12px}.alt-title{font-size:11px;font-weight:850}.alt-desc{font-size:9px;color:var(--muted);margin-top:4px;line-height:1.5}
-.doc-head{display:flex;justify-content:space-between;align-items:end}.progress-line{height:7px;background:#edf2f7;border-radius:99px;overflow:hidden;margin:13px 0 17px}.progress-fill{height:100%;background:#10b981;width:0;transition:.35s}
-.doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.doc-group{padding:16px}.doc-group h4{font-size:11px;margin:0 0 9px}.check{display:flex;gap:8px;padding:7px 0;font-size:10px;color:#475569;line-height:1.5}.check input{accent-color:#2563eb;margin-top:2px}.check.done{color:#64748b;text-decoration:line-through}
-.filter{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:750}
-.timeline{display:grid;gap:11px}.time-item{display:grid;grid-template-columns:42px 1fr;gap:12px}.time-num{width:36px;height:36px;border-radius:11px;background:#eff6ff;color:#1d4ed8;display:grid;place-items:center;font-size:10px;font-weight:900}.time-body{border:1px solid var(--line);border-radius:14px;padding:14px}.time-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.time-title{font-size:11px;font-weight:850}.time-type{font-size:8px;font-weight:900;text-transform:uppercase;color:#2563eb}.time-date{font-size:9px;color:#94a3b8;margin-top:3px}.time-detail{font-size:10px;color:#64748b;line-height:1.6;margin-top:7px}
-.reg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.reg{padding:16px}.reg-top{display:flex;justify-content:space-between;gap:7px}.reg h4{font-size:11px;margin:0}.reg p{font-size:9px;color:#64748b;line-height:1.55;margin:9px 0}.reg-next{border-top:1px solid #eef2f7;padding-top:9px;font-size:9px;color:#334155}.reg-next b{font-size:8px;text-transform:uppercase;color:#94a3b8;display:block;margin-bottom:3px}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}.matrix{border-collapse:collapse;width:100%;min-width:1100px;font-size:9px}.matrix th{background:#0f172a;color:#fff;text-align:left;padding:10px;font-size:9px}.matrix td{border-top:1px solid #e5e7eb;padding:10px;vertical-align:top;color:#64748b;line-height:1.45}.matrix td:first-child{font-weight:850;color:#0f172a;background:#f8fafc;position:sticky;left:0;z-index:1}
-.action-list{display:grid;gap:10px;max-width:900px}.action{display:flex;gap:12px;padding:15px;border:1px solid var(--line);border-radius:14px}.action-num{width:32px;height:32px;flex:none;border-radius:10px;background:#eff6ff;color:#1d4ed8;display:grid;place-items:center;font-size:9px;font-weight:900}.action h4{font-size:11px;margin:0}.action p{font-size:10px;color:#64748b;line-height:1.6;margin:4px 0 0}
-.alerts{display:grid;grid-template-columns:1fr 1fr;gap:16px}.alert-card{padding:18px}.alert-card h3{font-size:13px;margin:0}.risk{border:1px solid #fee2e2;background:#fffafa;border-radius:12px;padding:11px;margin-top:8px}.risk.med{border-color:#fde68a;background:#fffdf5}.risk.low{border-color:#bbf7d0;background:#f7fff9}.risk strong{font-size:10px}.risk p{font-size:9px;color:#64748b;line-height:1.5;margin:4px 0 0}
-.footer{padding:22px 4px;text-align:center;font-size:9px;color:#94a3b8}
-.site-footer{margin-top:18px;padding:14px 22px 8px;background:#0b1020;color:#e2e8f0;border-radius:14px}
-.site-footer-grid{display:grid;grid-template-columns:1.35fr 1fr 1fr .95fr;gap:10px 22px;align-items:start}
-.site-footer h2{margin:0 0 4px;color:#c4b5fd;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-.site-footer p{margin:0;color:#9aa8bd;font-size:10.5px;line-height:1.4}
-.site-footer ul{list-style:none;padding:0;margin:0}
-.site-footer a{color:#c4b5fd;text-decoration:none;display:inline;min-height:0;padding:0;font-size:11px;line-height:1.25}
-.site-footer li a{display:inline-block;padding:1px 0}
-.site-footer a:hover{text-decoration:underline;color:#fff}
-#assessment>.site-footer{width:100vw;position:relative;left:50%;transform:translateX(-50%);border-radius:0;margin-top:20px;padding:14px max(18px,calc((100vw - 1080px)/2)) 8px}
-.site-footer a:focus-visible,.btn:focus-visible,.nav-btn:focus-visible,.tab:focus-visible,.option:focus-within{outline:3px solid #60a5fa;outline-offset:3px}
-.locked-premium{margin-top:12px;padding:18px;border:1px solid #bfdbfe;border-radius:14px;background:#eff6ff;color:#172554}
-.locked-premium h3{margin:0 0 6px;font-size:14px}
-.locked-premium p{margin:0 0 12px;font-size:12px;line-height:1.6}
-.locked-premium .btn{min-height:44px}
-.preview-count{font-size:11px;color:#475569;margin:12px 0 0}
-.locked-placeholder{padding:13px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc;color:#334155;font-size:12px}
-.locked-placeholder strong{display:block;margin-bottom:4px}
-.site-footer-bottom{margin-top:8px;padding-top:7px;border-top:1px solid rgba(148,163,184,.28);color:#94a3b8;font-size:10px;text-align:center;display:flex;flex-direction:column;gap:1px;align-items:center}
-.site-footer-bottom p{margin:0;color:#94a3b8;font-size:10px}
-.site-footer-bottom a{font-size:10px}
-.option input[type="radio"]{position:absolute;width:1px;height:1px;opacity:0}
-.table-wrap{max-width:100%;overflow-x:auto}
-body{overflow-x:hidden}
-button,a,input{touch-action:manipulation}
-.assess{max-width:920px;margin:40px auto;padding:0 20px}.assess-card{padding:28px}.assess-top{text-align:center;margin-bottom:14px}.assess-mark{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#2563eb,#06b6d4);color:#fff;display:grid;place-items:center;font-weight:950;margin:0 auto 13px}.assess h1{font-size:31px;line-height:1.12;margin:0;letter-spacing:-.03em}.assess-intro{font-size:11px;color:#64748b;line-height:1.7;max-width:680px;margin:9px auto 0}.q-meta{display:flex;justify-content:space-between;align-items:center;margin:20px 0 8px}.q-count{font-size:10px;font-weight:850}.q-cat{font-size:9px;color:#2563eb;text-transform:uppercase;letter-spacing:.1em;font-weight:900}.qbar{height:6px;background:#edf2f7;border-radius:99px;overflow:hidden}.qbar>div{height:100%;background:#2563eb;transition:.35s}.q-title{font-size:24px;line-height:1.2;margin:26px 0 7px}.q-desc{font-size:11px;color:#64748b;line-height:1.65}.options{display:grid;gap:10px;margin-top:18px}.option{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start;transition:.18s}.option:hover{border-color:#93c5fd;box-shadow:0 7px 20px rgba(15,23,42,.05);transform:translateY(-1px)}.option.selected{border-color:#2563eb;background:#eff6ff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}.dot{width:19px;height:19px;border:2px solid #cbd5e1;border-radius:50%;margin-top:1px;flex:none}.option.selected .dot{border-color:#2563eb;background:#2563eb;box-shadow:inset 0 0 0 4px #fff}.option-title{font-size:12px;font-weight:850}.option-detail{font-size:9px;color:#64748b;line-height:1.5;margin-top:3px}.assess-nav{border-top:1px solid var(--line);margin:23px -28px -28px;padding:15px 28px;display:flex;justify-content:space-between}.mobile-menu{display:none}
-@media(max-width:1150px){.g4{grid-template-columns:repeat(2,1fr)}.recommend-grid{grid-template-columns:180px 1fr}.driver-box{grid-column:1/-1}.reg-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%}.mobile-menu{display:inline-flex}.topbar{padding:0 15px}.content{padding:17px 15px 35px}.hero-grid{grid-template-columns:1fr}.hero-actions{justify-content:flex-start}.summary-grid,.analysis-grid,.alerts{grid-template-columns:1fr}.recommend-grid{grid-template-columns:1fr}.score-wrap{justify-content:flex-start}.doc-grid,.reg-grid{grid-template-columns:1fr}}
-@media(max-width:620px){.g4,.g3,.g2{grid-template-columns:1fr}.hero{padding:21px}.hero h1{font-size:25px}.recommend{padding:17px}.tabs{margin:0 -1px}.tab-panel{padding:16px}.top-actions .secondary-hide{display:none}.assess{margin:18px auto;padding:0 12px}.assess-card{padding:20px}.assess-nav{margin:20px -20px -20px;padding:13px 20px}.q-title{font-size:20px}}
-/* PRINT REPORT */
-#printReport{display:none}
-.print-small{font-size:7.5pt;color:#64748b;margin-top:4px}.print-badge{font-size:7pt;font-weight:800;padding:3px 6px;border:1px solid #cbd5e1;border-radius:999px;white-space:nowrap}.print-check{margin-top:7px;padding:7px;background:#f8fafc;border-radius:6px;font-size:8pt;line-height:1.45}
-@media print{
-  .legal-disclaimer{font-size:9pt!important;padding:8pt!important}
-  @page{size:A4;margin:11mm}
-  body{background:#fff!important;color:#111827!important}
-  .app{display:none!important}
-  #printReport{display:block!important}
-  .print-page{page-break-after:always}
-  .print-page:last-child{page-break-after:auto}
-  .print-cover{min-height:260mm;display:flex;flex-direction:column;justify-content:space-between}
-  .print-brand{display:flex;align-items:center;gap:10px;border-bottom:2px solid #0f172a;padding-bottom:13px}
-  .print-mark{width:34px;height:34px;border-radius:9px;background:#2563eb;color:#fff;display:grid;place-items:center;font-weight:950}
-  .print-title{font-size:29px;font-weight:950;letter-spacing:-.03em;margin-top:35px}
-  .print-sub{font-size:11px;color:#64748b;line-height:1.6;margin-top:8px;max-width:650px}
-  .print-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:22px}
-  .pkpi{border:1px solid #dbe2ea;border-radius:9px;padding:11px}.pkpi-label{font-size:7px;text-transform:uppercase;font-weight:850;color:#94a3b8}.pkpi-value{font-size:13px;font-weight:900;margin-top:5px}
-  .print-section-title{font-size:18px;font-weight:950;border-bottom:1.5px solid #0f172a;padding-bottom:7px;margin-bottom:12px}
-  .print-grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.print-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-  .pcard{border:1px solid #dbe2ea;border-radius:8px;padding:10px;break-inside:avoid}.pcard h4{font-size:9px;margin:0}.pcard p,.pcard li{font-size:8px;color:#475569;line-height:1.5}.pcard p{margin:4px 0 0}.pcard ul{padding-left:14px;margin:5px 0 0}
-  .print-table{width:100%;border-collapse:collapse;font-size:8.5pt}.print-table th{background:#0f172a;color:#fff;text-align:left;padding:6px}.print-table td{border:1px solid #dbe2ea;padding:6px;vertical-align:top;line-height:1.4}.print-table td:first-child{font-weight:850;background:#f8fafc}
-  .print-foot{font-size:7px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:7px;margin-top:15px}
-  .print-page{break-inside:auto}.avoid-break{break-inside:avoid}
-}
-
-/* COMMERCIAL RELEASE UI PATCH — 2026-09-28 */
-.sidebar{
-  display:flex;flex-direction:column;
-  overflow:hidden;
-}
-.sidebar .brand{flex:none}
-.sidebar .nav-label{flex:none}
-.sidebar .nav-btn{flex:none}
-.sidebar .side-bottom{
-  position:static;
-  margin:14px 0 0;
-  margin-top:auto;
-  padding-top:14px;
-  border-top:1px solid rgba(255,255,255,.07);
-  flex:none;
-}
-.sidebar .side-note{
-  max-height:120px;
-  overflow:auto;
-}
-@media(max-width:900px){
-  .sidebar{overflow:auto}
-}
-.topbar{z-index:60}
-.content{padding-top:30px}
-.hero{scroll-margin-top:92px}
-.hero h1{max-width:850px;overflow-wrap:anywhere}
-.hero p{max-width:900px}
-.metric-value{
-  font-size:15px;
-  line-height:1.45;
-  overflow-wrap:anywhere;
-  word-break:normal;
-}
-.metric{min-width:0}
-.metric-label{white-space:nowrap}
-.nav-btn.active{position:relative}
-.nav-btn.active:after{
-  content:"";
-  position:absolute;right:-1px;top:7px;bottom:7px;width:3px;
-  border-radius:3px;background:#93c5fd;
-}
-.database-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  background:#ecfdf5;color:#047857;border:1px solid #bbf7d0;
-  padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900;
-}
-.rule-db{display:grid;gap:10px}
-.rule-filter{
-  display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px
-}
-.rule-filter input,.rule-filter select{
-  border:1px solid var(--line);background:#fff;border-radius:10px;
-  padding:9px 11px;font-size:10px;outline:none
-}
-.rule-table{overflow:auto;border:1px solid var(--line);border-radius:14px}
-.rule-table table{border-collapse:collapse;width:100%;min-width:1200px;font-size:9px}
-.rule-table th{background:#0f172a;color:#fff;padding:10px;text-align:left;white-space:nowrap}
-.rule-table td{padding:10px;border-top:1px solid #e5e7eb;vertical-align:top;color:#475569;line-height:1.55}
-.rule-table td:first-child{font-weight:850;color:#0f172a;background:#f8fafc}
-.status-verified{color:#047857;font-weight:900}
-.status-verify{color:#b45309;font-weight:900}
-.source-link{color:#1d4ed8;text-decoration:none;font-weight:750}
-.source-link:hover{text-decoration:underline}
-.db-notice{
-  background:#f8fbff;border:1px solid #dbeafe;border-radius:14px;
-  padding:14px;margin-bottom:14px;font-size:10px;color:#475569;line-height:1.6
-}
-.db-notice b{color:#0f172a}
-.print-db-note{
-  border:1px solid #dbeafe;background:#f8fbff;border-radius:8px;
-  padding:10px;font-size:9px;line-height:1.5;color:#475569;margin-bottom:12px
-}
-
-/* PRINT READABILITY — intentionally larger than the previous release */
-@media print{
-  .legal-disclaimer{font-size:9pt!important;padding:8pt!important}
-  @page{size:A4;margin:12mm 12mm 13mm}
-  .print-cover{min-height:265mm}
-  .print-title{font-size:30px;line-height:1.15}
-  .print-sub{font-size:11pt;line-height:1.55}
-  .print-brand{font-size:11pt}
-  .pkpi-label{font-size:8pt}
-  .pkpi-value{font-size:12pt;line-height:1.25}
-  .print-section-title{font-size:16pt;line-height:1.25;margin-bottom:12px}
-  .pcard{padding:11px}
-  .pcard h4{font-size:10.5pt;line-height:1.3}
-  .pcard p,.pcard li{font-size:9.5pt;line-height:1.5}
-  .pcard ul{margin-top:6px}
-  .print-table{font-size:8.5pt}
-  .print-table th{font-size:8.5pt;padding:7px;line-height:1.3}
-  .print-table td{font-size:8.5pt;padding:7px;line-height:1.45}
-  .print-foot{font-size:7.5pt;line-height:1.4}
-  .print-grid2{gap:10px}
-  .print-grid3{gap:10px}
-}
+<meta name="description" content="Biz Matrix business structure and registration intelligence for India, FY 2026-27. Free 35% report preview.">
+<title>Biz Matrix | Business Structure &amp; Registration Intelligence</title>
 
 
-/* COMMERCIAL COLOR / PROFESSIONALITY PATCH */
-:root{
-  --purple:#7c3aed;--teal:#0f766e;--sky:#0284c7;--rose:#e11d48;
-}
-.legal-disclaimer{
-  margin:12px 0;padding:11px 13px;border-radius:12px;
-  border:1px solid #fde68a;background:linear-gradient(135deg,#fffbeb,#fff7ed);
-  color:#713f12;font-size:9px;line-height:1.55;
-}
-.hero{
-  background:linear-gradient(135deg,#07111f 0%,#172554 52%,#075985 100%);
-}
-.metric:nth-child(1){border-top:3px solid #2563eb}
-.metric:nth-child(2){border-top:3px solid #7c3aed}
-.metric:nth-child(3){border-top:3px solid #0891b2}
-.metric:nth-child(4){border-top:3px solid #059669}
-.metric:nth-child(5){border-top:3px solid #d97706}
-.metric:nth-child(6){border-top:3px solid #e11d48}
-.metric:nth-child(7){border-top:3px solid #475569}
-.metric:nth-child(8){border-top:3px solid #0f766e}
-.reg:nth-child(3n+1){background:linear-gradient(180deg,#fff,#f8fbff)}
-.reg:nth-child(3n+2){background:linear-gradient(180deg,#fff,#fbf9ff)}
-.reg:nth-child(3n){background:linear-gradient(180deg,#fff,#f6fffc)}
-.alt{transition:.18s;background:linear-gradient(135deg,#fff,#f8fbff)}
-.alt:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(37,99,235,.08)}
-.section-title{letter-spacing:-.01em}
-
-
-.alternatives-note{
-  padding:12px 14px;border-radius:12px;margin-bottom:12px;
-  background:linear-gradient(135deg,#eff6ff,#f5f3ff);
-  border:1px solid #dbeafe;color:#334155;font-size:10px;line-height:1.55
-}
-.alt-title{font-size:12px!important;color:#0f172a}
-.alt-desc{margin-top:6px!important}
-
-
-/* V4 — COLORFUL PROFESSIONAL UI */
-.assess{position:relative}
-.assess:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 12% 8%,rgba(37,99,235,.10),transparent 28%),radial-gradient(circle at 88% 22%,rgba(124,58,237,.09),transparent 25%),linear-gradient(180deg,#f8fbff,#f4f7fb 55%,#fbfaff)}
-.assess-top{background:linear-gradient(135deg,#ffffff,#f7fbff);border:1px solid #dbeafe;border-radius:24px;padding:24px 20px;box-shadow:0 16px 45px rgba(37,99,235,.07)}
-.assess h1{background:linear-gradient(90deg,#0f172a,#2563eb 52%,#7c3aed);-webkit-background-clip:text;background-clip:text;color:transparent}
-.q-cat{background:#eff6ff;border:1px solid #dbeafe;padding:5px 9px;border-radius:999px}
-.qbar>div{background:linear-gradient(90deg,#2563eb,#7c3aed,#06b6d4)}
-.option{background:linear-gradient(135deg,#fff,#fbfdff);position:relative;overflow:hidden}
-.option:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2563eb,#06b6d4);opacity:.18}
-.option:nth-child(2n):before{background:linear-gradient(180deg,#7c3aed,#e11d48)}
-.option:nth-child(3n):before{background:linear-gradient(180deg,#059669,#0891b2)}
-.option.selected{background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-color:#2563eb;box-shadow:0 8px 28px rgba(37,99,235,.12),0 0 0 3px rgba(37,99,235,.07)}
-.option.selected:before{opacity:1}
-.metric{transition:.18s}.metric:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(15,23,42,.10)}
-.section-title{color:#111827}.section-head{border-left:4px solid #2563eb;padding-left:10px}
-.reg{transition:.18s}.reg:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(15,23,42,.09)}
-.reg:nth-child(3n+1){border-top:3px solid #2563eb}.reg:nth-child(3n+2){border-top:3px solid #7c3aed}.reg:nth-child(3n){border-top:3px solid #059669}
-.tabs .tab.active{background:linear-gradient(180deg,#eff6ff,#fff)}
-.legal-disclaimer{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-color:#cbd5e1;color:#475569}
-
-/* V5 — MORE COLOURFUL PREMIUM ASSESSMENT UI */
-body{
-  background:
-    radial-gradient(circle at 8% 12%,rgba(59,130,246,.16),transparent 24%),
-    radial-gradient(circle at 92% 10%,rgba(168,85,247,.14),transparent 22%),
-    radial-gradient(circle at 80% 88%,rgba(20,184,166,.12),transparent 25%),
-    linear-gradient(135deg,#f8fbff 0%,#f7f5ff 48%,#f3fffc 100%);
-}
-.assess{
-  background:
-    radial-gradient(circle at 15% 5%,rgba(37,99,235,.12),transparent 22%),
-    radial-gradient(circle at 88% 15%,rgba(124,58,237,.12),transparent 24%),
-    radial-gradient(circle at 50% 100%,rgba(6,182,212,.08),transparent 28%);
-}
-.assess-top{
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  min-height:86px;padding:14px 20px;
-  background:linear-gradient(135deg,#0b1730 0%,#12305a 55%,#0f766e 100%);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:18px;
-  box-shadow:0 14px 34px rgba(15,23,42,.16);
-  position:relative;overflow:hidden;
-}
-.assess-top:after{
-  content:"";position:absolute;width:170px;height:170px;border-radius:50%;
-  right:-65px;top:-82px;background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:-105px 78px 0 -34px rgba(45,212,191,.10);
-}
-.assess-mark{
-  width:48px;height:48px;margin:0;flex:none;
-  background:linear-gradient(135deg,#2563eb,#14b8a6)!important;
-  border:1px solid rgba(255,255,255,.24);
-  box-shadow:0 8px 20px rgba(0,0,0,.22)!important;
-}
-.assess h1{
-  color:#fff!important;background:none!important;
-  font-size:24px;letter-spacing:-.02em;position:relative;z-index:2;
-}
-.assess-card{
-  border:1px solid rgba(148,163,184,.35);
-  box-shadow:0 18px 50px rgba(30,64,175,.08),0 4px 18px rgba(124,58,237,.05);
-}
-.q-cat{
-  background:linear-gradient(135deg,#eff6ff,#f5f3ff);
-  border-color:#c7d2fe;color:#4338ca;
-}
-.qbar{background:#e8eefb!important}.qbar>div{
-  background:linear-gradient(90deg,#2563eb 0%,#7c3aed 48%,#06b6d4 100%)!important;
-  box-shadow:0 2px 10px rgba(79,70,229,.28);
-}
-.option{
-  border-color:#dbe4f2;
-  box-shadow:0 3px 12px rgba(15,23,42,.025);
-}
-.option:hover{
-  border-color:#93c5fd;
-  transform:translateY(-1px);
-  box-shadow:0 10px 24px rgba(37,99,235,.09);
-}
-.option.selected{
-  background:linear-gradient(135deg,#eaf3ff 0%,#f4edff 55%,#ecfeff 100%)!important;
-  border-color:#6366f1!important;
-  box-shadow:0 12px 30px rgba(79,70,229,.14),0 0 0 3px rgba(99,102,241,.08)!important;
-}
-.assess-nav{
-  background:linear-gradient(90deg,#fbfdff,#f8f5ff,#f2fffd);
-  border-top:1px solid #e2e8f0;
-}
-.assess-nav .btn.primary,#nextBtn,.generate-btn{
-  background:linear-gradient(135deg,#2563eb,#6366f1 52%,#7c3aed)!important;
-  border-color:transparent!important;color:#fff!important;
-  box-shadow:0 10px 24px rgba(79,70,229,.22);
-}
-.assess-nav .btn.primary:hover,#nextBtn:hover,.generate-btn:hover{
-  filter:brightness(1.05);transform:translateY(-1px);
-}
-
-@media(max-width:620px){
-  .assess{margin:16px auto;padding:0 12px}
-  .assess-top{min-height:72px;padding:10px 14px;border-radius:15px;gap:10px}
-  .assess-mark{width:40px;height:40px;border-radius:11px}
-  .assess h1{font-size:19px!important}
-}
-@media(max-width:980px){.site-footer-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.site-footer{padding:22px 18px}.site-footer-grid{grid-template-columns:1fr 1fr;gap:16px 18px}.site-footer-bottom{line-height:1.55}.topbar .btn{min-height:44px}#assessment>.site-footer{padding:22px 18px 14px}}
-</style>
-</head>
+<meta name="robots" content="index,follow"><link rel="canonical" href="https://bizmatrix.in/"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/preview.css"></head>
 
 <body>
 
@@ -386,23 +15,25 @@ body{
   <!-- ASSESSMENT -->
   <section id="assessment" class="assess">
     <div class="assess-top">
-      <div class="assess-mark">BI</div>
-      <h1>Business Structure Intelligence</h1>
-    </div>
+      <div class="assess-mark">BM</div>
+      <h1>Biz Matrix</h1>
+    <p class="assess-intro">Business Structure &amp; Registration Intelligence · FY 2026–27</p><span class="preview-badge">35% Free Preview</span></div>
 
+    <div class="parts"><div id="pt1" class="part on"><i>1</i><span>Business Structure<small>9 questions</small></span></div><div class="part-line"></div><div id="pt2" class="part"><i>2</i><span>Registration Profile<small>10 questions</small></span></div></div>
     <div class="card assess-card">
       <div class="q-meta">
-        <div id="qCount" class="q-count">Question 1 of 12</div>
+        <div id="qCount" class="q-count">Question 1 of 9</div>
         <div id="qCat" class="q-cat">Business objective</div>
       </div>
-      <div class="qbar"><div id="qProgress" style="width:8.33%"></div></div>
-      <div id="question"></div>
+      <div class="qbar"><div id="qProgress" style="width:11.11%"></div></div>
+      <div id="question"></div><div id="qMsg"></div>
       <div class="assess-nav">
         <button class="btn" id="prevQ">← Back</button>
         <button class="btn primary" id="nextQ">Continue →</button>
       </div>
     </div>
-    <footer class="site-footer">
+    <div class="footer">Two-part assessment • Preliminary decision support • Verify applicable law before filing</div>
+  <footer class="site-footer">
       <div class="site-footer-grid">
         <section>
           <h2>About Us</h2>
@@ -439,15 +70,14 @@ body{
         <p><a href="mailto:nexifydigital03@gmail.com">nexifydigital03@gmail.com</a> · Monday–Saturday, 10:00 AM – 6:00 PM IST</p>
         <p>© 2026 Biz Matrix. All rights reserved.</p>
       </div>
-    </footer>
-  </section>
+    </footer></section>
 
   <!-- DASHBOARD -->
   <section id="dashboard" class="hidden">
-    <aside class="sidebar" id="sidebar" aria-label="Dashboard navigation">
+    <aside class="sidebar" id="sidebar">
       <div class="brand">
         <div class="brand-mark">BI</div>
-        <div><div class="brand-title">Business Structure<br>Intelligence</div><div class="brand-sub">Decision & Compliance Engine</div></div>
+        <div><div class="brand-title">Biz Matrix</div><div class="brand-sub">Decision &amp; Compliance Engine</div></div>
       </div>
 
       <div class="nav-label">Decision</div>
@@ -457,11 +87,13 @@ body{
       <div class="nav-label">Implementation</div>
       <button class="nav-btn" data-tab="documents"><span class="nav-icon" data-icon="file"></span>Document Control</button>
       <button class="nav-btn" data-tab="compliance"><span class="nav-icon" data-icon="calendar"></span>Compliance Calendar</button>
-      <button class="nav-btn" data-tab="registrations"><span class="nav-icon" data-icon="shield"></span>Registration Stack</button>
+      <button class="nav-btn" data-tab="registrations"><span class="nav-icon" data-icon="shield"></span>Registration Planner <span id="navReg" class="pill blue" style="margin-left:auto">0</span></button>
 
       <div class="nav-label">Comparison</div>
       <button class="nav-btn" data-tab="comparison"><span class="nav-icon" data-icon="compare"></span>Entity Matrix</button>
       <button class="nav-btn" data-tab="action"><span class="nav-icon" data-icon="route"></span>Execution Plan</button>
+
+      <div class="nav-label">Reference</div>
 
       <div class="side-bottom">
         <div class="side-note">
@@ -474,14 +106,14 @@ body{
     <div class="main">
       <div class="topbar">
         <div style="display:flex;align-items:center;gap:10px">
-          <button class="btn mobile-menu" id="menuBtn" type="button" aria-label="Open navigation menu" aria-expanded="false">☰</button>
-          <div><div class="page-title" id="topTitle">Business Structure Guidance Dashboard</div><div class="page-sub">FY 2026–27 • Professional advisory workflow</div></div>
+          <button class="btn mobile-menu" id="menuBtn" aria-label="Open navigation" aria-expanded="false">☰</button>
+          <div><div class="page-title" id="topTitle">Business Structure and Registration Dashboard</div><div class="page-sub">FY 2026–27 • Professional advisory workflow</div></div>
         </div>
         <div class="top-actions">
           <button class="btn secondary-hide" id="newBtn">↻ New Assessment</button>
-          <button class="btn primary" id="printBtn">▣ Generate Free Preview PDF</button>
+          <button class="btn primary" id="printBtn">Download Preview PDF</button>
         </div>
-      </div>
+      </div><div class="preview-status"><span class="preview-badge">35% Free Preview</span><a href="contact/">Request Full Report</a></div>
 
       <div class="content">
         <div class="hero">
@@ -489,7 +121,7 @@ body{
             <div>
               <div class="kicker">Assessment complete • FY 2026–27</div>
               <h1 id="heroTitle">Private Limited Company</h1>
-              <p id="heroDesc"></p>
+              <p id="heroDesc"></p><div class="pillrow" id="heroPills"></div>
             </div>
             <div class="hero-actions">
               <button class="btn primary" data-jump="documents">Prepare Documents →</button>
@@ -497,6 +129,10 @@ body{
             </div>
           </div>
         </div>
+
+
+
+        <div class="grid g4 snap" id="snap"></div>
 
         <div class="grid g4 metrics" id="metrics"></div>
 
@@ -528,17 +164,17 @@ body{
         </div>
 
         <div class="section card" id="workspace">
-          <div class="tabs" role="tablist" aria-label="Assessment report sections">
-            <button class="tab active" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview" data-tab="overview">Executive Summary</button>
-            <button class="tab" id="tab-analysis" role="tab" aria-selected="false" aria-controls="panel-analysis" data-tab="analysis">Detailed Analysis</button>
-            <button class="tab" id="tab-documents" role="tab" aria-selected="false" aria-controls="panel-documents" data-tab="documents">Documents</button>
-            <button class="tab" id="tab-compliance" role="tab" aria-selected="false" aria-controls="panel-compliance" data-tab="compliance">Compliance</button>
-            <button class="tab" id="tab-registrations" role="tab" aria-selected="false" aria-controls="panel-registrations" data-tab="registrations">Registrations</button>
-            <button class="tab" id="tab-comparison" role="tab" aria-selected="false" aria-controls="panel-comparison" data-tab="comparison">Entity Matrix</button>
-            <button class="tab" id="tab-action" role="tab" aria-selected="false" aria-controls="panel-action" data-tab="action">Action Plan</button>
+          <div class="tabs">
+            <button class="tab active" data-tab="overview">Executive Summary</button>
+            <button class="tab" data-tab="analysis">Detailed Analysis</button>
+            <button class="tab" data-tab="documents">Documents</button>
+            <button class="tab" data-tab="compliance">Compliance</button>
+            <button class="tab" data-tab="registrations">Registration Planner</button>
+            <button class="tab" data-tab="comparison">Entity Matrix</button>
+            <button class="tab" data-tab="action">Action Plan</button>
           </div>
 
-          <div class="tab-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+          <div class="tab-panel" id="panel-overview">
             <div class="summary-grid">
               <div class="grid" style="gap:12px">
                 <div class="text-card card"><h3>Executive Decision Summary</h3><p id="executive"></p></div>
@@ -551,7 +187,7 @@ body{
             </div>
           </div>
 
-          <div class="tab-panel hidden" id="panel-analysis" role="tabpanel" aria-labelledby="tab-analysis">
+          <div class="tab-panel hidden" id="panel-analysis">
             <div class="analysis-grid">
               <div><div class="section-head"><div><div class="section-title">Detailed Structure Analysis</div><div class="section-sub">Source-aligned legal, ownership, funding, tax, audit and compliance interpretation.</div></div></div><div class="analysis-list" id="analysis"></div></div>
               <div>
@@ -563,30 +199,34 @@ body{
             </div>
           </div>
 
-          <div class="tab-panel hidden" id="panel-documents" role="tabpanel" aria-labelledby="tab-documents">
+          <div class="tab-panel hidden" id="panel-documents">
             <div class="doc-head"><div><div class="section-title">Incorporation Document Control Room</div><div class="section-sub">Tick each item as it is collected or prepared.</div></div><div><b id="docCount" style="font-size:13px">0 / 0</b><div class="section-sub">completed</div></div></div>
             <div class="progress-line"><div id="docProgress" class="progress-fill"></div></div>
             <div class="doc-grid" id="documents"></div>
           </div>
 
-          <div class="tab-panel hidden" id="panel-compliance" role="tabpanel" aria-labelledby="tab-compliance">
-            <div class="section-head"><div><div class="section-title">FY 2026–27 Compliance Calendar</div><div class="section-sub">Initial, annual, tax, audit and event-based obligations.</div></div><select class="filter" id="compFilter"><option value="all">All obligations</option><option>Initial</option><option>Annual</option><option>Tax</option><option>Audit</option><option>Event Based</option><option>State</option><option>Employees</option></select></div>
+          <div class="tab-panel hidden" id="panel-compliance">
+            <div class="section-head"><div><div class="section-title">FY 2026–27 Compliance Intelligence</div><div class="section-sub">Detailed annual, tax, audit, labour, GST and event-based obligations • Position aligned to the Compliance Intelligence Baseline verified to 5 October 2026.</div></div><select class="filter" id="compFilter"><option value="all">All obligations</option><option>Initial</option><option>Annual</option><option>Tax</option><option>Audit</option><option>Event Based</option><option>State</option><option>Employees</option></select></div>
             <div class="timeline" id="compliance"></div>
           </div>
 
-          <div class="tab-panel hidden" id="panel-registrations" role="tabpanel" aria-labelledby="tab-registrations">
-            <div class="section-title">Ancillary Registration & Licensing Planner</div>
-            <div class="section-sub" style="margin-bottom:14px">Each card identifies the legal trigger to test, the factual inputs required, and the official reference point. Entity incorporation alone does not automatically trigger every registration.</div>
-            <div class="reg-grid" id="registrations"></div>
+          <div class="tab-panel hidden" id="panel-registrations">
+            <div class="section-title">Registration Planner</div>
+            <div class="section-sub" style="margin-bottom:12px">Registrations and licences applicable to your business structure and registration profile, reconciled to the Research Memorandum (verified position as on 3 October 2026). Mark each as obtained to track readiness.</div>
+            <div class="rgprof" id="rgProf"></div>
+            <div class="grid g4" id="rgKpi" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"></div>
+            <div class="rbar" id="rgBar"></div>
+            <div class="rgtools"><div class="fl" id="rgChips"></div><input type="text" id="rgQ" placeholder="Search name, Act or keyword"></div>
+            <div id="rgOut"></div>
           </div>
 
-          <div class="tab-panel hidden" id="panel-comparison" role="tabpanel" aria-labelledby="tab-comparison">
+
+          <div class="tab-panel hidden" id="panel-comparison">
             <div class="section-title">Business Structure Matrix</div>
             <div class="section-sub" style="margin-bottom:13px">Comparative decision view based on the supplied source material.</div>
             <div class="table-wrap"><table class="matrix"><thead id="matrixHead"></thead><tbody id="matrixBody"></tbody></table></div>
-            <div id="matrixGate"></div>
-          </div>
-          <div class="tab-panel hidden" id="panel-action" role="tabpanel" aria-labelledby="tab-action">
+          <div id="matrixGate"></div></div>
+          <div class="tab-panel hidden" id="panel-action">
             <div class="section-title">Recommended Execution Plan</div>
             <div class="section-sub" style="margin-bottom:14px">Move from decision to implementation without losing compliance tasks.</div>
             <div class="action-list" id="actionPlan"></div>
@@ -594,7 +234,10 @@ body{
         </div>
 
         <div class="legal-disclaimer"><b>Important limitation:</b> Preliminary guidance only. Verify current law, thresholds and activity/state-specific requirements before acting. Final responsibility for the chosen structure, registrations and filings rests with the user.</div>
-        <footer class="site-footer">
+        <div class="footer">
+          Business Structure Intelligence • Commercial Release v1.0 • FY 2026–27 • Verify amendment-sensitive and state/activity-specific requirements before filing.
+        </div>
+      <footer class="site-footer">
       <div class="site-footer-grid">
         <section>
           <h2>About Us</h2>
@@ -631,824 +274,17 @@ body{
         <p><a href="mailto:nexifydigital03@gmail.com">nexifydigital03@gmail.com</a> · Monday–Saturday, 10:00 AM – 6:00 PM IST</p>
         <p>© 2026 Biz Matrix. All rights reserved.</p>
       </div>
-    </footer>
-      </div>
+    </footer></div>
     </div>
   </section>
 </div>
 
+<div id="toast"></div>
 <!-- PRINT REPORT -->
 <section id="printReport"></section>
 
-<script>
-const ICONS={
-grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
-target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3"/></svg>',
-file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
-calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
-shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 3v5c0 5-3.3 8.2-8 10-4.7-1.8-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
-compare:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 4H4v16h4M16 4h4v16h-4M10 8h4M10 12h4M10 16h4"/></svg>',
-route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 5h5a4 4 0 014 4v6M17 19h-5a4 4 0 01-4-4V9"/></svg>'
-};
-
-const APP_CONFIG=Object.freeze({
-  productName:"Biz Matrix",
-  supportEmail:"nexifydigital03@gmail.com",
-  premiumMode:"contact",
-  paymentEnabled:false,
-  freePreviewDefault:2,
-  freePreviewLimits:Object.freeze({
-    executiveSummary:2,
-    detailedAnalysis:2,
-    documents:2,
-    compliance:2,
-    registrations:2,
-    entityMatrix:2,
-    actionPlan:2
-  })
-});
-const ACCESS_STATE=Object.freeze({FREE:"FREE",PREMIUM:"PREMIUM",PENDING:"PENDING",UNAUTHORIZED:"UNAUTHORIZED"});
-const AccessProvider=Object.freeze({
-  getState:()=>APP_CONFIG.premiumMode==="contact"?ACCESS_STATE.FREE:ACCESS_STATE.UNAUTHORIZED,
-  getUnlockHref:()=>createUnlockEmail(),
-  requestUnlock:()=>{window.location.href=createUnlockEmail()}
-});
-function getPreviewItems(items,sectionKey,totalItems=items.length){
-  const limit=APP_CONFIG.freePreviewLimits[sectionKey]??APP_CONFIG.freePreviewDefault;
-  const visibleItems=items.slice(0,limit);
-  const total=Math.max(visibleItems.length,Number.isFinite(totalItems)?totalItems:items.length);
-  const remainingCount=Math.max(0,total-visibleItems.length);
-  return {
-    visibleItems,
-    lockedItems:Array.from({length:remainingCount},(_,index)=>({locked:true,index})),
-    totalItems:total,
-    remainingCount
-  };
-}
-function createUnlockEmail(){
-  const assessment=typeof state!=="undefined"&&state.rec?ENTITIES[state.rec.key].name:"Not completed";
-  const body=[
-    "Name:",
-    "Email:",
-    `Assessment: ${assessment}`,
-    "Requested report: Full Biz Matrix report",
-    `Date: ${new Date().toLocaleDateString("en-IN")}`,
-    "Additional information:"
-  ].join("\n");
-  return `mailto:${APP_CONFIG.supportEmail}?subject=${encodeURIComponent("Biz Matrix – Full Report Access Request")}&body=${encodeURIComponent(body)}`;
-}
-function LockedPremiumSection(remainingCount,label){
-  if(!remainingCount)return "";
-  const noun=remainingCount===1?"item":"items";
-  const message=label==="full report"
-    ?"Premium content is unavailable in this static release until server-side entitlement and delivery are implemented. Request the full report by email."
-    :`Additional analysis available in the full Biz Matrix report. ${remainingCount} more ${label||noun} available in the full report. Premium content is unavailable in this static release until server-side entitlement and delivery are implemented.`;
-  return `<aside class="locked-premium" aria-label="Premium content locked">
-    <h3>🔒 Premium Content</h3>
-    <p>${message}</p>
-    <a class="btn primary" href="${AccessProvider.getUnlockHref()}" aria-label="Contact us to request the full report">Contact Us to Unlock</a>
-  </aside>`;
-}
-function LockedPremiumPlaceholder(remainingCount,label){
-  if(!remainingCount)return "";
-  return `<div class="locked-placeholder" role="note"><strong>🔒 Premium Content</strong>${remainingCount} additional ${label||"items"} are unavailable in this static preview. Premium content requires server-side entitlement verification.</div>`;
-}
-document.querySelectorAll('[data-icon]').forEach(x=>x.innerHTML=ICONS[x.dataset.icon]);
-
-const ENTITIES={
-  "private_limited": {
-    "name": "Private Limited Company",
-    "legal": "Separate legal entity",
-    "liability": "Limited to unpaid share capital",
-    "compliance": "High",
-    "funding": "Equity, preference shares, CCPS, ESOPs, debentures, VC, angel and PE funding are identified in the source.",
-    "ownership": "Shareholders own through shares; Board of Directors manages company affairs.",
-    "best": "Startups, scale-ups, funded businesses and businesses expecting outside investors.",
-    "docs": [
-      [
-        "Directors & Shareholders",
-        [
-          "PAN of directors/shareholders",
-          "Aadhaar / identity proof"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Initial",
-        "Within 30 days",
-        "First Board Meeting",
-        "First Board meeting within 30 days of incorporation."
-      ],
-      [
-        "Initial",
-        "Within 30 days",
-        "First Auditor / ADT-1",
-        "Appointment of first auditor and related filing requirements."
-      ]
-    ],
-    "docsTotal": 20,
-    "compTotal": 10
-  },
-  "llp": {
-    "name": "Limited Liability Partnership",
-    "legal": "Separate legal entity",
-    "liability": "Limited to agreed contribution, subject to applicable exceptions",
-    "compliance": "Moderate",
-    "funding": "Partner contribution and loans; no ordinary equity-share funding route.",
-    "ownership": "Partners hold interests through capital contribution and the LLP Agreement.",
-    "best": "Professional firms, consultancies, bootstrapped SMEs and service businesses.",
-    "docs": [
-      [
-        "Partners & Designated Partners",
-        [
-          "PAN",
-          "Aadhaar / passport / identity proof"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Initial",
-        "Within 30 days",
-        "LLP Agreement — Form 3",
-        "File the LLP Agreement through the applicable Form 3 process."
-      ],
-      [
-        "Annual",
-        "30 May 2027",
-        "Form 11 — Annual Return",
-        "Reports partners, designated partners, contribution and changes."
-      ]
-    ],
-    "docsTotal": 20,
-    "compTotal": 8
-  },
-  "sole": {
-    "name": "Sole Proprietorship",
-    "legal": "No separate legal identity from proprietor",
-    "liability": "Unlimited personal liability",
-    "compliance": "Lowest",
-    "funding": "Owner-funded / loans; not an equity-investor structure.",
-    "ownership": "Complete direct control by proprietor.",
-    "best": "Solo freelancers, small shopkeepers, local traders and small owner-managed businesses.",
-    "docs": [
-      [
-        "Proprietor KYC",
-        [
-          "PAN",
-          "Aadhaar"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Tax",
-        "Annual",
-        "ITR-3 / ITR-4",
-        "Return selection depends on applicable books/presumptive-tax conditions."
-      ],
-      [
-        "Tax",
-        "Quarterly where applicable",
-        "Advance Tax",
-        "Quarterly advance tax where applicable."
-      ]
-    ],
-    "docsTotal": 18,
-    "compTotal": 8
-  },
-  "partnership": {
-    "name": "Partnership Firm",
-    "legal": "No separate legal entity",
-    "liability": "Unlimited joint and several liability",
-    "compliance": "Moderate",
-    "funding": "Partner contribution / loans; cannot issue ordinary shares to equity investors.",
-    "ownership": "Partners operate according to the Partnership Deed.",
-    "best": "Small traders, family businesses and professional partnerships.",
-    "docs": [
-      [
-        "Partner KYC",
-        [
-          "PAN of partners",
-          "Aadhaar / Voter ID / Passport"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Annual",
-        "Annual",
-        "Tax Year 2026–27 return form — to be confirmed from the Income Tax Department notification before filing.",
-        "Income-tax return for the firm/LLP. For Tax Year 2026–27, use the form prescribed under the Income-tax Rules, 2026 once notified."
-      ],
-      [
-        "Tax",
-        "Periodic",
-        "GST Returns",
-        "Applicable where GST registered."
-      ]
-    ],
-    "docsTotal": 15,
-    "compTotal": 6
-  },
-  "opc": {
-    "name": "One Person Company",
-    "legal": "Separate legal entity",
-    "liability": "Limited to unpaid share value",
-    "compliance": "Moderate",
-    "funding": "Limited investor appeal compared with a Private Limited Company.",
-    "ownership": "Single member/shareholder with nominee-based succession.",
-    "best": "Individual entrepreneurs seeking corporate identity and limited liability.",
-    "docs": [
-      [
-        "Member / Nominee",
-        [
-          "PAN",
-          "Aadhaar / passport"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Initial",
-        "Within 30 days",
-        "First Auditor",
-        "First auditor appointment."
-      ],
-      [
-        "Initial",
-        "Within 2 months",
-        "Share Certificate",
-        "Issue share certificate within the applicable period."
-      ]
-    ],
-    "docsTotal": 19,
-    "compTotal": 8
-  },
-  "public_limited": {
-    "name": "Public Limited Company",
-    "legal": "Separate legal entity",
-    "liability": "Limited to amount unpaid on shares",
-    "compliance": "Very High",
-    "funding": "Public issues, rights issues and private placements subject to applicable law.",
-    "ownership": "Share-capital / shareholding ownership with broader transferability subject to law and Articles.",
-    "best": "Businesses requiring broader capital access and potential public-market funding.",
-    "docs": [
-      [
-        "Shareholders & Directors",
-        [
-          "Identity proof",
-          "PAN"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Initial",
-        "Within 30 days",
-        "First Board Meeting",
-        "First Board meeting."
-      ],
-      [
-        "Initial",
-        "Within 30 days",
-        "First Auditor",
-        "First auditor appointment."
-      ]
-    ],
-    "docsTotal": 9,
-    "compTotal": 7
-  },
-  "section8": {
-    "name": "Section 8 Company",
-    "legal": "Separate legal entity",
-    "liability": "Limited liability",
-    "compliance": "High",
-    "funding": "Domestic donations, CSR funding, grants and foreign contributions subject to applicable approvals/conditions.",
-    "ownership": "Profits cannot be distributed as dividends and must be applied toward stated objects.",
-    "best": "Charitable, educational, social welfare, research, sports and environmental initiatives.",
-    "docs": [
-      [
-        "Directors & Members",
-        [
-          "PAN",
-          "Aadhaar / identity proof"
-        ]
-      ]
-    ],
-    "comp": [
-      [
-        "Initial",
-        "Incorporation",
-        "Section 8 Licence",
-        "Section 8 licence is part of the incorporation framework."
-      ],
-      [
-        "Annual",
-        "Each calendar year",
-        "Board Meetings",
-        "Board meetings according to applicable corporate requirements."
-      ]
-    ],
-    "docsTotal": 17,
-    "compTotal": 9
-  }
-};
-
-const QUESTIONS=[
-{id:"objective",cat:"Business Objective",title:"What is the fundamental objective of the organisation?",desc:"This is the first structural filter because the source treats non-profit activity differently from ordinary commercial businesses.",opts:[["profit","For-profit business","Commercial business intended to generate profits."],["nonprofit","Non-profit / charitable / social initiative","Charitable, educational, social welfare, research, sports or similar objective."]]},
-{id:"founders",cat:"Ownership",title:"How many founders / owners will initially participate?",desc:"Founder count determines which structures can accommodate the proposed ownership model.",opts:[["one","1 founder","Single entrepreneur / owner."],["two_to_six","2–6 founders / owners","Closely held multi-owner business."],["seven_plus","7 or more founders / members","Seven or more does not by itself require a Public Limited Company."]]},
-{id:"liability",cat:"Risk & Liability",title:"How important is personal asset protection?",desc:"The source differentiates structures sharply on limited versus unlimited liability.",opts:[["critical","Critical — personal assets should generally be protected","Limited liability is a core requirement."],["preferred","Preferred but flexibility matters","Limited liability is important, but other factors also matter."],["acceptable","Unlimited liability is acceptable","I understand and accept personal exposure."]]},
-{id:"funding",cat:"Funding",title:"What is your expected funding strategy?",desc:"The source identifies substantial differences between share-based structures and partner/proprietor structures.",opts:[["vc","VC / angel / institutional equity","External investors, dilution and equity fundraising."],["bank","Bank finance / debt / self-funded","No immediate equity-investor requirement."],["public","Public issue / eventual listing","Broader public-market capital access."]]},
-{id:"compliance",cat:"Compliance Capacity",title:"How much compliance infrastructure can you maintain?",desc:"This measures whether the business can support the recurring governance burden described in the source.",opts:[["low","Low","Prefer the simplest possible compliance structure."],["moderate","Moderate","Can manage regular tax and statutory filings."],["high","High","Can maintain corporate records, audits, meetings and annual filings."]]},
-{id:"business",cat:"Business Model",title:"Which business model best describes you?",desc:"Different structures in the source are associated with different business profiles.",opts:[["startup","Startup / scalable growth","Growth, investment, ownership transfer and scale matter."],["professional","Professional / consultancy / service","Partner-driven expertise and flexible profit sharing."],["small","Small local / trading / owner-managed","Direct control and lower administrative burden."]]},
-{id:"ownership",cat:"Ownership Structure",title:"How should ownership legally be represented?",desc:"This is a critical routing question. A company limited by shares uses share capital. An LLP does not issue ordinary company shares; partner rights arise through contribution and the LLP Agreement.",opts:[["shares","Share-capital / shareholding ownership","Ownership should be represented through shares, shareholding percentages and share capital."],["partners","Partner contribution / LLP Agreement (no company shares)","Ownership should be represented through partner contribution and agreed partner rights — not company shares."],["single","Direct single-owner control","One person should own and control the business directly."]]},
-{id:"scale",cat:"Growth",title:"What is your expected scale?",desc:"Expected growth direction affects the value of funding and governance flexibility.",opts:[["small","Remain small / closely held","No major expansion expected."],["growth","Growth / expansion","Expect more customers, employees, capital or owners."],["large","Large / public-market oriented","Long-term public capital or listing possibility."]]},
-{id:"turnover",cat:"Financial Scale",title:"What is your expected annual turnover?",desc:"Turnover is relevant for GST and audit analysis in the source.",opts:[["under20","Below ₹20 lakh","Early-stage / small turnover."],["20to40","₹20 lakh – ₹40 lakh","GST and audit analysis may depend on business type and other conditions."],["40plus","Above ₹40 lakh","Relevant for GST and certain LLP audit thresholds."]]},
-{id:"employees",cat:"Employees",title:"Will you employ staff?",desc:"Employee registrations such as EPF and ESI are identified in the source as threshold / applicability-based.",opts:[["none","No employees initially","Founder / partner driven operation."],["small","Small team","Employees but initially a small workforce."],["large","Growing workforce","Employee-related registrations should be actively planned."]]},
-{id:"activity",cat:"Industry",title:"Does your activity trigger specialised registrations?",desc:"This identifies whether the business may need additional licences beyond entity registration.",opts:[["general","General commercial / professional activity","No specialised licence currently identified."],["food","Food business","FSSAI becomes relevant."],["import","Import / export","IEC becomes relevant."],["regulated","Regulated / sector-specific activity","Additional regulatory approval may be required."]]},
-{id:"foreign",cat:"Foreign / Cross-border",title:"Is foreign investment or foreign contribution contemplated?",desc:"The source discusses FDI and, for Section 8, FCRA considerations.",opts:[["none","No","Domestic ownership / funding only."],["investment","Foreign investment","Foreign investor / FDI possibility."],["contribution","Foreign contribution / donation","Particularly relevant to non-profit organisations."]]}
-];
-
-let state={i:0,answers:{},scores:{},rec:null,docs:{}};
-
-function score(a){
-  /*
-    RELIABILITY-FIRST DECISION ENGINE
-    ---------------------------------
-    The engine uses HARD COMPATIBILITY GATES before weighted preferences.
-    This prevents a structurally incompatible entity from winning merely
-    because several softer preferences add points.
-
-    Critical examples:
-    1. "Share-capital / shareholding ownership" is compatible with share-capital companies
-       (Private Limited / Public Limited / OPC), NOT LLP or Partnership.
-    2. "Partner contribution / LLP Agreement (no company shares)" strongly routes to LLP /
-       Partnership and removes company-share structures from consideration.
-    3. Non-profit objective strongly routes to Section 8.
-    4. Public-market funding requires the public-company route, subject to
-       the statutory minimum-member/director requirements.
-  */
-  const s={private_limited:0,llp:0,sole:0,partnership:0,opc:0,public_limited:0,section8:0};
-  const impossible=new Set();
-
-  // ---------- HARD STRUCTURAL GATES ----------
-  if(a.objective==="nonprofit"){
-    // Non-profit objective: Section 8 is the only entity in this engine.
-    ["private_limited","llp","sole","partnership","opc","public_limited"].forEach(k=>impossible.add(k));
-  } else if(a.objective==="profit"){
-    // Profit motive: Section 8 is not a commercial-profit alternative.
-    impossible.add("section8");
-  }
-
-  if(a.ownership==="shares"){
-    // LLP and partnership are NOT share-capital structures.
-    impossible.add("llp"); impossible.add("partnership");
-    // Direct proprietorship is not share-based.
-    impossible.add("sole");
-  }
-
-  if(a.ownership==="partners"){
-    // Partner contribution / agreement is not company shareholding.
-    impossible.add("private_limited"); impossible.add("public_limited");
-    impossible.add("opc"); impossible.add("sole");
-  }
-
-  if(a.ownership==="single"){
-    // Direct single-owner control excludes multi-owner partnership/company
-    // structures unless OPC is selected.
-    impossible.add("private_limited"); impossible.add("public_limited");
-    impossible.add("llp"); impossible.add("partnership");
-  }
-
-  if(a.funding==="public"){
-    // Public issue / listing is not routed to LLP, partnership, proprietorship
-    // or OPC. A public company also requires the relevant statutory structure.
-    ["llp","partnership","sole","opc"].forEach(k=>impossible.add(k));
-  }
-
-  if(a.funding==="vc"){
-    // The supplied business model treats Private Limited as the principal
-    // equity/VC/angel route. Other structures are not permitted to outrank it
-    // merely through soft scoring.
-    ["llp","partnership","sole","opc"].forEach(k=>impossible.add(k));
-  }
-
-
-  // ---------- BASE PREFERENCE SCORING ----------
-  if(a.objective==="nonprofit") s.section8+=1000;
-
-  if(a.founders==="one"){s.sole+=180;s.opc+=180;s.private_limited+=15}
-  if(a.founders==="two_to_six"){s.private_limited+=75;s.llp+=90;s.partnership+=90}
-  if(a.founders==="seven_plus"){
-    // Seven or more members does NOT by itself make the company public.
-    s.private_limited+=70;
-  }
-
-  if(a.liability==="critical"){
-    ["private_limited","llp","opc","public_limited","section8"].forEach(k=>s[k]+=75);
-    s.sole-=120;s.partnership-=120;
-  }
-  if(a.liability==="preferred"){
-    ["private_limited","llp","opc","public_limited","section8"].forEach(k=>s[k]+=45);
-  }
-  if(a.liability==="acceptable"){s.sole+=70;s.partnership+=60}
-
-  if(a.funding==="vc") s.private_limited+=500;
-  if(a.funding==="public") s.public_limited+=500;
-  if(a.funding==="bank"){s.llp+=20;s.partnership+=20;s.sole+=20;s.private_limited+=25}
-
-  if(a.compliance==="low"){
-    s.sole+=90;s.partnership+=35;s.llp+=25;
-    s.private_limited-=60;s.public_limited-=100;s.section8-=50;
-  }
-  if(a.compliance==="moderate"){s.llp+=50;s.partnership+=45;s.opc+=30;s.private_limited+=20}
-  if(a.compliance==="high"){s.private_limited+=45;s.public_limited+=75;s.section8+=45}
-
-  if(a.business==="startup") s.private_limited+=100;
-  if(a.business==="professional"){s.llp+=100;s.partnership+=75}
-  if(a.business==="small"){s.sole+=90;s.partnership+=40}
-
-  if(a.ownership==="shares"){
-    s.private_limited+=260;s.public_limited+=260;s.opc+=170;
-  }
-  if(a.ownership==="partners"){
-    s.llp+=280;s.partnership+=260;
-  }
-  if(a.ownership==="single"){
-    s.sole+=180;s.opc+=180;
-  }
-
-  if(a.scale==="small"){s.sole+=40;s.partnership+=30;s.llp+=20}
-  if(a.scale==="growth"){s.private_limited+=80;s.llp+=30}
-  if(a.scale==="large"){
-    // Large scale can still be privately held; do not infer public status from scale alone.
-    s.private_limited+=70;
-  }
-
-  if(a.foreign==="investment"){s.private_limited+=35;s.llp+=15}
-  if(a.foreign==="contribution")s.section8+=150;
-
-  // ---------- SECONDARY BUSINESS RULES ----------
-  if(a.founders==="one" && a.ownership==="shares") {
-    // A one-person shareholding preference points to OPC rather than LLP.
-    s.opc+=260; s.private_limited+=40;
-  }
-  if(a.founders==="one" && a.ownership==="single" && a.liability==="acceptable"){
-    s.sole+=260;
-  }
-  if(a.founders==="two_to_six" && a.ownership==="partners" && a.liability!=="acceptable"){
-    s.llp+=180;
-  }
-  if(a.founders==="two_to_six" && a.ownership==="partners" && a.liability==="acceptable"){
-    s.partnership+=180;
-  }
-
-  // ---------- APPLY HARD GATES ----------
-  impossible.forEach(k=>{s[k]=-1000000});
-
-  // Never allow an impossible structure to become the recommendation.
-  return s;
-}
-function recommendation(){
-  const entries=Object.entries(state.scores)
-    .filter(([k,v])=>Number.isFinite(v) && v>-999999)
-    .sort((a,b)=>b[1]-a[1]);
-  if(!entries.length){
-    return {
-      key:null,
-      fit:0,
-      ranking:[],
-      conflict:true,
-      message:"The selected requirements are structurally incompatible. Review the ownership and funding choices before implementation."
-    };
-  }
-  const top=entries[0],second=entries[1]||[top[0],top[1]];
-  const gap=Math.max(0,top[1]-second[1]);
-  const fit=Math.max(78,Math.min(98,Math.round(78+Math.min(20,gap/10))));
-  return {key:top[0],fit,ranking:entries,conflict:false};
-}
-function drivers(a,k){
-  const x=[];
-  if(a.objective==="nonprofit")x.push("The non-profit objective routes the assessment to the Section 8 framework.");
-  if(a.ownership==="shares")x.push("Share-capital / shareholding ownership is a company share-capital requirement; LLP and Partnership are excluded from the recommendation set.");
-  if(a.ownership==="partners")x.push("Partner contribution and LLP-Agreement based ownership routes toward LLP / Partnership rather than a share-capital company.");
-  if(a.funding==="vc"&&k==="private_limited")x.push("VC / angel / institutional equity funding is a direct structural driver toward a Private Limited Company.");
-  if(a.funding==="public"&&k==="public_limited")x.push("Public-market capital objectives route toward a Public Limited Company, subject to statutory eligibility.");
-  if(a.founders==="one"&&k==="opc")x.push("One founder plus share-based limited-liability preference is aligned with the OPC structure.");
-  if(a.founders==="one"&&k==="sole")x.push("One owner plus acceptance of unlimited liability is aligned with proprietorship.");
-  if(a.founders==="two_to_six"&&k==="llp")x.push("Multiple founders plus partner-style ownership and limited liability support an LLP.");
-  if(a.founders==="two_to_six"&&k==="partnership")x.push("Multiple founders plus partner-style ownership and acceptance of unlimited liability support a Partnership Firm.");
-  if(a.founders==="seven_plus"&&k==="private_limited")x.push("Seven or more members can still fit a Private Limited Company; member count alone does not route the result to a Public Limited Company.");
-  if(a.liability==="critical")x.push("Personal asset protection is a core decision criterion in the assessment.");
-  if(a.compliance==="low")x.push("Low compliance capacity reduces suitability of structures with heavier corporate governance.");
-  return x.length?x.slice(0,5):["The result reflects the combined structural answers and the hard-compatibility rules of the engine."];
-}
-function alternativeStructures(a,k){
-  /*
-    Alternatives are filtered for legal/structural compatibility.
-    This avoids showing LLP as an "alternative" where the user explicitly
-    selected share-based ownership, and avoids presenting structurally
-    incompatible forms as credible recommendations.
-  */
-  const blocked=new Set();
-  if(a.ownership==="shares"){blocked.add("llp");blocked.add("partnership");blocked.add("sole")}
-  if(a.ownership==="partners"){blocked.add("private_limited");blocked.add("public_limited");blocked.add("opc");blocked.add("sole")}
-  if(a.ownership==="single"){blocked.add("private_limited");blocked.add("public_limited");blocked.add("llp");blocked.add("partnership")}
-  if(a.funding==="vc")["llp","partnership","sole","opc"].forEach(k=>blocked.add(k));
-  if(a.funding==="public")["llp","partnership","sole","opc"].forEach(k=>blocked.add(k));
-  if(a.objective==="nonprofit")["private_limited","llp","sole","partnership","opc","public_limited"].forEach(k=>blocked.add(k));
-  if(a.objective==="profit")blocked.add("section8");
-  return state.rec.ranking.filter(([key])=>key!==k && !blocked.has(key)).slice(0,3);
-}
-function optionLabel(q,v){const o=q.opts.find(x=>x[0]===v);return o?o[1]:"—"}
 
 
 
-function renderQuestion(){
- const q=QUESTIONS[state.i],selected=state.answers[q.id],pct=((state.i+1)/QUESTIONS.length)*100;
- document.getElementById("qCount").textContent=`Question ${state.i+1} of ${QUESTIONS.length}`;
- document.getElementById("qCat").textContent=q.cat;
- document.getElementById("qProgress").style.width=pct+"%";
- document.getElementById("question").innerHTML=`
-   <h2 class="q-title">${q.title}</h2>
-   <p class="q-desc">${q.desc}</p>
-   <div class="options">${q.opts.map(o=>`
-     <label class="option ${selected===o[0]?'selected':''}">
-       <input type="radio" name="${q.id}" value="${o[0]}" ${selected===o[0]?'checked':''}>
-       <span class="dot"></span>
-       <span><div class="option-title">${o[1]}</div><div class="option-detail">${o[2]}</div></span>
-     </label>`).join("")}</div>`;
- document.querySelectorAll(".option").forEach(card=>card.addEventListener("click",()=>{
-   const input=card.querySelector("input");state.answers[q.id]=input.value;
-   document.querySelectorAll(`input[name="${q.id}"]`).forEach(x=>x.closest(".option").classList.remove("selected"));
-   input.checked=true;card.classList.add("selected");
- }));
- document.getElementById("prevQ").disabled=state.i===0;
- document.getElementById("nextQ").textContent=state.i===QUESTIONS.length-1?"Generate Intelligence Dashboard →":"Continue →";
-}
-document.getElementById("prevQ").onclick=()=>{if(state.i>0){state.i--;renderQuestion()}};
-document.getElementById("nextQ").onclick=()=>{
- if(!state.answers[QUESTIONS[state.i].id]){alert("Please select an option before continuing.");return}
- if(state.i<QUESTIONS.length-1){state.i++;renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}
- else{generate()}
-};
 
-function metricCards(e){
- const items=[
- ["Liability",e.liability,"shield"],["Compliance",e.compliance,"calendar"]
- ];
- const preview=getPreviewItems(items,"executiveSummary",8);
- document.getElementById("metrics").innerHTML=preview.visibleItems.map(x=>`
- <div class="card metric"><div class="ico" style="width:22px;height:22px">${ICONS[x[2]]}</div><div class="metric-label">${x[0]}</div><div class="metric-value">${x[1]}</div></div>`).join("")+LockedPremiumSection(preview.remainingCount,"summary items");
-}
-function priority(k){return {private_limited:"Incorporation",llp:"LLP Agreement",sole:"Core registrations",partnership:"Partnership Deed",opc:"OPC incorporation",public_limited:"Corporate incorporation",section8:"Section 8 licence"}[k]}
-
-function renderDashboard(){
- const e=ENTITIES[state.rec.key],a=state.answers;
- document.getElementById("heroTitle").textContent=e.name;
- document.getElementById("heroDesc").textContent=e.best+". "+e.legal+". "+e.liability+".";
- document.getElementById("recTitle").textContent=e.name;
- document.getElementById("recDesc").textContent=e.name+" is the current structural fit based on your stated ownership, liability, funding, compliance and growth requirements.";
- document.getElementById("score").textContent=state.rec.fit;
- const ring=2*Math.PI*78;document.getElementById("ringFg").style.strokeDashoffset=ring-(state.rec.fit/100)*ring;
- document.getElementById("recPills").innerHTML=`<span class="pill green">● Current fit ${state.rec.fit}/100</span><span class="pill blue">FY 2026–27</span><span class="pill gray">${e.compliance} compliance</span>`;
- document.getElementById("drivers").innerHTML=drivers(a,state.rec.key).map((x,i)=>`<div class="driver"><div class="driver-num">${i+1}</div><div class="driver-text">${x}</div></div>`).join("");
- // Risk / change sections were intentionally removed from the dashboard UI.
- // Do not write to those retired DOM nodes; doing so prevents the dashboard
- // from rendering after the final questionnaire step.
- metricCards(e);
- document.getElementById("executive").textContent=`Based on the answers provided, the engine identifies ${e.name} as the current structural fit. The assessment considers the organisation's objective, founder count, liability preference, funding strategy, compliance capacity, ownership model and expected scale. The source positions this structure for ${e.best.toLowerCase()}.`;
- const summaryCards=[
- ["Ownership model",e.ownership],["Funding compatibility",e.funding]
- ];
- const summaryPreview=getPreviewItems(summaryCards,"executiveSummary",4);
- document.getElementById("overviewCards").innerHTML=summaryPreview.visibleItems.map(x=>`<div class="card text-card"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("")+LockedPremiumSection(summaryPreview.remainingCount,"executive summary items");
- document.getElementById("answers").innerHTML=QUESTIONS.map(q=>`<div class="answer-item"><div class="answer-cat">${q.cat}</div><div class="answer-val">${optionLabel(q,a[q.id])}</div></div>`).join("");
- renderAnalysis(e);renderDocs(e);renderCompliance(e);renderRegs(a);renderMatrix();renderAction(e);
- buildPrint(e);
- document.getElementById("assessment").classList.add("hidden");
- document.getElementById("dashboard").classList.remove("hidden");
- window.scrollTo({top:0,behavior:"smooth"});
-}
-function renderAnalysis(e){
- const blocks=[
- ["Structural compatibility gate", state.answers.ownership==="shares" ? "Share-capital ownership selected: LLP and Partnership are excluded because they are partner/contribution-based structures, not ordinary share-capital companies." : state.answers.ownership==="partners" ? "Partner-contribution ownership selected: share-capital company structures are excluded from the primary recommendation path." : "Direct single-owner control selected: the engine evaluates proprietorship / OPC routes before other forms."],
- ["Legal identity",e.legal]
- ];
- const preview=getPreviewItems(blocks,"detailedAnalysis",10);
- document.getElementById("analysis").innerHTML=preview.visibleItems.map((x,i)=>`<div class="analysis-item"><h4>${String(i+1).padStart(2,"0")} • ${x[0]}</h4><p>${x[1]}</p></div>`).join("")+LockedPremiumSection(preview.remainingCount);
- const alternativeCount=Math.min(3,Math.max(0,state.rec.ranking.length-1));
- document.getElementById("alternatives").innerHTML=alternativeCount
-  ?LockedPremiumPlaceholder(alternativeCount,"alternative structures")
-  :'<div class="locked-placeholder" role="note"><strong>Alternative structures</strong>No structurally compatible alternative is available for this assessment.</div>';
-}
-function renderDocs(e){
- state.docs={};let html="";
- e.docs.forEach((g,gi)=>{html+=`<div class="card doc-group"><h4>${g[0]}</h4>${g[1].map((item,ii)=>{let id=gi+"_"+ii;state.docs[id]=false;return `<label class="check"><input type="checkbox" data-doc="${id}"><span>${item}</span></label>`}).join("")}</div>`});
- const preview=getPreviewItems(e.docs.flatMap(group=>group[1]),"documents",e.docsTotal);
- document.getElementById("documents").innerHTML=html+LockedPremiumSection(preview.remainingCount);
- state.docsTotal=preview.visibleItems.length;updateDocs();
- document.querySelectorAll("[data-doc]").forEach(x=>x.onchange=()=>{state.docs[x.dataset.doc]=x.checked;x.closest(".check").classList.toggle("done",x.checked);updateDocs()});
-}
-function updateDocs(){let t=Object.keys(state.docs).length,d=Object.values(state.docs).filter(Boolean).length;document.getElementById("docCount").textContent=`${d} / ${t} preview documents`;document.getElementById("docProgress").style.width=(t?d/t*100:0)+"%"}
-function renderCompliance(e){
- const f=document.getElementById("compFilter").value;
- const arr=e.comp.filter(x=>f==="all"||x[0]===f);
- const preview=getPreviewItems(arr,"compliance",e.compTotal);
- document.getElementById("compliance").innerHTML=preview.visibleItems.map((x,i)=>`<div class="time-item"><div class="time-num">${i+1}</div><div class="time-body"><div class="time-top"><div class="time-title">${x[2]}</div><div class="time-type">${x[0]}</div></div><div class="time-date">${x[1]}</div><div class="time-detail">${x[3]}</div></div></div>`).join("")+LockedPremiumSection(preview.remainingCount,"compliance obligations");
-}
-document.getElementById("compFilter").onchange=()=>state.rec&&renderCompliance(ENTITIES[state.rec.key]);
-
-function renderRegs(a){
- const regs=[
-   ["GST", a.turnover==="40plus"?"Priority review":a.turnover==="20to40"?"Threshold review":"Conditional",
-     "Evaluate GST registration based on turnover, supply type and compulsory-registration provisions.",
-     "Check aggregate turnover • taxable/exempt supplies • inter-State activity • e-commerce • reverse charge • special categories."],
-   ["Professional Tax", "State-specific",
-     "Professional Tax may apply depending on the state, nature of activity, profession and employer/employee structure.",
-     "State applicability varies; confirm the requirements for the business location."]
- ];
- const preview=getPreviewItems(regs,"registrations",9);
- document.getElementById("registrations").innerHTML=preview.visibleItems.map(r=>`
-   <div class="card reg">
-     <div class="reg-top"><h4>${r[0]}</h4><span class="pill ${r[1].includes("Priority")?"red":r[1].includes("review")||r[1].includes("Workforce")?"amber":"blue"}">${r[1]}</span></div>
-     <p>${r[2]}</p>
-     <div class="reg-next"><b>Applicability checklist</b>${r[3]}</div>
-   </div>`).join("")+LockedPremiumSection(preview.remainingCount,"registration reviews");
-}
-function renderMatrix(){
- const cols=["Parameter","Private Limited","LLP","Proprietorship","Partnership","OPC","Public Limited","Section 8"];
- const rows=[
- ["Legal Status","Separate legal entity","Separate legal entity","No separate legal identity","No separate legal entity","Separate legal entity","Separate legal entity","Separate legal entity"],
- ["Liability","Limited","Limited, subject to exceptions","Unlimited","Unlimited joint & several","Limited","Limited","Limited"]
- ];
- const preview=getPreviewItems(rows,"entityMatrix",8);
- document.getElementById("matrixHead").innerHTML="<tr>"+cols.map(x=>`<th>${x}</th>`).join("")+"</tr>";
- document.getElementById("matrixBody").innerHTML=preview.visibleItems.map(r=>"<tr>"+r.map(x=>`<td>${x}</td>`).join("")+"</tr>").join("");
- document.getElementById("matrixGate").innerHTML=LockedPremiumSection(preview.remainingCount,"comparison rows");
-}
-function renderAction(e){
- const items=[
- ["Confirm the structural decision",`Review the ${e.name} recommendation against founder, liability, funding and compliance requirements.`],
- ["Prepare incorporation documents","Review the first items in the free document preview."]
- ];
- const preview=getPreviewItems(items,"actionPlan",6);
- document.getElementById("actionPlan").innerHTML=preview.visibleItems.map((x,i)=>`<div class="action"><div class="action-num">${String(i+1).padStart(2,"0")}</div><div><h4>${x[0]}</h4><p>${x[1]}</p></div></div>`).join("")+LockedPremiumSection(preview.remainingCount,"action steps");
-}
-
-/* TABS / NAV */
-function activateTab(tab){
- document.querySelectorAll(".tab,.nav-btn").forEach(x=>x.classList.toggle("active",x.dataset.tab===tab));
- document.querySelectorAll(".tab").forEach(x=>{
-  const selected=x.dataset.tab===tab;
-  x.setAttribute("aria-selected",String(selected));
-  x.tabIndex=selected?0:-1;
- });
- document.querySelectorAll(".nav-btn").forEach(x=>{
-  if(x.dataset.tab===tab)x.setAttribute("aria-current","page");
-  else x.removeAttribute("aria-current");
- });
- document.querySelectorAll(".tab-panel").forEach(x=>x.classList.add("hidden"));
- document.getElementById("panel-"+tab).classList.remove("hidden");
- if(window.innerWidth<901){
-  document.getElementById("sidebar").classList.remove("open");
-  document.getElementById("menuBtn").setAttribute("aria-expanded","false");
- }
- document.getElementById("workspace").scrollIntoView({behavior:"smooth",block:"nearest"});
-}
-document.querySelectorAll("[data-tab]").forEach(x=>x.addEventListener("click",()=>activateTab(x.dataset.tab)));
-document.querySelectorAll("[data-jump]").forEach(x=>x.addEventListener("click",()=>activateTab(x.dataset.jump)));
-document.querySelectorAll(".nav-icon,[data-icon]").forEach(x=>x.setAttribute("aria-hidden","true"));
-document.querySelectorAll(".nav-btn").forEach(x=>{if(x.dataset.tab==="overview")x.setAttribute("aria-current","page")});
-document.querySelectorAll(".tab").forEach(x=>{x.tabIndex=x.dataset.tab==="overview"?0:-1});
-document.querySelectorAll(".tab").forEach((tab,index,all)=>{
- tab.addEventListener("keydown",event=>{
-  let next=index;
-  if(event.key==="ArrowRight")next=(index+1)%all.length;
-  else if(event.key==="ArrowLeft")next=(index-1+all.length)%all.length;
-  else if(event.key==="Home")next=0;
-  else if(event.key==="End")next=all.length-1;
-  else return;
-  event.preventDefault();
-  activateTab(all[next].dataset.tab);
-  all[next].focus();
- });
-});
-document.getElementById("menuBtn").onclick=()=>{
- const menu=document.getElementById("sidebar");
- const expanded=!menu.classList.contains("open");
- menu.classList.toggle("open",expanded);
- document.getElementById("menuBtn").setAttribute("aria-expanded",String(expanded));
- document.getElementById("menuBtn").setAttribute("aria-label",expanded?"Close navigation menu":"Open navigation menu");
-};
-document.addEventListener("keydown",event=>{
- if(event.key==="Escape"&&document.getElementById("sidebar").classList.contains("open")){
-  document.getElementById("sidebar").classList.remove("open");
-  document.getElementById("menuBtn").setAttribute("aria-expanded","false");
-  document.getElementById("menuBtn").setAttribute("aria-label","Open navigation menu");
-  document.getElementById("menuBtn").focus();
- }
-});
-
-/* NEW */
-document.getElementById("newBtn").onclick=()=>{if(confirm("Start a new assessment? The current assessment will be cleared.")){state={i:0,answers:{},scores:{},rec:null,docs:{}};document.getElementById("dashboard").classList.add("hidden");document.getElementById("assessment").classList.remove("hidden");renderQuestion();window.scrollTo({top:0,behavior:"smooth"})}};
-
-/* PRINT REPORT */
-function buildPrint(e){
- const esc=x=>String(x??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
- const a=state.answers;
- const summary=[
-  ["Liability",e.liability],["Compliance",e.compliance]
- ];
- const summaryPreview=getPreviewItems(summary,"executiveSummary",8);
- const analysis=[
-  ["Structural compatibility gate",a.ownership==="shares"?"Share-capital ownership selected: LLP and Partnership are excluded from this route.":a.ownership==="partners"?"Partner-contribution ownership selected: share-capital company structures are excluded from the primary route.":"Direct single-owner control selected: the engine evaluates proprietorship / OPC routes."],
-  ["Legal identity",e.legal]
- ];
- const analysisPreview=getPreviewItems(analysis,"detailedAnalysis",10);
- const documents=getPreviewItems(e.docs.flatMap(group=>group[1]),"documents",e.docsTotal);
- const compliance=getPreviewItems(e.comp,"compliance",e.compTotal);
- const registrations=getPreviewItems([
-  ["GST",a.turnover==="40plus"?"Priority review":a.turnover==="20to40"?"Threshold review":"Conditional","Evaluate GST registration based on turnover and applicable provisions."],
-  ["Professional Tax","State-specific","Applicability varies by state, profession and workforce."]
- ],"registrations",9);
- const matrixRows=getPreviewItems([
-  ["Legal Status","Separate legal entity","Separate legal entity","No separate legal identity","No separate legal entity","Separate legal entity","Separate legal entity","Separate legal entity"],
-  ["Liability","Limited","Limited, subject to exceptions","Unlimited","Unlimited joint & several","Limited","Limited","Limited"]
- ],"entityMatrix",8);
- const actions=getPreviewItems([
-  ["Confirm the structural decision",`Review the ${e.name} recommendation against your stated requirements.`],
-  ["Prepare incorporation documents","Review the first items in this free document preview."]
- ],"actionPlan",6);
- const answers=QUESTIONS.map(q=>`<div class="pcard"><h4>${esc(q.cat)}</h4><p><b>${esc(optionLabel(q,a[q.id]))}</b></p><div class="print-small">${esc(q.title)}</div></div>`).join("");
- const analysisHtml=analysisPreview.visibleItems.map((item,index)=>`<div class="pcard"><h4>${index+1}. ${esc(item[0])}</h4><p>${esc(item[1])}</p></div>`).join("");
- const docHtml=documents.visibleItems.map(item=>`<li>${esc(item)}</li>`).join("");
- const complianceHtml=compliance.visibleItems.map(x=>`<tr><td>${esc(x[0])}</td><td>${esc(x[1])}</td><td>${esc(x[2])}</td><td>${esc(x[3])}</td></tr>`).join("");
- const registrationHtml=registrations.visibleItems.map(x=>`<div class="pcard"><h4>${esc(x[0])} — ${esc(x[1])}</h4><p>${esc(x[2])}</p></div>`).join("");
- const matrixHtml=matrixRows.visibleItems.map(row=>`<tr>${row.map(cell=>`<td>${esc(cell)}</td>`).join("")}</tr>`).join("");
- const actionHtml=actions.visibleItems.map((item,index)=>`<div class="pcard"><h4>Step ${index+1}: ${esc(item[0])}</h4><p>${esc(item[1])}</p></div>`).join("");
- document.getElementById("printReport").innerHTML=`
-  <div class="print-page print-cover"><div><div class="print-brand"><div class="print-mark">BI</div><div><b>Biz Matrix</b><div class="print-small">Business Structure Intelligence</div></div></div><div class="print-title">${esc(e.name)}</div><div class="print-sub">Free assessment preview • FY 2026–27</div><div class="pcard"><h4>Executive Decision</h4><p>${esc(e.name)} is the current structural fit based on your assessment answers. ${esc(e.best)}</p></div><div class="pcard"><h4>Important limitation</h4><p>Preliminary decision support only. This preview is not legal, tax, accounting or regulatory advice.</p></div>${LockedPremiumSection(1,"full report")}</div><div class="print-foot">Generated from the current browser session. Premium content is unavailable in this static release.</div></div>
-  <div class="print-page"><div class="print-section-title">Executive Summary Preview</div><div class="print-grid2">${summaryPreview.visibleItems.map(item=>`<div class="pcard"><h4>${esc(item[0])}</h4><p>${esc(item[1])}</p></div>`).join("")}</div>${LockedPremiumSection(summaryPreview.remainingCount,"summary items")}</div>
-  <div class="print-page"><div class="print-section-title">Detailed Analysis Preview</div><div class="print-grid2">${analysisHtml}</div>${LockedPremiumSection(analysisPreview.remainingCount,"analysis items")}</div>
-  <div class="print-page"><div class="print-section-title">Assessment Inputs</div><div class="print-grid2">${answers}</div></div>
-  <div class="print-page"><div class="print-section-title">Documents Preview</div><ul>${docHtml}</ul>${LockedPremiumSection(documents.remainingCount,"documents")}</div>
-  <div class="print-page"><div class="print-section-title">Compliance Preview</div><table class="print-table"><thead><tr><th>Category</th><th>Timing</th><th>Obligation</th><th>Details</th></tr></thead><tbody>${complianceHtml}</tbody></table>${LockedPremiumSection(compliance.remainingCount,"compliance obligations")}</div>
-  <div class="print-page"><div class="print-section-title">Registration Preview</div><div class="print-grid2">${registrationHtml}</div>${LockedPremiumSection(registrations.remainingCount,"registration reviews")}</div>
-  <div class="print-page"><div class="print-section-title">Entity Matrix Preview</div><table class="print-table"><tbody>${matrixHtml}</tbody></table>${LockedPremiumSection(matrixRows.remainingCount,"comparison rows")}</div>
-  <div class="print-page"><div class="print-section-title">Action Plan Preview</div>${actionHtml}${LockedPremiumSection(actions.remainingCount,"action steps")}</div>`;
-}
-document.getElementById("printBtn").onclick=()=>{
- if(AccessProvider.getState()!==ACCESS_STATE.FREE){AccessProvider.requestUnlock();return}
- if(state.rec&&!state.rec.conflict)window.print();
-};
-
-
-
-function renderConflict(){
-  const a=state.answers;
-  document.getElementById("heroTitle").textContent="Compatibility Check Required";
-  document.getElementById("heroDesc").textContent="The selected answers do not produce a legally compatible structure in the current decision set. No structure has been recommended.";
-  document.getElementById("recTitle").textContent="No compatible structure identified";
-  document.getElementById("recDesc").textContent="Review the answers below. In particular, check whether the ownership model and funding strategy can operate together under the selected structure.";
-  document.getElementById("score").textContent="—";
-  document.getElementById("ringFg").style.strokeDashoffset=(2*Math.PI*78);
-  document.getElementById("recPills").innerHTML='<span class="pill amber">Compatibility review</span><span class="pill gray">No recommendation made</span>';
-  document.getElementById("drivers").innerHTML=[
-    "Ownership and funding requirements are currently incompatible.",
-    a.ownership==="single"&&a.funding==="vc"?"Single-owner control conflicts with a VC / institutional equity funding route because that funding model requires an investor-compatible ownership structure.":"One or more selected structural requirements exclude every available entity in the current decision set.",
-    "Change the conflicting answer(s) and regenerate the dashboard."
-  ].map((x,i)=>`<div class="driver"><div class="driver-num">${i+1}</div><div class="driver-text">${x}</div></div>`).join("");
-  document.getElementById("metrics").innerHTML=[
-    ["Status","Review required"],["Recommendation","None"],["Ownership",optionLabel(QUESTIONS.find(q=>q.id==="ownership"),a.ownership)],["Funding",optionLabel(QUESTIONS.find(q=>q.id==="funding"),a.funding)]
-  ].map(x=>`<div class="card metric"><div class="metric-label">${x[0]}</div><div class="metric-value">${x[1]}</div></div>`).join("");
-  document.getElementById("executive").textContent="No entity has been recommended because the selected requirements do not leave a structurally compatible option. The tool does not force a recommendation when the answers conflict.";
-  document.getElementById("overviewCards").innerHTML=[
-    ["Ownership selected",optionLabel(QUESTIONS.find(q=>q.id==="ownership"),a.ownership)],
-    ["Funding selected",optionLabel(QUESTIONS.find(q=>q.id==="funding"),a.funding)],
-    ["Next step","Review the conflicting requirements and regenerate the assessment"]
-  ].map(x=>`<div class="card text-card"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("");
-  document.getElementById("answers").innerHTML=QUESTIONS.map(q=>`<div class="answer-item"><div class="answer-cat">${q.cat}</div><div class="answer-val">${optionLabel(q,a[q.id])}</div></div>`).join("");
-  document.getElementById("analysis").innerHTML='<div class="analysis-item"><h4>01 • Compatibility result</h4><p>No legally compatible entity was found for the complete combination of answers. The engine intentionally does not select an entity merely to produce a result.</p></div><div class="analysis-item"><h4>02 • What to review</h4><p>Review the ownership representation and funding strategy first. A share-capital investor route generally requires a share-capital company structure rather than direct single-owner control.</p></div>';
-  document.getElementById("alternatives").innerHTML='<div class="alt"><div class="alt-title">No alternative shown</div><div class="alt-desc">Alternatives are not displayed because there is no compatible primary structure under the selected requirements.</div></div>';
-  document.getElementById("documents").innerHTML='<div class="card text-card"><h3>Document checklist paused</h3><p>Resolve the structural compatibility issue first. Entity-specific documents should not be generated until a compatible structure is selected.</p></div>';
-  document.getElementById("compliance").innerHTML='<div class="card text-card"><h3>Compliance calendar paused</h3><p>Entity-specific compliance obligations will be shown after a compatible structure is identified.</p></div>';
-  renderRegs(a);
-  renderMatrix();
-  document.getElementById("actionPlan").innerHTML='<div class="action"><div class="action-num">01</div><div><h4>Review conflicting answers</h4><p>Revisit ownership and funding requirements.</p></div></div><div class="action"><div class="action-num">02</div><div><h4>Regenerate assessment</h4><p>Return to the questionnaire and update the conflicting input.</p></div></div>'+LockedPremiumSection(4,"action steps");
-  document.getElementById("assessment").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-function generate(){
-  state.scores=score(state.answers);
-  state.rec=recommendation();
-  if(state.rec.conflict){renderConflict();return;}
-  renderDashboard();
-}
-renderQuestion();
-</script>
-</body>
-</html>
+<script src="js/pdf.min.js"></script><script src="js/preview.js"></script><script src="js/app.js"></script></body></html>

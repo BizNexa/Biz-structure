@@ -6,3 +6,4 @@ exclude:
   - github-pages-deployment
   - saas-backend
   - saas-frontend
+  - tools
