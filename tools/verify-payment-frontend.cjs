@@ -12,7 +12,7 @@ const orderId = 'BIZ_' + 'a'.repeat(32);
 const receipt = { orderId, paidAt: Date.now(), recoveryCode: 'BIZ-' + 'c'.repeat(43), amount: 4900, currency: 'INR' };
 
 async function harness({ paid = false, returned = false, failed = false, includePdf = false, available = true } = {}) {
-  const { window, document } = parseHTML(fs.readFileSync(path.join(root, 'index.html'), 'utf8'));
+  const { window, document } = parseHTML(fs.readFileSync(path.join(root, 'assessment/index.html'), 'utf8'));
   const href = 'http://localhost:3000/' + (returned ? '?phonepe_order_id=' + orderId : '');
   const storage = new Map([['biz_report_unlocked', 'true'], ['premium', 'true'], ['bizmatrix.phonepe.session.v1', 'b'.repeat(43)]]);
   if (returned) storage.set('bizmatrix.assessment.v1', JSON.stringify({ answers: profile, docs: { '0_0': true } }));
@@ -62,7 +62,9 @@ async function main() {
   assert.ok(!free.calls.some(call => call.endpoint === '/premium/content'));
   free.document.querySelector('[data-buy]').click(); await free.tick();
   const form = free.document.getElementById('purchaseForm');
+  free.document.getElementById('buyerName').value = 'Asha Rao';
   free.document.getElementById('buyerEmail').value = 'buyer@example.com';
+  free.document.getElementById('buyerPhone').value = '9876543210';
   form.dispatchEvent(new free.window.Event('submit', { cancelable: true })); await free.tick();
   assert.match(free.downloads[0], /^https:\/\/mercury\.phonepe\.com/);
   assert.equal(JSON.parse(free.calls.find(call => call.endpoint === '/orders').options.body).amount, undefined);

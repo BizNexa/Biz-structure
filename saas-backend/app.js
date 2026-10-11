@@ -126,7 +126,10 @@ export function createApp({ store, gateway, mode, frontendUrl, allowedOrigins, c
     app.get('/js/config.js', (_req, res) => res.type('application/javascript').send("window.BIZ_API_BASE_URL = '';\n"));
     app.get(['/', '/index.html'], (_req, res) => res.sendFile(path.join(siteRoot, 'index.html')));
     app.get('/favicon.svg', (_req, res) => res.sendFile(path.join(siteRoot, 'favicon.svg')));
+    app.get('/favicon.png', (_req, res) => res.sendFile(path.join(siteRoot, 'favicon.png')));
     app.get('/site.css', (_req, res) => res.sendFile(path.join(siteRoot, 'site.css')));
+    app.use('/assets', express.static(path.join(siteRoot, 'assets'), { dotfiles: 'deny', index: false }));
+    app.use('/assessment', express.static(path.join(siteRoot, 'assessment'), { dotfiles: 'deny' }));
     app.use('/css', express.static(path.join(siteRoot, 'css'), { dotfiles: 'deny', index: false }));
     app.use('/js', express.static(path.join(siteRoot, 'js'), { dotfiles: 'deny', index: false }));
     for (const page of ['about', 'contact', 'privacy-policy', 'terms', 'refund-policy', 'shipping-delivery', 'cookie-policy', 'disclaimer', 'grievance-redressal', 'accessibility', 'corporate-information']) app.use('/' + page, express.static(path.join(siteRoot, page), { dotfiles: 'deny' }));

@@ -5,6 +5,7 @@ a{color:#1d4ed8}
 a:focus-visible{outline:3px solid #60a5fa;outline-offset:3px;border-radius:3px}
 .site-header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px max(20px,calc((100% - 1120px)/2));background:#fff;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:11px;color:var(--ink);font-weight:800;text-decoration:none}
+.brand-logo{width:178px;height:auto;display:block}
 .brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff}
 .site-header nav{display:flex;gap:18px;flex-wrap:wrap}
 .site-header nav a{display:inline-flex;align-items:center;min-height:44px;color:#334155;text-decoration:none;font-size:14px;font-weight:650}

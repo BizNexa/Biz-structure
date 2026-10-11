@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 190" role="img" aria-labelledby="title">
+  <title id="title">Biz Matrix</title>
+  <g fill="#184f6b">
+    <circle cx="42" cy="47" r="15"/>
+    <circle cx="93" cy="47" r="23"/>
+    <circle cx="42" cy="96" r="12"/>
+    <circle cx="93" cy="96" r="16"/>
+    <circle cx="145" cy="96" r="22"/>
+    <circle cx="42" cy="145" r="8"/>
+    <circle cx="93" cy="145" r="13"/>
+    <circle cx="145" cy="145" r="18"/>
+  </g>
+  <circle cx="145" cy="47" r="28" fill="#dfa95e"/>
+  <text x="230" y="125" fill="#184f6b" font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="500" letter-spacing="0">Biz Matrix</text>
+</svg>

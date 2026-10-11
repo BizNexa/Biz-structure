@@ -24,7 +24,7 @@ async function fixture(t, options = {}) {
     validateCallback(auth, body) { if (auth !== 'valid-test-callback') throw new Error('Invalid callback'); return JSON.parse(body); },
     ...options.gateway
   };
-  const app = createApp({ store, gateway, mode: 'sandbox', frontendUrl: 'https://bizmatrix.in/', allowedOrigins: ['https://bizmatrix.in'], catalog: { version: 1, entities: { private_limited: { private: 'paid-data' } }, registrations: { groups: [] } }, siteRoot: path.resolve('..'), ...options });
+  const app = createApp({ store, gateway, mode: 'sandbox', frontendUrl: 'https://www.bizmatrix.in/assessment/', allowedOrigins: ['https://www.bizmatrix.in'], catalog: { version: 1, entities: { private_limited: { private: 'paid-data' } }, registrations: { groups: [] } }, siteRoot: path.resolve('..'), ...options });
   const server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));
   t.after(async () => { await new Promise(resolve => server.close(resolve)); store.close(); rmSync(directory, { recursive: true, force: true }); });

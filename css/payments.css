@@ -1,33 +1,82 @@
 .purchase-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .assess-purchase { justify-content: center; margin-top: 16px; }
-.payment-dialog { width: min(460px, calc(100% - 32px)); padding: 24px; border: 1px solid #d5dce4; border-radius: 8px; background: #fff; color: #202832; max-height: calc(100dvh - 32px); overflow: auto; box-sizing: border-box; }
-.payment-dialog::backdrop { background: rgba(20, 25, 32, .5); }
-.payment-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
-.payment-header h2 { font-size: 20px; margin: 0; }
-.payment-close { width: 36px; height: 36px; flex-shrink: 0; border: 0; border-radius: 4px; background: #f1f4f6; font-size: 24px; color: #202832; cursor: pointer; }
-.payment-dialog h3 { font-size: 18px; margin: 0 0 12px; }
-.payment-dialog p { line-height: 1.5; }
-.payment-price { font-size: 30px; font-weight: 700; margin: 8px 0; }
-.payment-price span { font-size: 14px; font-weight: 400; color: #586474; }
-.payment-dialog label { display: block; font-size: 14px; font-weight: 600; margin: 16px 0 8px; }
-.payment-dialog input { width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #aab5c2; border-radius: 4px; font: inherit; padding: 11px; background: #fff; color: inherit; }
-.payment-dialog form .btn { width: 100%; margin-top: 16px; justify-content: center; }
-.payment-dialog .btn { white-space: normal; min-height: 42px; }
+.payment-dialog { width: min(440px, calc(100% - 28px)); margin: auto; padding: 26px 24px 20px; border: 0; border-radius: 22px; background: #fff; color: #0f172a; max-height: calc(100dvh - 28px); overflow: auto; box-sizing: border-box; box-shadow: 0 24px 70px rgba(15, 23, 42, .28); font-family: "Public Sans", Inter, system-ui, sans-serif; }
+.payment-dialog[open] { animation: pay-in .28s ease; }
+.payment-dialog::backdrop { background: rgba(15, 23, 42, .58); }
+.pay-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.pay-lock { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #fff4d6; color: #b86e00; }
+.payment-close { width: 36px; height: 36px; margin: -6px -6px 0 0; border: 0; border-radius: 999px; background: transparent; font-size: 26px; line-height: 1; color: #64748b; cursor: pointer; }
+.payment-close:hover { background: #f1f5f9; color: #0f172a; }
+.pay-kicker { margin: 14px 0 6px; color: #2563eb; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.payment-dialog h2 { margin: 0 0 8px; font-size: clamp(1.45rem, 3vw, 1.75rem); line-height: 1.15; letter-spacing: -.03em; color: #0f172a; }
+.pay-copy { margin: 0 0 14px; color: #64748b; font-size: .95rem; line-height: 1.55; }
+.pay-price { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 16px; padding: 14px 16px; border-radius: 14px; background: #f8fafc; }
+.pay-price b { display: block; font-size: .98rem; }
+.pay-price small { display: block; margin-top: 2px; color: #64748b; font-size: .8rem; }
+.pay-price strong { font-size: 1.7rem; letter-spacing: -.03em; }
+.payment-dialog label { display: grid; gap: 6px; margin: 0 0 12px; color: #334155; font-size: .86rem; font-weight: 650; }
+.payment-dialog input { width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 12px; font: inherit; font-size: 1rem; font-weight: 450; padding: 12px 14px; background: #fff; color: #0f172a; }
+.payment-dialog input:focus { outline: 3px solid #bfdbfe; border-color: #2563eb; }
+.payment-dialog .pay-submit { width: 100%; margin-top: 4px; border: 0; border-radius: 12px; background: #2563eb; color: #fff; font-size: 1rem; font-weight: 700; padding: 14px 16px; justify-content: center; cursor: pointer; }
+.payment-dialog .pay-submit:hover { background: #1d4ed8; }
+.payment-dialog .btn { white-space: normal; min-height: 44px; }
 .payment-dialog button:disabled { opacity: .6; cursor: not-allowed; }
 .payment-dialog [hidden] { display: none !important; }
-.payment-dialog :focus-visible { outline: 2px solid #1a7c60; outline-offset: 3px; }
-.payment-link { border: 0; background: none; color: #126647; text-decoration: underline; padding: 12px 0 0; font: inherit; cursor: pointer; }
-#checkPayment { width: 100%; margin-top: 10px; justify-content: center; }
-#paymentMessage { font-size: 14px; color: #255946; margin: 16px 0 0; overflow-wrap: anywhere; }
+.payment-dialog :focus-visible { outline: 3px solid #bfdbfe; outline-offset: 2px; }
+.payment-link { display: block; width: 100%; margin-top: 12px; border: 0; background: none; color: #1d4ed8; text-decoration: underline; padding: 4px 0 0; font: inherit; font-size: .92rem; cursor: pointer; text-align: center; }
+#checkPayment { width: 100%; margin-top: 10px; justify-content: center; border-radius: 12px; }
+.pay-note, .payment-terms, .receipt-note { font-size: .78rem; line-height: 1.5; color: #94a3b8; text-align: center; }
+.pay-note { margin: 14px 0 0; }
+.payment-terms { margin: 4px 0 12px; text-align: left; }
+.payment-terms a { color: #1d4ed8; }
+#paymentMessage { font-size: .9rem; color: #0f766e; margin: 14px 0 0; overflow-wrap: anywhere; }
 #paymentMessage:empty { display: none; }
-#paymentMessage.payment-error { color: #a22525; }
-.receipt-details { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 12px; font-size: 14px; }
-.receipt-details dt { color: #586474; }
+#paymentMessage.payment-error { color: #b91c1c; }
+.receipt-details { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 10px 12px; margin: 0 0 14px; font-size: .92rem; }
+.receipt-details dt { color: #64748b; }
 .receipt-details dd { margin: 0; overflow-wrap: anywhere; }
-.receipt-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.receipt-note { font-size: 13px; color: #586474; }
-.payment-terms { font-size: 12px; color: #586474; }
-.payment-terms a { color: #126647; }
+.receipt-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.receipt-actions .btn { flex: 1 1 160px; justify-content: center; border-radius: 12px; }
+@keyframes pay-in { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .payment-dialog[open] { animation: none; } }
 #receiptCode, #accessCode { font-family: monospace; font-size: 13px; }
 @media (max-width: 600px) { .preview-status { align-items: flex-start; } .payment-dialog { padding: 18px; } .receipt-actions .btn { flex: 1 1 100%; justify-content: center; } }
 @media print { .payment-dialog, .purchase-actions { display: none !important; } }
+
+/* Loaded last: keep the assessment masthead aligned after preview/payment widgets mount. */
+.assess .assess-top{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:0!important;
+  padding:24px 20px!important;
+  text-align:center!important;
+  background:linear-gradient(135deg,#fff,#f7fbfb)!important;
+  border-color:#d7e2df!important;
+  overflow:hidden!important;
+}
+.assess-logo{width:min(360px,84vw);height:auto}
+.assess h1{
+  position:absolute!important;
+  width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;border:0!important;
+}
+.assess .assess-intro{margin:0!important;color:#526176!important}
+.assess .assess-top .preview-badge{margin-top:0!important}
+.assess-purchase{width:100%;justify-content:center!important;margin-top:8px!important}
+.assess-purchase .btn{width:auto;min-width:118px;justify-content:center}
+@media (max-width: 620px){
+  html,body{max-width:100%;overflow-x:hidden}
+  .assess,.assess-card,.option,.q-title,.q-desc,.q-cat,.parts,.part{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .assess .assess-top{padding:18px 14px!important}
+  .assess-logo{width:min(300px,82vw)}
+  .assess-purchase{display:grid!important;grid-template-columns:1fr;width:100%}
+  .assess-purchase .btn{width:100%;min-width:0}
+  .q-meta{display:grid!important;grid-template-columns:1fr;gap:8px}
+  .q-cat{justify-self:start!important;text-align:left!important}
+  .assess-nav{align-items:stretch}
+  .assess-nav .btn{min-width:0}
+}

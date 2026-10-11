@@ -80,10 +80,13 @@
     lastFocus = document.activeElement;
     dialog.querySelectorAll('[data-payment-view]').forEach(panel => { panel.hidden = panel.dataset.paymentView !== view; });
     message('');
+    const titles = { buy: 'Unlock your full action plan', restore: 'Restore your purchase', receipt: 'Payment verified' };
+    dialog.querySelector('#paymentTitle').textContent = titles[view];
+    dialog.querySelector('.pay-kicker').hidden = view !== 'buy';
     if (!dialog.open) {
       if (dialog.showModal) dialog.showModal(); else dialog.setAttribute('open', '');
     }
-    dialog.querySelector(view === 'restore' ? '#accessCode' : view === 'buy' ? '#buyerEmail' : '#copyAccess').focus();
+    dialog.querySelector(view === 'restore' ? '#accessCode' : view === 'buy' ? '#buyerName' : '#copyAccess').focus();
     if (view === 'receipt') fillReceipt();
     if (view === 'buy') {
       dialog.querySelector('#checkPayment').hidden = !pendingOrder;
@@ -174,13 +177,21 @@
     dialog = document.createElement('dialog');
     dialog.className = 'payment-dialog';
     dialog.setAttribute('aria-labelledby', 'paymentTitle');
-    dialog.innerHTML = `<header class="payment-header"><h2 id="paymentTitle">Biz Matrix</h2><button class="payment-close" type="button" aria-label="Close" title="Close">&times;</button></header>
-      <section data-payment-view="buy"><h3>Full Report</h3><p class="payment-price">&#8377;49 <span>one-time payment</span></p><p>Full content and PDF download.</p><form id="purchaseForm"><label for="buyerEmail">Email (optional)</label><input id="buyerEmail" name="email" type="email" autocomplete="email" maxlength="254"><button id="payPhonePe" class="btn primary" type="submit" data-network>Pay &#8377;49 with PhonePe</button></form><button id="checkPayment" class="btn" type="button" data-network hidden>Check Payment Status</button><button class="payment-link" type="button" data-restore>Already purchased?</button></section>
-      <section data-payment-view="restore" hidden><h3>Restore Purchase</h3><form id="restoreForm"><label for="accessCode">Access code</label><input id="accessCode" autocomplete="off" spellcheck="false" required pattern="BIZ-[A-Za-z0-9_-]{43}"><button class="btn primary" type="submit" data-network>Restore Access</button></form></section>
-      <section data-payment-view="receipt" hidden><h3>Payment Verified</h3><dl class="receipt-details"><dt>Total paid</dt><dd>&#8377;49</dd><dt>Order</dt><dd id="receiptOrder"></dd><dt>Date</dt><dd id="receiptDate"></dd></dl><label for="receiptCode">Access code</label><input id="receiptCode" readonly><div class="receipt-actions"><button class="btn" id="copyAccess" type="button">Copy Access Code</button><button class="btn primary" id="receiptDownload" type="button">Download Full PDF</button></div><p class="receipt-note">Keep your access code private.</p></section>
+    dialog.innerHTML = `<div class="pay-top"><span class="pay-lock" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><button class="payment-close" type="button" aria-label="Close" title="Close">&times;</button></div>
+      <p class="pay-kicker">One-time premium access</p>
+      <h2 id="paymentTitle">Unlock your full action plan</h2>
+      <section data-payment-view="buy"><p class="pay-copy">Get the complete legal analysis, statutory checklist, compliance calendar and PDF-ready report.</p><div class="pay-price"><div><b>One-Time Report Access</b><small>Inclusive of all taxes</small></div><strong>&#8377;49</strong></div><form id="purchaseForm"><label for="buyerName">Full name<input id="buyerName" name="name" autocomplete="name" required maxlength="80" placeholder="Your full name"></label><label for="buyerEmail">Email address<input id="buyerEmail" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label><label for="buyerPhone">WhatsApp phone<input id="buyerPhone" name="phone" inputmode="numeric" autocomplete="tel" required maxlength="10" pattern="[6-9][0-9]{9}" placeholder="10-digit Indian mobile number"></label><button id="payPhonePe" class="btn primary pay-submit" type="submit" data-network>Continue to secure payment &#183; &#8377;49</button></form><button id="checkPayment" class="btn" type="button" data-network hidden>Check payment status</button><button class="payment-link" type="button" data-restore>Already purchased? Restore access</button><p class="pay-note">Payments are processed securely by PhonePe over HTTPS. We do not collect card or UPI details on this page.</p></section>
+      <section data-payment-view="restore" hidden><p class="pay-copy">Enter the access code from your purchase receipt.</p><form id="restoreForm"><label for="accessCode">Access code<input id="accessCode" autocomplete="off" spellcheck="false" required pattern="BIZ-[A-Za-z0-9_-]{43}" placeholder="BIZ-…"></label><button class="btn primary pay-submit" type="submit" data-network>Restore access</button></form></section>
+      <section data-payment-view="receipt" hidden><p class="pay-copy">Your full report and PDF are unlocked on this browser.</p><dl class="receipt-details"><dt>Total paid</dt><dd>&#8377;49</dd><dt>Order</dt><dd id="receiptOrder"></dd><dt>Date</dt><dd id="receiptDate"></dd></dl><label for="receiptCode">Access code<input id="receiptCode" readonly></label><div class="receipt-actions"><button class="btn" id="copyAccess" type="button">Copy access code</button><button class="btn primary" id="receiptDownload" type="button">Download full PDF</button></div><p class="receipt-note">Keep your access code private. You can use it to restore this purchase later.</p></section>
       <p id="paymentMessage" role="status" aria-live="polite"></p>`;
     document.body.appendChild(dialog);
-    dialog.querySelector('#purchaseForm').insertAdjacentHTML('beforeend', '<p class="payment-terms">By continuing, you agree to the <a href="terms/" target="_blank" rel="noopener">Terms</a>, <a href="privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a> and <a href="refund-policy/" target="_blank" rel="noopener">Refund Policy</a>.</p>');
+    dialog.querySelector('#payPhonePe').insertAdjacentHTML('beforebegin', '<p class="payment-terms">By continuing, you agree to the <a href="../terms/" target="_blank" rel="noopener">Terms</a>, <a href="../privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a> and <a href="../refund-policy/" target="_blank" rel="noopener">Refunds</a>.</p>');
+    try {
+      const savedBuyer = JSON.parse(storage.get('bizmatrix.buyer.v1') || '{}');
+      if (savedBuyer.name) dialog.querySelector('#buyerName').value = savedBuyer.name;
+      if (savedBuyer.email) dialog.querySelector('#buyerEmail').value = savedBuyer.email;
+      if (savedBuyer.phone) dialog.querySelector('#buyerPhone').value = savedBuyer.phone;
+    } catch { /* A saved buyer profile is only a convenience. */ }
     dialog.querySelector('.payment-close').onclick = close;
     document.addEventListener('click', event => {
       const button = event.target.closest('[data-buy],[data-restore],[data-receipt]');
@@ -191,8 +202,15 @@
     dialog.querySelector('#purchaseForm').onsubmit = event => {
       event.preventDefault();
       run(async () => {
+        const name = dialog.querySelector('#buyerName').value.trim();
+        const email = dialog.querySelector('#buyerEmail').value.trim();
+        const phone = dialog.querySelector('#buyerPhone').value.trim();
+        if (name.length < 2) throw new Error('Enter your full name.');
+        if (email.length > 254 || !/^\S+@\S+\.\S+$/.test(email)) throw new Error('Enter a valid email address.');
+        if (!/^[6-9]\d{9}$/.test(phone)) throw new Error('Enter a 10-digit Indian mobile number.');
+        storage.set('bizmatrix.buyer.v1', JSON.stringify({ name, email, phone }));
         await ensureSession();
-        const order = await api('/orders', { email: dialog.querySelector('#buyerEmail').value });
+        const order = await api('/orders', { email });
         if (order.alreadyPaid) { await unlock(order); show('receipt'); return; }
         const checkout = new URL(order.checkoutUrl);
         if (order.amount !== 4900 || checkout.protocol !== 'https:' || !checkout.hostname.endsWith('.phonepe.com')) throw new Error('Checkout could not be verified. Please try again.');

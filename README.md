@@ -10,6 +10,7 @@ Business structure and registration intelligence for India, FY 2026-27, updated 
 - Server-side order verification, durable SQLite purchases and private access codes for restoration.
 - Full report data is served only through an authenticated, paid backend endpoint, never shipped in public JavaScript.
 - PDF downloads only. There is no ZIP or folder download.
+- The public homepage is a branded landing site. The assessment app is available at `/assessment/`.
 - Existing legal/support routes and GitHub Pages deployment remain in place.
 
 Checkout is implemented but **not live until the backend is deployed, its private catalog is supplied and PhonePe credentials are configured**. No credentials are included. See [PhonePe Setup](README-PHONEPE.md).
@@ -23,9 +24,9 @@ npm.cmd --prefix saas-backend ci
 npm.cmd --prefix saas-backend start
 ```
 
-Open `http://localhost:3000/`. Without credentials, the free assessment remains usable and checkout is unavailable. The backend serves only explicitly allowed site files, not the entire repository.
+Open `http://localhost:3000/assessment/`. Without credentials, the free assessment remains usable and checkout is unavailable. The backend serves only explicitly allowed site files, not the entire repository.
 
-Opening `index.html` directly is sufficient for the free preview, but payments require the backend.
+Opening `assessment/index.html` directly is sufficient for the free preview, but payments require the backend.
 
 ## Importing an updated report
 
@@ -50,7 +51,7 @@ GitHub Pages cannot execute the payment backend. To retain Pages for the fronten
 
 ### Custom domain
 
-`CNAME` contains `bizmatrix.in`. Set these GoDaddy A records for `@`, removing conflicting parking records:
+`CNAME` contains `www.bizmatrix.in` so the GitHub Pages certificate matches the `www` URL. Set these GoDaddy A records for `@`, removing conflicting parking records:
 
 ```text
 185.199.108.153
@@ -59,7 +60,7 @@ GitHub Pages cannot execute the payment backend. To retain Pages for the fronten
 185.199.111.153
 ```
 
-Set the `www` CNAME to `biznexa.github.io`. Once DNS and GitHub's certificate are ready, enable Enforce HTTPS in repository Pages settings. A disabled checkbox means DNS/certificate setup is not yet complete, not a broken website button.
+Set the `www` CNAME to `biznexa.github.io`. Once DNS and GitHub's certificate are ready, enable Enforce HTTPS in repository Pages settings. A disabled checkbox means DNS/certificate setup is not yet complete, not a broken website button. GitHub may take some time to issue or refresh the certificate after the custom domain changes.
 
 ## Support and policies
 

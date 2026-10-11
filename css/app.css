@@ -17,6 +17,7 @@ button{cursor:pointer}
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:linear-gradient(180deg,#09111f,#0f1b2e);color:#fff;padding:24px 16px;z-index:50;overflow:auto}
 .brand{display:flex;gap:11px;align-items:center;padding:4px 8px 25px}
 .brand-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#3b82f6,#06b6d4);display:grid;place-items:center;font-weight:900;box-shadow:0 8px 22px rgba(37,99,235,.3)}
+.sidebar-logo-mark{width:42px;height:42px;border-radius:10px;background:#fff;padding:4px;object-fit:contain;box-shadow:0 8px 22px rgba(37,99,235,.18)}
 .brand-title{font-size:14px;font-weight:850;line-height:1.25}
 .brand-sub{font-size:10px;color:#94a3b8;margin-top:3px}
 .nav-label{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#64748b;font-weight:800;padding:14px 10px 7px}
@@ -91,6 +92,7 @@ button{cursor:pointer}
   .print-page:last-child{page-break-after:auto}
   .print-cover{min-height:260mm;display:flex;flex-direction:column;justify-content:space-between}
   .print-brand{display:flex;align-items:center;gap:10px;border-bottom:2px solid #0f172a;padding-bottom:13px}
+  .print-logo{width:34px;height:34px;object-fit:contain}
   .print-mark{width:34px;height:34px;border-radius:9px;background:#2563eb;color:#fff;display:grid;place-items:center;font-weight:950}
   .print-title{font-size:29px;font-weight:950;letter-spacing:-.03em;margin-top:35px}
   .print-sub{font-size:11px;color:#64748b;line-height:1.6;margin-top:8px;max-width:650px}
@@ -372,3 +374,23 @@ h2.gh{margin:20px 0 2px;font-size:15px;font-weight:900}.gn{margin:0 0 10px;font-
 @media (max-width:640px){.og{grid-template-columns:1fr}.parts{flex-direction:column;align-items:stretch}.part-line{display:none}}
 .warnbox{margin-top:14px;background:#fffbeb;border:1px solid #fcd34d;color:#78350f;border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.6}
 .exec-summary p{margin:0 0 12px;line-height:1.65}.exec-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.exec-points>div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px}.exec-points b{display:block;font-size:11px;margin-bottom:4px}.exec-points span{display:block;color:#475569;font-size:11px;line-height:1.55}.exec-note{margin-top:12px;padding:10px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:10px;line-height:1.55;color:#1e3a8a}.doc-help{font-size:10px;color:#64748b;line-height:1.5;margin:-2px 0 10px}.comp-block{margin-top:16px}.comp-block-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:9px}.comp-block-head h3{margin:0;font-size:15px}.comp-block-head p{margin:4px 0 0;color:#64748b;font-size:10px;line-height:1.5}.initial-block .comp-block-head h3:before{content:'01';display:inline-grid;place-items:center;width:25px;height:25px;margin-right:7px;border-radius:8px;background:#ecfdf5;color:#047857;font-size:9px}.annual-block .comp-block-head h3:before{content:'02';display:inline-grid;place-items:center;width:25px;height:25px;margin-right:7px;border-radius:8px;background:#eff6ff;color:#1d4ed8;font-size:9px}@media(max-width:760px){.exec-points{grid-template-columns:1fr}.comp-block-head{flex-direction:column}.content{padding:18px 14px 40px}.topbar{padding:0 14px}.hero h1{font-size:25px}}
+
+/* Biz Matrix brand assets */
+.assess-top{
+  flex-direction:column!important;
+  gap:9px!important;
+  min-height:118px!important;
+  background:linear-gradient(135deg,#ffffff 0%,#f7fbfb 100%)!important;
+  border-color:#d7e2df!important;
+  color:#0f172a!important;
+}
+.assess-logo{width:min(360px,86vw);height:auto;position:relative;z-index:2}
+.assess h1{
+  position:absolute!important;
+  width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;border:0!important;
+}
+.assess-intro{position:relative;z-index:2;color:#526176!important;margin:0!important}
+.assess-top .preview-badge{position:relative;z-index:2}

@@ -35,7 +35,7 @@ For production:
 ```dotenv
 NODE_ENV=production
 PHONEPE_ENV=production
-FRONTEND_URL=https://bizmatrix.in/
+FRONTEND_URL=https://www.bizmatrix.in/assessment/
 FRONTEND_ORIGINS=https://bizmatrix.in,https://www.bizmatrix.in
 DATA_DIR=/your/persistent/private/data
 PREMIUM_DIR=/your/private/report

@@ -10,7 +10,7 @@ dotenv.config({ path: path.join(directory, '.env') });
 const mode = process.env.PHONEPE_ENV || 'sandbox';
 if (!['sandbox', 'production'].includes(mode)) throw new Error('PHONEPE_ENV must be sandbox or production.');
 const port = Number(process.env.PORT || 3000);
-const frontendUrl = process.env.FRONTEND_URL || `http://localhost:${port}/`;
+const frontendUrl = process.env.FRONTEND_URL || `http://localhost:${port}/assessment/`;
 const frontend = new URL(frontendUrl);
 if (mode === 'production' && frontend.protocol !== 'https:') throw new Error('Production FRONTEND_URL must use HTTPS.');
 const allowedOrigins = (process.env.FRONTEND_ORIGINS || `${frontend.origin},https://bizmatrix.in,https://www.bizmatrix.in`).split(',').map(value => value.trim()).filter(Boolean);

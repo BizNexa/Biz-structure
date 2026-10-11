@@ -33,7 +33,7 @@ function literal(node) {
 
 async function main() {
   const { parse, serialize, parseFragment } = await import(pathToFileURL(requireTool.resolve('parse5')).href);
-  const oldDocument = parse(fs.readFileSync(path.join(root, 'index.html'), 'utf8'));
+  const oldDocument = parse(fs.readFileSync(path.join(root, 'assessment', 'index.html'), 'utf8'));
   const document = parse(fs.readFileSync(sourceFile, 'utf8'));
   const elements = (tree, predicate) => {
     const found = [];
@@ -143,7 +143,7 @@ async function main() {
   const head = elements(document, n => n.tagName === 'head')[0];
   setText(elements(document, n => n.tagName === 'title')[0], 'Biz Matrix | Business Structure & Registration Intelligence');
   setAttr(elements(document, n => n.tagName === 'meta' && attr(n, 'name') === 'description')[0], 'content', 'Biz Matrix business structure and registration intelligence for India, FY 2026-27. Free 35% report preview.');
-  append(head, '<meta name="robots" content="index,follow"><link rel="canonical" href="https://bizmatrix.in/"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/preview.css"><link rel="stylesheet" href="css/payments.css">');
+  append(head, '<meta name="robots" content="index,follow"><link rel="canonical" href="https://www.bizmatrix.in/assessment/"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../css/app.css"><link rel="stylesheet" href="../css/preview.css"><link rel="stylesheet" href="../css/payments.css">');
   const footers = elements(oldDocument, n => n.tagName === 'footer' && attr(n, 'class') === 'site-footer');
   for (const [id, footer] of [['assessment', footers[0]], ['dashboard', footers[1]]]) {
     const target = elements(document, n => attr(n, 'id') === id)[0];
@@ -168,7 +168,12 @@ async function main() {
   fs.writeFileSync(path.join(root, 'css/app.css'), css);
   fs.writeFileSync(path.join(root, 'js/pdf.min.js'), vendor);
   fs.writeFileSync(path.join(root, 'js/app.js'), code);
-  fs.writeFileSync(path.join(root, 'index.html'), serialize(document).replace(/[ \t]+$/gm, ''));
+  fs.mkdirSync(path.join(root, 'assessment'), { recursive: true });
+  let html = serialize(document).replace(/[ \t]+$/gm, '');
+  html = html.replaceAll('src="js/', 'src="../js/');
+  for (const page of ['terms', 'privacy-policy', 'refund-policy', 'cookie-policy', 'disclaimer', 'shipping-delivery', 'grievance-redressal', 'accessibility', 'corporate-information', 'contact']) html = html.replaceAll(`href="${page}/"`, `href="../${page}/"`);
+  html = html.replaceAll('href="index.html"', 'href="./"');
+  fs.writeFileSync(path.join(root, 'assessment', 'index.html'), html);
   console.log(JSON.stringify({ questions: 19, totalRegistrations, registrationLimit, entities: Object.fromEntries(Object.entries(entities).map(([key, e]) => [key, { docs: e.docs.flatMap(g => g[1]).length, docsTotal: e.docsTotal, compliance: e.comp.length, compTotal: e.compTotal }])) }, null, 2));
 }
 module.exports = { walk, literal };
