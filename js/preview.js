@@ -97,7 +97,7 @@ function metricCards(e) {
 function renderDashboard() {
   const e = ENTITIES[state.rec.key];
   document.getElementById('printBtn').disabled = false;
-  document.getElementById('printBtn').innerHTML = `<span class="nav-icon" aria-hidden="true">${ICONS.file}</span>${AccessProvider.isPremium() ? 'Download Full PDF' : 'Download Preview PDF'}`;
+  document.getElementById('printBtn').innerHTML = `<span class="nav-icon" aria-hidden="true">${ICONS.file}</span>${AccessProvider.isPremium() ? 'Download Full PDF' : 'Download PDF · ₹49'}`;
   document.getElementById('heroTitle').textContent = e.name;
   document.getElementById('heroDesc').textContent = e.best;
   document.getElementById('recTitle').textContent = e.name;

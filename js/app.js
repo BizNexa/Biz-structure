@@ -1632,6 +1632,11 @@ function printNow(){
 const pdfClean=s=>String(s==null?"":s).replace(/₹/g,"Rs. ").replace(/→/g,"->").replace(/[✓✔]/g,"Yes").replace(/☐/g,"[ ]").replace(/≥/g,">=").replace(/[^\x09\x0A\x20-\x7E\xA0-\xFF\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026]/g,"");
 function pdfNow(){
  if(!state.rec||!state.rec.key){toast(state.rec&&state.rec.conflict?"No compatible structure was identified, so the report cannot be built. Revise your Part 1 answers and regenerate.":"Please complete the assessment first.");return}
+ if(!AccessProvider.isPremium()){
+  if(window.BizPayments&&typeof window.BizPayments.openCheckout==="function")window.BizPayments.openCheckout();
+  else{const buy=document.querySelector("[data-buy]");if(buy)buy.click();}
+  return;
+ }
  try{
   if(!window.jspdf||typeof window.jspdf.jsPDF!=="function")throw new Error("PDF engine unavailable");
   buildPrint(ENTITIES[state.rec.key]);
