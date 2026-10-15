@@ -13,8 +13,8 @@ const receipt = { orderId, paidAt: Date.now(), recoveryCode: 'BIZ-' + 'c'.repeat
 
 async function harness({ paid = false, returned = false, failed = false, includePdf = false, available = true } = {}) {
   const { window, document } = parseHTML(fs.readFileSync(path.join(root, 'assessment/index.html'), 'utf8'));
-  const href = 'http://localhost:3000/' + (returned ? '?phonepe_order_id=' + orderId : '');
-  const storage = new Map([['biz_report_unlocked', 'true'], ['premium', 'true'], ['bizmatrix.phonepe.session.v1', 'b'.repeat(43)]]);
+  const href = 'http://localhost:3000/' + (returned ? '?cashfree_order_id=' + orderId : '');
+  const storage = new Map([['biz_report_unlocked', 'true'], ['premium', 'true'], ['bizmatrix.cashfree.session.v1', 'b'.repeat(43)]]);
   if (returned) storage.set('bizmatrix.assessment.v1', JSON.stringify({ answers: profile, docs: { '0_0': true } }));
   const calls = [], errors = [], downloads = [];
   let verified = paid;
@@ -24,6 +24,7 @@ async function harness({ paid = false, returned = false, failed = false, include
   window.location = { href, assign(url) { downloads.push(url); } };
   window.history = { replaceState(_state, _title, url) { window.location.href = url; } };
   window.BIZ_API_BASE_URL = '';
+  window.Cashfree = () => ({ checkout: async ({ paymentSessionId }) => { downloads.push('cashfree:' + paymentSessionId); } });
   const getComputedStyle = element => ({ ...element.style, getPropertyValue: property => element.style[property] || '', display: 'table', paddingTop: '0', paddingRight: '0', paddingBottom: '0', paddingLeft: '0', fontSize: '12px', fontFamily: 'Arial', fontStyle: 'normal', fontWeight: 'normal', color: 'rgb(0, 0, 0)', backgroundColor: 'rgb(255, 255, 255)', textAlign: 'left', verticalAlign: 'top' });
   window.getComputedStyle = getComputedStyle;
   const localStorage = { getItem: key => storage.get(key) || null, setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) };
@@ -36,7 +37,7 @@ async function harness({ paid = false, returned = false, failed = false, include
     else if (endpoint === '/premium/content') { status = verified ? 200 : 403; result = verified ? catalog : { error: 'Payment required' }; }
     else if (endpoint.endsWith('/verify')) { verified = !failed; result = { premium: verified, receipt: verified ? receipt : null, state: failed ? 'FAILED' : 'COMPLETED' }; }
     else if (endpoint === '/restore-access') { verified = true; result = { premium: true, receipt }; }
-    else if (endpoint === '/orders') result = { orderId, amount: 4900, checkoutUrl: 'https://mercury.phonepe.com/checkout/test' };
+    else if (endpoint === '/orders') result = { orderId, amount: 4900, currency: 'INR', paymentSessionId: 'session_test', mode: 'sandbox' };
     else throw new Error('Unexpected test endpoint: ' + endpoint);
     return { ok: status === 200, status, json: async () => result };
   };
@@ -66,7 +67,7 @@ async function main() {
   free.document.getElementById('buyerEmail').value = 'buyer@example.com';
   free.document.getElementById('buyerPhone').value = '9876543210';
   form.dispatchEvent(new free.window.Event('submit', { cancelable: true })); await free.tick();
-  assert.match(free.downloads[0], /^https:\/\/mercury\.phonepe\.com/);
+  assert.equal(free.downloads[0], 'cashfree:session_test');
   assert.equal(JSON.parse(free.calls.find(call => call.endpoint === '/orders').options.body).amount, undefined);
   assert.equal(JSON.parse(free.storage.get('bizmatrix.assessment.v1')).answers.sector, 'svc');
   free.document.querySelector('[data-restore]').click();
@@ -77,7 +78,7 @@ async function main() {
 
   const unavailable = await harness({ available: false }); unavailable.assess();
   unavailable.document.querySelector('[data-buy]').click(); await unavailable.tick();
-  assert.equal(unavailable.document.getElementById('payPhonePe').disabled, true);
+  assert.equal(unavailable.document.getElementById('payCashfree').disabled, true);
   assert.match(unavailable.document.getElementById('paymentMessage').textContent, /unavailable/);
   assert.equal(unavailable.document.querySelectorAll('#documents [data-doc]').length, 7);
 
@@ -99,7 +100,7 @@ async function main() {
   assert.equal(paid.document.getElementById('receiptCode').value, receipt.recoveryCode);
   assert.equal(paid.document.querySelectorAll('#printReport .print-preview-note').length, 0);
   assert.ok(paid.document.getElementById('printReport').textContent.includes('INC-20A'));
-  assert.ok(!paid.window.location.href.includes('phonepe_order_id'));
+  assert.ok(!paid.window.location.href.includes('cashfree_order_id'));
   paid.document.querySelector('[data-rf="0"]').click();
   paid.evaluate('buildPrint(ENTITIES.private_limited)');
   assert.ok(paid.evaluate('RG.getPreview(true).visibleItems.length > 0'), 'PDF ignores the not-applicable view filter');

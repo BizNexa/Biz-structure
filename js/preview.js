@@ -2,7 +2,7 @@ const APP_CONFIG = Object.freeze({
   productName: 'Biz Matrix',
   supportEmail: 'nexifydigital03@gmail.com',
   freePreviewPercent: 35,
-  premiumMode: 'phonepe',
+  premiumMode: 'cashfree',
   paymentEnabled: true,
   pricePaise: 4900
 });

@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
+import { createHmac } from 'node:crypto';
 import { createApp } from '../app.js';
 import { createStore } from '../store.js';
-import { createPhonePeGateway, PRICE_PAISE } from '../phonepe.js';
+import { createCashfreeGateway, PRICE_PAISE } from '../cashfree.js';
+
+const buyer = { name: 'Asha Rao', email: 'buyer@example.com', phone: '9876543210' };
 
 async function fixture(t, options = {}) {
   const directory = mkdtempSync(path.join(tmpdir(), 'bizmatrix-payment-test-'));
@@ -15,13 +17,13 @@ async function fixture(t, options = {}) {
   const statuses = new Map();
   const gateway = {
     configured: true, webhookConfigured: true,
-    async createOrder(id, redirect) {
-      requests.push({ id, redirect });
-      statuses.set(id, { orderId: 'PG_' + id, merchantOrderId: id, amount: 4900, state: 'PENDING' });
-      return { orderId: 'PG_' + id, redirectUrl: 'https://mercury.phonepe.com/checkout/' + id };
+    async createOrder({ orderId, returnUrl }) {
+      requests.push({ id: orderId, redirect: returnUrl });
+      statuses.set(orderId, { orderId: 'PG_' + orderId, merchantOrderId: orderId, amount: 4900, state: 'PENDING' });
+      return { orderId: 'PG_' + orderId, paymentSessionId: 'session_' + orderId };
     },
     async getOrderStatus(id) { return statuses.get(id); },
-    validateCallback(auth, body) { if (auth !== 'valid-test-callback') throw new Error('Invalid callback'); return JSON.parse(body); },
+    validateCallback(_timestamp, body, signature) { if (signature !== 'valid-test-callback') throw new Error('Invalid callback'); return JSON.parse(body); },
     ...options.gateway
   };
   const app = createApp({ store, gateway, mode: 'sandbox', frontendUrl: 'https://www.bizmatrix.in/assessment/', allowedOrigins: ['https://www.bizmatrix.in'], catalog: { version: 1, entities: { private_limited: { private: 'paid-data' } }, registrations: { groups: [] } }, siteRoot: path.resolve('..'), ...options });
@@ -40,10 +42,11 @@ async function fixture(t, options = {}) {
 
 test('price is fixed at 4900 paise and duplicate checkout is reused', async t => {
   const f = await fixture(t); const token = await f.session();
-  const first = await f.request('/api/orders', token, { amount: 1, email: 'buyer@example.com' });
+  const first = await f.request('/api/orders', token, { ...buyer, amount: 1 });
   assert.equal(first.status, 201); assert.equal(first.body.amount, PRICE_PAISE);
   assert.equal(f.store.getOrder(first.body.orderId).amount, 4900);
-  assert.equal(new URL(f.requests[0].redirect).searchParams.get('phonepe_order_id'), first.body.orderId);
+  assert.equal(first.body.paymentSessionId, 'session_' + first.body.orderId);
+  assert.equal(new URL(f.requests[0].redirect).searchParams.get('cashfree_order_id'), '{order_id}');
   const second = await f.request('/api/orders', token, { amount: 0 });
   assert.equal(second.body.orderId, first.body.orderId); assert.equal(f.requests.length, 1);
 });
@@ -58,7 +61,7 @@ test('free sessions and forged tokens cannot fetch premium data', async t => {
 
 test('retry checks a delayed completed payment before creating another charge', async t => {
   const f = await fixture(t); const token = await f.session();
-  const { orderId } = (await f.request('/api/orders', token, {})).body;
+  const { orderId } = (await f.request('/api/orders', token, buyer)).body;
   f.statuses.get(orderId).state = 'COMPLETED';
   const retry = await f.request('/api/orders', token, {});
   assert.equal(retry.body.alreadyPaid, true); assert.equal(retry.body.premium, true);
@@ -67,7 +70,7 @@ test('retry checks a delayed completed payment before creating another charge', 
 
 test('pending and failed payments do not unlock; another session cannot verify an order', async t => {
   const f = await fixture(t); const token = await f.session();
-  const { orderId } = (await f.request('/api/orders', token, {})).body;
+  const { orderId } = (await f.request('/api/orders', token, buyer)).body;
   const pending = await f.request('/api/orders/' + orderId + '/verify', token, {});
   assert.equal(pending.body.state, 'PENDING'); assert.equal(pending.body.premium, false);
   assert.equal((await f.request('/api/orders/' + orderId + '/verify', await f.session(), {})).status, 404);
@@ -77,7 +80,7 @@ test('pending and failed payments do not unlock; another session cannot verify a
 
 test('mismatched provider amount, provider id and merchant id fail verification', async t => {
   const f = await fixture(t); const token = await f.session();
-  const { orderId } = (await f.request('/api/orders', token, {})).body;
+  const { orderId } = (await f.request('/api/orders', token, buyer)).body;
   const valid = { ...f.statuses.get(orderId), state: 'COMPLETED' };
   for (const mismatch of [{ amount: 1 }, { orderId: 'other-provider-order' }, { merchantOrderId: 'other-merchant-order' }]) {
     f.statuses.set(orderId, { ...valid, ...mismatch });
@@ -88,7 +91,7 @@ test('mismatched provider amount, provider id and merchant id fail verification'
 
 test('verified payment unlocks content and purchase restoration without another charge', async t => {
   const f = await fixture(t); const token = await f.session();
-  const { orderId } = (await f.request('/api/orders', token, {})).body;
+  const { orderId } = (await f.request('/api/orders', token, buyer)).body;
   f.statuses.get(orderId).state = 'COMPLETED';
   const paid = await f.request('/api/orders/' + orderId + '/verify', token, {});
   assert.equal(paid.body.premium, true); assert.equal(paid.body.receipt.amount, 4900);
@@ -103,18 +106,18 @@ test('verified payment unlocks content and purchase restoration without another 
 
 test('webhook must authenticate and independently verify; repeated callbacks are idempotent', async t => {
   const f = await fixture(t); const token = await f.session();
-  const { orderId } = (await f.request('/api/orders', token, {})).body;
-  const callback = { event: 'checkout.order.completed', payload: { merchantOrderId: orderId, orderId: 'PG_' + orderId } };
-  assert.equal((await f.request('/api/phonepe/webhook', null, callback)).status, 401);
-  const send = body => f.request('/api/phonepe/webhook', null, body, { Authorization: 'valid-test-callback' });
+  const { orderId } = (await f.request('/api/orders', token, buyer)).body;
+  const callback = { type: 'PAYMENT_SUCCESS_WEBHOOK', data: { order: { order_id: orderId, cf_order_id: 'PG_' + orderId } } };
+  assert.equal((await f.request('/api/cashfree/webhook', null, callback)).status, 401);
+  const send = body => f.request('/api/cashfree/webhook', null, body, { 'x-webhook-signature': 'valid-test-callback', 'x-webhook-timestamp': String(Math.floor(Date.now() / 1000)) });
   assert.equal((await send(callback)).status, 200);
   assert.equal((await f.request('/api/access', token)).body.premium, false, 'Callback text alone must not grant access');
   f.statuses.get(orderId).state = 'COMPLETED';
-  for (const event of ['checkout.order.completed', 'CHECKOUT_ORDER_COMPLETED', 'PG_ORDER_COMPLETED', 0]) assert.equal((await send({ type: event, payload: callback.payload })).status, 200);
+  assert.equal((await send(callback)).status, 200);
   const receipt = (await f.request('/api/access', token)).body.receipt;
   assert.equal((await send(callback)).status, 200);
   assert.deepEqual((await f.request('/api/access', token)).body.receipt, receipt);
-  assert.equal((await send({ ...callback, payload: { ...callback.payload, orderId: 'wrong' } })).status, 400);
+  assert.equal((await send({ ...callback, data: { order: { ...callback.data.order, cf_order_id: 'wrong' } } })).status, 400);
 });
 
 test('offline checkout, invalid email, disallowed origins and private paths are rejected', async t => {
@@ -147,10 +150,12 @@ test('purchases and restoration survive restarts; sandbox purchases cannot unloc
   } finally { store.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
-test('official PhonePe SDK validates callback authentication without making API calls', () => {
-  const gateway = createPhonePeGateway({ clientId: 'unit-test-client', clientSecret: 'unit-test-secret', clientVersion: 1, mode: 'sandbox', webhookUsername: 'test-user', webhookPassword: 'test-password' });
-  const body = JSON.stringify({ event: 'checkout.order.completed', payload: { merchantOrderId: 'test-order' } });
-  const authorization = createHash('sha256').update('test-user:test-password').digest('hex');
-  assert.equal(gateway.validateCallback(authorization, body).payload.merchantOrderId, 'test-order');
-  assert.throws(() => gateway.validateCallback('invalid', body));
+test('Cashfree webhook signature is checked without calling the payment API', () => {
+  const gateway = createCashfreeGateway({ appId: 'unit-test-app', secretKey: 'unit-test-secret', mode: 'sandbox' });
+  const body = JSON.stringify({ type: 'PAYMENT_SUCCESS_WEBHOOK', data: { order: { order_id: 'test-order' } } });
+  const timestamp = String(Math.floor(Date.now() / 1000));
+  const signature = createHmac('sha256', 'unit-test-secret').update(timestamp + body).digest('base64');
+  assert.equal(gateway.validateCallback(timestamp, body, signature).data.order.order_id, 'test-order');
+  assert.throws(() => gateway.validateCallback(timestamp, body, 'invalid'));
+  assert.throws(() => gateway.validateCallback('1', body, signature));
 });

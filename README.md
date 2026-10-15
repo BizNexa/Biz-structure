@@ -6,14 +6,14 @@ Business structure and registration intelligence for India, FY 2026-27, updated 
 
 - 19-question assessment, seven entity structures and 62 registration rules.
 - Free preview limited to `floor(total items * 35 / 100)` per section. Filters do not expand it.
-- Rs. 49 one-time PhonePe payment unlocks the full report edition and full PDF download.
+- Rs. 49 one-time Cashfree payment unlocks the full report edition and full PDF download.
 - Server-side order verification, durable SQLite purchases and private access codes for restoration.
 - Full report data is served only through an authenticated, paid backend endpoint, never shipped in public JavaScript.
 - PDF downloads only. There is no ZIP or folder download.
 - The public homepage is a branded landing site. The assessment app is available at `/assessment/`.
 - Existing legal/support routes and GitHub Pages deployment remain in place.
 
-Checkout is implemented but **not live until the backend is deployed, its private catalog is supplied and PhonePe credentials are configured**. No credentials are included. See [PhonePe Setup](README-PHONEPE.md).
+Checkout is implemented but **not live until the backend is deployed, its private catalog is supplied and Cashfree credentials are configured on that server**. No credentials are included in the website. See [Cashfree Setup](README-CASHFREE.md).
 
 ## Local development
 
@@ -64,4 +64,4 @@ Set the `www` CNAME to `biznexa.github.io`. Once DNS and GitHub's certificate ar
 
 ## Support and policies
 
-About, Contact, Privacy, Terms, Refunds, Digital Delivery, Cookies, Disclaimer, Grievance Redressal, Accessibility and Corporate Information remain available as static directory routes. Payment-provider and delivery descriptions now match PhonePe and on-site PDF delivery. The owner should review the supplied policies before accepting live payments; this code change is not legal validation of their wording.
+About, Contact, Privacy, Terms, Refunds, Digital Delivery, Cookies, Disclaimer, Grievance Redressal, Accessibility and Corporate Information remain available as static directory routes. Payment-provider and delivery descriptions now match Cashfree and on-site PDF delivery. The owner should review the supplied policies before accepting live payments; this code change is not legal validation of their wording.
