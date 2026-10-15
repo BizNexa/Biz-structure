@@ -236,7 +236,7 @@ async function route(request, env, origin) {
     return json({ received: true }, 200, origin);
   }
 
-  if (request.method === 'GET' && url.pathname === '/health') return json({ ok: true, paymentsReady: ready, premiumReady: Boolean(catalog), mode }, 200, origin);
+  if (request.method === 'GET' && (url.pathname === '/health' || url.pathname === '/')) return json({ ok: true, paymentsReady: ready, premiumReady: Boolean(catalog), credentialsConfigured: configured, mode }, 200, origin);
   if (request.method === 'GET' && url.pathname === '/api/config') return json({ provider: 'Cashfree', amount: PRICE_PAISE, currency: 'INR', available: ready, mode }, 200, origin);
 
   if (request.method === 'POST' && url.pathname === '/api/setup/catalog') {
@@ -258,6 +258,8 @@ async function route(request, env, origin) {
     return json({ token }, 201, origin);
   }
 
+  const protectedPath = ['/api/access', '/api/orders', '/api/restore-access', '/api/premium/content'].includes(url.pathname) || /^\/api\/orders\/BIZ_[a-f0-9]{32}\/verify$/.test(url.pathname);
+  if (!protectedPath) return fail(404, 'Not found.', origin);
   const session = await sessionFrom(request, db);
   if (!session) return fail(401, 'Your session has expired. Restore your purchase to continue.', origin);
 
