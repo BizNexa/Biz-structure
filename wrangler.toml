@@ -6,7 +6,7 @@ compatibility_date = "2026-10-15"
 [[d1_databases]]
 binding = "DB"
 database_name = "bizmatrix"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "3b71b529-4f08-424f-97a8-988042d2de16"
 
 [vars]
 CASHFREE_ENV = "production"
