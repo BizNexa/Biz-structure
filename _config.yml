@@ -8,3 +8,7 @@ exclude:
   - saas-backend
   - saas-frontend
   - tools
+  - worker
+  - package.json
+  - package-lock.json
+  - wrangler.toml

@@ -1,0 +1,12 @@
+{
+  "name": "biz-structure",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "test": "node --test worker/signature.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.42.0"
+  }
+}

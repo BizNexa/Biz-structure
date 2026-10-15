@@ -1,0 +1,14 @@
+name = "biz-structure"
+main = "worker/index.js"
+compatibility_date = "2026-10-15"
+
+# Create a D1 database named bizmatrix in the Cloudflare dashboard, then replace this id before Deploy.
+[[d1_databases]]
+binding = "DB"
+database_name = "bizmatrix"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[vars]
+CASHFREE_ENV = "production"
+FRONTEND_URL = "https://www.bizmatrix.in/assessment/"
+ALLOWED_ORIGINS = "https://www.bizmatrix.in,https://bizmatrix.in"
