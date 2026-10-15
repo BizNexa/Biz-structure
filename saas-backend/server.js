@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApp, loadPremiumCatalog } from './app.js';
@@ -20,8 +21,9 @@ if (notifyUrl && new URL(notifyUrl).protocol !== 'https:') throw new Error('CASH
 const gateway = createCashfreeGateway({ mode, appId: process.env.CASHFREE_APP_ID, secretKey: process.env.CASHFREE_SECRET_KEY });
 const store = createStore({ directory: path.resolve(directory, process.env.DATA_DIR || 'data'), secret: process.env.APP_SECRET });
 const catalog = loadPremiumCatalog(path.resolve(directory, process.env.PREMIUM_DIR || 'private'));
-const app = createApp({ store, gateway, mode, frontendUrl, allowedOrigins, catalog, siteRoot: path.resolve(directory, '..'), trustProxyHops: Number(process.env.TRUST_PROXY_HOPS || 0), notifyUrl });
-const server = app.listen(port, () => {
+const siteCandidate = path.resolve(directory, '..');
+const app = createApp({ store, gateway, mode, frontendUrl, allowedOrigins, catalog, siteRoot: existsSync(path.join(siteCandidate, 'index.html')) ? siteCandidate : undefined, trustProxyHops: Number(process.env.TRUST_PROXY_HOPS || 0), notifyUrl });
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Biz Matrix: http://localhost:${port} (${mode})`);
   console.log(`Cashfree checkout: ${gateway.configured && catalog ? 'ready' : 'waiting for credentials or private content'}`);
 });

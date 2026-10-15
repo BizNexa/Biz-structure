@@ -1,0 +1,32 @@
+app = "bizmatrix-pay"
+primary_region = "bom"
+
+[build]
+
+[env]
+  PORT = "8080"
+  CASHFREE_ENV = "production"
+  FRONTEND_URL = "https://www.bizmatrix.in/assessment/"
+  FRONTEND_ORIGINS = "https://www.bizmatrix.in,https://bizmatrix.in"
+  DATA_DIR = "/data"
+  PREMIUM_DIR = "private"
+  TRUST_PROXY_HOPS = "1"
+  CASHFREE_WEBHOOK_URL = "https://bizmatrix-pay.fly.dev/api/cashfree/webhook"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "20s"
+
+[[mounts]]
+  source = "bizmatrix_data"
+  destination = "/data"
