@@ -65,3 +65,26 @@ Set the `www` CNAME to `biznexa.github.io`. Once DNS and GitHub's certificate ar
 ## Support and policies
 
 About, Contact, Privacy, Terms, Refunds, Digital Delivery, Cookies, Disclaimer, Grievance Redressal, Accessibility and Corporate Information remain available as static directory routes. Payment-provider and delivery descriptions now match Cashfree and on-site PDF delivery. The owner should review the supplied policies before accepting live payments; this code change is not legal validation of their wording.
+
+## Knowledge base (checklists, registrations, compliances)
+
+Rebuild the parsed tables with `tools/parse-sources.cjs` (see its header), then run `tools/build-kb.cjs`. The document checklist, registration planner, compliance calendar, action plan and PDF report are generated from four reference sources kept **outside** this repository: the Master Registration Checklist v1.0 (JSON), the Registration Master Map FY 2026-27, and the Initial & Annual Compliance Master (law as of 6 Nov 2026).
+
+```powershell
+node tools/build-kb.cjs --checklist <bizmatrix_master_checklist.json> --regmap <regmap.json> --compliance <compliance.json>
+```
+
+This writes two files:
+
+- `js/kb-public.js`: public skeleton (names, applicability rules and full detail for the core 35% of each list). Commit it.
+- `saas-backend/private/catalog.json`: the full catalog for paid users. It is gitignored and must never be committed.
+
+Upload the full catalog to the payment Worker so paid users receive it:
+
+```powershell
+$env:WORKER_URL="https://biz-structure.nexifydigital03.workers.dev"; $env:SETUP_TOKEN="<your setup token>"; node worker/upload-catalog.mjs
+```
+
+Until the new catalog is uploaded, paid users still unlock their report but see detail only for the public 35% core.
+
+The PDF report uses Inter (SIL Open Font License, `assets/fonts/OFL.txt`).

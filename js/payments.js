@@ -50,10 +50,12 @@
   async function unlock(access) {
     if (!access.premium) return false;
     const catalog = await api('/premium/content');
-    if (catalog.version !== 1 || !catalog.entities || Object.keys(publicEntities).some(key => !catalog.entities[key]?.docs || !catalog.entities[key]?.comp) || !catalog.registrations?.groups) throw new Error('The full report could not be loaded. Please try again.');
-    for (const key of Object.keys(publicEntities)) ENTITIES[key] = catalog.entities[key];
-    Object.assign(DOC_NOTES, catalog.docNotes);
-    RG.hydrate(catalog.registrations);
+    if (!catalog || catalog.version !== 1) throw new Error('The full report could not be loaded. Please try again.');
+    // Knowledge base v2 (checklists, registrations, compliances). Older catalogs still unlock their legacy content.
+    if (catalog.kb && !KB.hydrate(catalog.kb)) throw new Error('The full report could not be loaded. Please try again.');
+    for (const key of Object.keys(publicEntities)) if (catalog.entities?.[key]?.name) ENTITIES[key] = catalog.entities[key];
+    if (catalog.docNotes) Object.assign(DOC_NOTES, catalog.docNotes);
+    if (catalog.registrations?.groups?.length) RG.hydrate(catalog.registrations);
     receipt = access.receipt;
     premium = true;
     pendingOrder = null; storage.remove(keys.order);
@@ -67,6 +69,7 @@
     for (const key of Object.keys(DOC_NOTES)) delete DOC_NOTES[key];
     Object.assign(DOC_NOTES, publicNotes);
     RG.resetContent();
+    KB.reset();
     refreshReport();
   }
 
