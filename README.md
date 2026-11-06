@@ -4,7 +4,7 @@ Business structure and registration intelligence for India, FY 2026-27, updated 
 
 ## Current release
 
-- 19-question assessment, seven entity structures and 62 registration rules.
+- 26-question assessment (16 structure + 10 registration), seven entity structures, BizMatrix Rulebook v1.0 engine (23 hard rules, 9 weighted factors, 25 regression tests) and 62 registration rules.
 - Free preview limited to `floor(total items * 35 / 100)` per section. Filters do not expand it.
 - Rs. 49 one-time Cashfree payment unlocks the full report edition and full PDF download.
 - Server-side order verification, durable SQLite purchases and private access codes for restoration.

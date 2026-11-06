@@ -1,0 +1,1402 @@
+{
+  "version": "1.0",
+  "verified_as_of": "6 Nov 2026",
+  "entities": [
+    {
+      "id": "PROP",
+      "name": "Sole Proprietorship"
+    },
+    {
+      "id": "PF",
+      "name": "Partnership Firm"
+    },
+    {
+      "id": "LLP",
+      "name": "Limited Liability Partnership"
+    },
+    {
+      "id": "OPC",
+      "name": "One Person Company"
+    },
+    {
+      "id": "PVT",
+      "name": "Private Limited Company"
+    },
+    {
+      "id": "PUB",
+      "name": "Public Limited Company"
+    },
+    {
+      "id": "S8",
+      "name": "Section 8 Company"
+    }
+  ],
+  "factors": [
+    {
+      "id": "F09",
+      "name": "Liability risk of the activity",
+      "weight": 20,
+      "basis": "LAW+JDG",
+      "input": "liability"
+    },
+    {
+      "id": "F06",
+      "name": "Funding route",
+      "weight": 15,
+      "basis": "MKT",
+      "input": "funding"
+    },
+    {
+      "id": "F10",
+      "name": "Tax on profit (profit level x extraction)",
+      "weight": 15,
+      "basis": "LAW",
+      "input": "profit_level+extraction"
+    },
+    {
+      "id": "F14",
+      "name": "Compliance appetite",
+      "weight": 15,
+      "basis": "JDG",
+      "input": "compliance"
+    },
+    {
+      "id": "F15",
+      "name": "Credibility with banks, tenders, large clients",
+      "weight": 10,
+      "basis": "MKT",
+      "input": "credibility"
+    },
+    {
+      "id": "F16",
+      "name": "Exit / succession plan",
+      "weight": 10,
+      "basis": "LAW+MKT",
+      "input": "exit"
+    },
+    {
+      "id": "F05",
+      "name": "Foreign money (scored part)",
+      "weight": 5,
+      "basis": "LAW+REG",
+      "input": "foreign"
+    },
+    {
+      "id": "F19",
+      "name": "Startup India (DPIIT) eligibility value",
+      "weight": 5,
+      "basis": "REG",
+      "input": "business"
+    },
+    {
+      "id": "F20",
+      "name": "Formation cost and speed",
+      "weight": 5,
+      "basis": "MKT",
+      "input": "(always)"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-001",
+      "if": "objective == nonprofit",
+      "then": "eligible = {S8}",
+      "basis": "LAW",
+      "cite": "Companies Act 2013 s.8(1)",
+      "plain": "A charitable / not-for-profit objective can only be served by a Section 8 company within this tool's scope."
+    },
+    {
+      "id": "R-002",
+      "if": "objective == profit",
+      "then": "exclude S8",
+      "basis": "LAW",
+      "cite": "Companies Act 2013 s.8(1)(b)-(c)",
+      "plain": "A Section 8 company must apply profits to its objects and cannot pay dividends."
+    },
+    {
+      "id": "R-003",
+      "if": "founders == one",
+      "then": "exclude PF, LLP, PVT, PUB, S8",
+      "basis": "LAW",
+      "cite": "Partnership Act 1932 s.4; LLP Act 2008 s.6(1); Companies Act s.3(1)",
+      "plain": "Partnership and LLP need at least 2 partners; Pvt Ltd and Section 8 (private) need 2 members; Public needs 7."
+    },
+    {
+      "id": "R-004",
+      "if": "founders != one",
+      "then": "exclude PROP, OPC",
+      "basis": "LAW",
+      "cite": "Companies Act s.2(62), s.3(1)(c)",
+      "plain": "A proprietorship has one owner; an OPC has exactly one member."
+    },
+    {
+      "id": "R-005",
+      "if": "founders in {one, two_to_six}",
+      "then": "exclude PUB (flag: possible if 7 members can be brought in)",
+      "basis": "LAW",
+      "cite": "Companies Act s.3(1)(a), s.149(1)(a)",
+      "plain": "A public company needs at least 7 members and 3 directors."
+    },
+    {
+      "id": "R-006",
+      "if": "max_owners in {51_200, over_200}",
+      "then": "exclude PF",
+      "basis": "LAW",
+      "cite": "Companies Act s.464; Companies (Misc.) Rules 2014 r.10",
+      "plain": "A partnership of more than 50 persons is prohibited."
+    },
+    {
+      "id": "R-007",
+      "if": "max_owners == over_200",
+      "then": "exclude PVT, OPC",
+      "basis": "LAW",
+      "cite": "Companies Act s.2(68)(ii)",
+      "plain": "A private company is capped at 200 members (excluding employee/ex-employee members)."
+    },
+    {
+      "id": "R-008",
+      "if": "residency == foreign_national",
+      "then": "exclude OPC; REVIEW for PROP, PF",
+      "basis": "LAW",
+      "cite": "Companies (Incorporation) Rules 2014 r.3(1); FEMA (Non-debt Instruments) Rules 2019",
+      "plain": "Only an Indian citizen can be an OPC member; foreign nationals face FEMA limits on proprietorships and firms."
+    },
+    {
+      "id": "R-009",
+      "if": "foreign == investment",
+      "then": "exclude PROP, PF, OPC; flag LLP sector check",
+      "basis": "LAW/REG",
+      "cite": "FEMA NDI Rules 2019; Consolidated FDI Policy; Companies (Incorporation) Rules r.3",
+      "plain": "FDI is not permitted in proprietorships and firms; an OPC cannot have a foreign shareholder."
+    },
+    {
+      "id": "R-010",
+      "if": "foreign == contribution",
+      "then": "REVIEW (FCRA)",
+      "basis": "LAW",
+      "cite": "Foreign Contribution (Regulation) Act 2010 s.11-12",
+      "plain": "Foreign donations need FCRA registration or prior permission; new entities usually cannot register at once."
+    },
+    {
+      "id": "R-011",
+      "if": "funding == public",
+      "then": "eligible for-profit = {PUB}",
+      "basis": "LAW",
+      "cite": "Companies Act s.23(1); s.2(68)(iii)",
+      "plain": "Only a public company can invite the public to subscribe to securities."
+    },
+    {
+      "id": "R-012",
+      "if": "funding == vc",
+      "then": "exclude PROP, PF, OPC",
+      "basis": "LAW",
+      "cite": "Companies Act s.2(62), s.43; Partnership Act s.4",
+      "plain": "Proprietorships and firms cannot issue equity; an OPC cannot add a second member without converting."
+    },
+    {
+      "id": "R-013",
+      "if": "esop == yes",
+      "then": "exclude PROP, PF, LLP, OPC",
+      "basis": "LAW",
+      "cite": "Companies Act s.2(37), s.62(1)(b)",
+      "plain": "Statutory employee stock options exist only for companies with more than one member."
+    },
+    {
+      "id": "R-014",
+      "if": "profession == ca_cs_cma",
+      "then": "exclude OPC, PVT, PUB",
+      "basis": "LAW/REG",
+      "cite": "Chartered Accountants Act 1949 s.2(2), s.7, s.25; parallel CS & CMA Acts",
+      "plain": "Members in practice may practise as individuals, firms or LLPs, not through companies."
+    },
+    {
+      "id": "R-015",
+      "if": "profession == advocate",
+      "then": "exclude OPC, PVT, PUB; LLP = grey area",
+      "basis": "REG",
+      "cite": "Advocates Act 1961; Bar Council of India Rules Part VI",
+      "plain": "Advocates cannot practise law through a company; law-firm LLPs exist but are State Bar Council-dependent."
+    },
+    {
+      "id": "R-016",
+      "if": "profession == other_regulated",
+      "then": "REVIEW",
+      "basis": "REG",
+      "cite": "Relevant professional council regulations",
+      "plain": "Doctors, architects and other regulated professionals must check council rules before choosing a corporate form."
+    },
+    {
+      "id": "R-017",
+      "if": "activity == nbfc",
+      "then": "eligible = {PVT, PUB}",
+      "basis": "LAW",
+      "cite": "RBI Act 1934 s.45-IA, s.45-I(f)",
+      "plain": "Only a company can apply for NBFC registration."
+    },
+    {
+      "id": "R-018",
+      "if": "activity == insurance",
+      "then": "eligible = {PUB}; REVIEW",
+      "basis": "LAW",
+      "cite": "Insurance Act 1938 s.2(7A), s.2C",
+      "plain": "An Indian insurer must be a public company (subject to IRDAI)."
+    },
+    {
+      "id": "R-019",
+      "if": "objective == nonprofit and founders == one",
+      "then": "NO ELIGIBLE STRUCTURE in scope",
+      "basis": "LAW",
+      "cite": "Companies (Incorporation) Rules 2014 r.3(6) [OPC cannot be a s.8 company]; s.3(1)",
+      "plain": "A one-person charity cannot be a Section 8 company; consider a trust (out of scope)."
+    },
+    {
+      "id": "R-020",
+      "if": "residency in {nri, foreign_national} and all founders non-resident",
+      "then": "REVIEW: resident director / designated partner needed",
+      "basis": "LAW",
+      "cite": "Companies Act s.149(3); LLP Act s.7(1)",
+      "plain": "Every company needs one director resident 182+ days in the FY; every LLP needs one resident designated partner."
+    },
+    {
+      "id": "R-021",
+      "if": "activity == other_licensed or sector in restricted-FDI list and foreign == investment",
+      "then": "REVIEW",
+      "basis": "REG",
+      "cite": "Consolidated FDI Policy (DPIIT)",
+      "plain": "Sector licensing and FDI caps can override entity choice."
+    },
+    {
+      "id": "R-023",
+      "if": "residency == nri and PROP or PF eligible",
+      "then": "REVIEW (FEMA)",
+      "basis": "LAW",
+      "cite": "FEMA (Non-debt Instruments) Rules 2019 (NRI investment in firms/proprietary concerns)",
+      "plain": "An NRI may invest in a firm or proprietary concern only on the conditions FEMA allows (generally non-repatriation); confirm before choosing."
+    },
+    {
+      "id": "R-022",
+      "if": "objective == nonprofit and founders == seven_plus",
+      "then": "S8 may be private or public type; no change",
+      "basis": "LAW",
+      "cite": "Companies Act s.8(1)",
+      "plain": "Section 8 can be formed as a private (2+) or public (7+) company."
+    }
+  ],
+  "scores": {
+    "liability": {
+      "critical": {
+        "PROP": 0,
+        "PF": 0,
+        "LLP": 9,
+        "OPC": 9,
+        "PVT": 10,
+        "PUB": 10
+      },
+      "preferred": {
+        "PROP": 3,
+        "PF": 3,
+        "LLP": 8,
+        "OPC": 8,
+        "PVT": 9,
+        "PUB": 9
+      },
+      "acceptable": {
+        "PROP": 8,
+        "PF": 7,
+        "LLP": 7,
+        "OPC": 6,
+        "PVT": 6,
+        "PUB": 4
+      }
+    },
+    "funding": {
+      "bank": {
+        "PROP": 8,
+        "PF": 8,
+        "LLP": 8,
+        "OPC": 7,
+        "PVT": 7,
+        "PUB": 3
+      },
+      "vc": {
+        "PROP": 0,
+        "PF": 0,
+        "LLP": 3,
+        "OPC": 0,
+        "PVT": 10,
+        "PUB": 5
+      },
+      "public": {
+        "PROP": 0,
+        "PF": 0,
+        "LLP": 0,
+        "OPC": 0,
+        "PVT": 3,
+        "PUB": 10
+      }
+    },
+    "compliance": {
+      "low": {
+        "PROP": 10,
+        "PF": 8,
+        "LLP": 6,
+        "OPC": 4,
+        "PVT": 3,
+        "PUB": 0
+      },
+      "moderate": {
+        "PROP": 8,
+        "PF": 8,
+        "LLP": 8,
+        "OPC": 7,
+        "PVT": 7,
+        "PUB": 3
+      },
+      "high": {
+        "PROP": 6,
+        "PF": 6,
+        "LLP": 7,
+        "OPC": 7,
+        "PVT": 9,
+        "PUB": 8
+      }
+    },
+    "credibility": {
+      "high": {
+        "PROP": 3,
+        "PF": 4,
+        "LLP": 7,
+        "OPC": 6,
+        "PVT": 9,
+        "PUB": 10
+      },
+      "low": {
+        "PROP": 8,
+        "PF": 7,
+        "LLP": 7,
+        "OPC": 6,
+        "PVT": 6,
+        "PUB": 5
+      }
+    },
+    "exit": {
+      "sell": {
+        "PROP": 2,
+        "PF": 3,
+        "LLP": 6,
+        "OPC": 6,
+        "PVT": 10,
+        "PUB": 10
+      },
+      "succession": {
+        "PROP": 3,
+        "PF": 5,
+        "LLP": 8,
+        "OPC": 6,
+        "PVT": 9,
+        "PUB": 8
+      },
+      "none": {
+        "PROP": 7,
+        "PF": 6,
+        "LLP": 7,
+        "OPC": 6,
+        "PVT": 7,
+        "PUB": 5
+      }
+    },
+    "foreign": {
+      "none": {
+        "PROP": 7,
+        "PF": 7,
+        "LLP": 7,
+        "OPC": 7,
+        "PVT": 7,
+        "PUB": 6
+      },
+      "investment": {
+        "PROP": 0,
+        "PF": 0,
+        "LLP": 6,
+        "OPC": 0,
+        "PVT": 10,
+        "PUB": 9
+      },
+      "contribution": {
+        "PROP": 5,
+        "PF": 5,
+        "LLP": 5,
+        "OPC": 5,
+        "PVT": 5,
+        "PUB": 5
+      }
+    },
+    "business": {
+      "startup": {
+        "PROP": 0,
+        "PF": 6,
+        "LLP": 9,
+        "OPC": 3,
+        "PVT": 10,
+        "PUB": 3
+      },
+      "professional": {
+        "PROP": 5,
+        "PF": 5,
+        "LLP": 5,
+        "OPC": 5,
+        "PVT": 5,
+        "PUB": 5
+      },
+      "small": {
+        "PROP": 5,
+        "PF": 5,
+        "LLP": 5,
+        "OPC": 5,
+        "PVT": 5,
+        "PUB": 5
+      }
+    },
+    "cost": {
+      "PROP": 10,
+      "PF": 8,
+      "LLP": 6,
+      "OPC": 6,
+      "PVT": 5,
+      "PUB": 2
+    }
+  },
+  "confidence_bands": {
+    "clear": ">=10",
+    "moderate": "5-9.9",
+    "near_tie": "<5"
+  },
+  "questions": [
+    {
+      "id": "Q1 objective",
+      "options": "profit / nonprofit",
+      "rules": "R-001, R-002, R-019",
+      "factor": "none (gate)",
+      "recommendation": "KEEP"
+    },
+    {
+      "id": "Q2 founders",
+      "options": "one / two_to_six / seven_plus",
+      "rules": "R-003, R-004, R-005, R-019, R-022",
+      "factor": "none (gate)",
+      "recommendation": "KEEP; re-bucket to 1 / 2-6 / 7-50 / 51-200 / 200+ or add N2"
+    },
+    {
+      "id": "Q3 liability",
+      "options": "critical / preferred / acceptable",
+      "rules": "-",
+      "factor": "F09 x20",
+      "recommendation": "REWORD: ask about activity risk, not preference"
+    },
+    {
+      "id": "Q4 funding",
+      "options": "vc / bank / public",
+      "rules": "R-011, R-012",
+      "factor": "F06 x15",
+      "recommendation": "KEEP"
+    },
+    {
+      "id": "Q5 compliance",
+      "options": "low / moderate / high",
+      "rules": "-",
+      "factor": "F14 x15",
+      "recommendation": "KEEP"
+    },
+    {
+      "id": "Q6 business",
+      "options": "startup / professional / small",
+      "rules": "-",
+      "factor": "F19 x5",
+      "recommendation": "KEEP but narrow to 'Will you apply for Startup India recognition?'"
+    },
+    {
+      "id": "Q7 ownership",
+      "options": "shares / partners / single",
+      "rules": "(current engine gates)",
+      "factor": "-",
+      "recommendation": "DROP as input (D3); derive from Q4, N3, N5"
+    },
+    {
+      "id": "Q8 scale",
+      "options": "small / growth / large",
+      "rules": "-",
+      "factor": "-",
+      "recommendation": "DROP: no independent effect once Q4, N4 and N6 exist"
+    },
+    {
+      "id": "Q9 foreign",
+      "options": "none / investment / contribution",
+      "rules": "R-009, R-010, R-021",
+      "factor": "F05 x5",
+      "recommendation": "KEEP"
+    },
+    {
+      "id": "Q10 sector",
+      "options": "28 options",
+      "rules": "R-017, R-018, R-021 via N7",
+      "factor": "-",
+      "recommendation": "KEEP; feed regulated activities into gates (D11)"
+    },
+    {
+      "id": "Q11-Q19",
+      "options": "registration profile",
+      "rules": "-",
+      "factor": "-",
+      "recommendation": "KEEP for Part E outputs; no effect on entity (correct by design)"
+    },
+    {
+      "id": "N1",
+      "wording": "How many people will own the business in 5 years, at most?",
+      "options": "Up to 50 / 51-200 / More than 200",
+      "feeds": "R-006, R-007 (fixes D8)",
+      "status": "new"
+    },
+    {
+      "id": "N2",
+      "wording": "Where do the founders live and what citizenship do they hold?",
+      "options": "All resident Indians / Includes NRI Indian citizen / Includes foreign national / All live outside India",
+      "feeds": "R-008, R-020, R-023",
+      "status": "new"
+    },
+    {
+      "id": "N3",
+      "wording": "Do you plan to give employees stock options (ESOPs)?",
+      "options": "Yes, within 3 years / No / Not sure",
+      "feeds": "R-013 (fixes D10)",
+      "status": "new"
+    },
+    {
+      "id": "N4",
+      "wording": "Expected annual profit in year 3?",
+      "options": "Up to ₹25 lakh / ₹25 lakh-₹2 crore / Above ₹2 crore",
+      "feeds": "F10 (fixes D4)",
+      "status": "new"
+    },
+    {
+      "id": "N5",
+      "wording": "What will you do with most of the profit?",
+      "options": "Take it out / Reinvest in the business",
+      "feeds": "F10 (fixes D4)",
+      "status": "new"
+    },
+    {
+      "id": "N6",
+      "wording": "What is your long-term plan for the business?",
+      "options": "Sell it or bring in a buyer / Pass it to family / No plan",
+      "feeds": "F16 (fixes D10)",
+      "status": "new"
+    },
+    {
+      "id": "N7",
+      "wording": "Are you a member of a regulated profession practising through this entity?",
+      "options": "CA/CS/CMA / Advocate / Doctor, architect or other / No",
+      "feeds": "R-014, R-015, R-016 (fixes D5)",
+      "status": "new"
+    },
+    {
+      "id": "N8",
+      "wording": "Will the business do any of these?",
+      "options": "Lending/NBFC / Insurance / Other licensed activity (telecom, defence, broadcasting etc.) / None",
+      "feeds": "R-017, R-018, R-021 (fixes D11)",
+      "status": "new"
+    },
+    {
+      "id": "N9",
+      "wording": "Do you need credibility with banks, tenders or large corporate clients?",
+      "options": "Yes, it matters a lot / Not really",
+      "feeds": "F15 (fixes D10)",
+      "status": "new"
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "TC-01",
+      "title": "Solo freelance designer, Rs 12 lakh profit",
+      "inputs": {
+        "objective": "profit",
+        "founders": "one",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "acceptable",
+        "compliance": "low",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PROP",
+      "runner_up": "OPC"
+    },
+    {
+      "id": "TC-02",
+      "title": "Solo IT consultant, Rs 60 lakh profit, enterprise clients",
+      "inputs": {
+        "objective": "profit",
+        "founders": "one",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "moderate",
+        "credibility": "high",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "25L_2cr",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "OPC",
+      "runner_up": "PROP"
+    },
+    {
+      "id": "TC-03",
+      "title": "Three doctors opening a clinic",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "other_regulated",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "25L_2cr",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "LLP",
+      "runner_up": "PF"
+    },
+    {
+      "id": "TC-04",
+      "title": "Three brothers, family trading shop, cash-light",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "acceptable",
+        "compliance": "low",
+        "credibility": "low",
+        "exit": "succession",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PF",
+      "runner_up": "LLP"
+    },
+    {
+      "id": "TC-05",
+      "title": "SaaS founders raising VC with ESOP pool",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "vc",
+        "esop": "yes",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "low",
+        "exit": "sell",
+        "business": "startup",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PVT",
+      "runner_up": null
+    },
+    {
+      "id": "TC-06",
+      "title": "SaaS founders raising angel round, no ESOP yet",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "vc",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "low",
+        "exit": "sell",
+        "business": "startup",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PVT",
+      "runner_up": "LLP"
+    },
+    {
+      "id": "TC-07",
+      "title": "NRI (Indian citizen) solo consultant, Rs 10 lakh profit",
+      "inputs": {
+        "objective": "profit",
+        "founders": "one",
+        "max_owners": "up_to_50",
+        "residency": "nri",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other",
+        "all_non_resident": true
+      },
+      "expected": "PROP",
+      "runner_up": "OPC"
+    },
+    {
+      "id": "TC-08",
+      "title": "Indian + foreign co-founder, foreign equity",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "foreign_national",
+        "foreign": "investment",
+        "funding": "vc",
+        "esop": "no",
+        "profession": "none",
+        "activity": "other_licensed",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "low",
+        "exit": "sell",
+        "business": "startup",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "telecom_media"
+      },
+      "expected": "PVT",
+      "runner_up": "LLP"
+    },
+    {
+      "id": "TC-09",
+      "title": "Seven founders starting an education NGO",
+      "inputs": {
+        "objective": "nonprofit",
+        "founders": "seven_plus",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "S8",
+      "runner_up": null
+    },
+    {
+      "id": "TC-10",
+      "title": "NGO expecting donations from abroad",
+      "inputs": {
+        "objective": "nonprofit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "contribution",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "S8",
+      "runner_up": null
+    },
+    {
+      "id": "TC-11",
+      "title": "Single founder wants a charity",
+      "inputs": {
+        "objective": "nonprofit",
+        "founders": "one",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "NONE",
+      "runner_up": null
+    },
+    {
+      "id": "TC-12",
+      "title": "D2C brand raising angel funding",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "vc",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "high",
+        "exit": "sell",
+        "business": "startup",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "ecommerce"
+      },
+      "expected": "PVT",
+      "runner_up": "LLP"
+    },
+    {
+      "id": "TC-13",
+      "title": "Two CAs starting a practice",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "ca_cs_cma",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "25L_2cr",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "LLP",
+      "runner_up": "PF"
+    },
+    {
+      "id": "TC-14",
+      "title": "Solo CA in practice",
+      "inputs": {
+        "objective": "profit",
+        "founders": "one",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "ca_cs_cma",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PROP",
+      "runner_up": null
+    },
+    {
+      "id": "TC-15",
+      "title": "Advocates forming a law firm",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "advocate",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "25L_2cr",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "LLP",
+      "runner_up": "PF"
+    },
+    {
+      "id": "TC-16",
+      "title": "Four promoters, factory, bank-funded, profits retained",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "high",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "gt_2cr",
+        "extraction": "retain",
+        "sector": "manufacturing"
+      },
+      "expected": "PVT",
+      "runner_up": "LLP"
+    },
+    {
+      "id": "TC-17",
+      "title": "Fintech lending (NBFC) with 3 founders",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "nbfc",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PVT",
+      "runner_up": null
+    },
+    {
+      "id": "TC-18",
+      "title": "Insurance venture with 7+ promoters",
+      "inputs": {
+        "objective": "profit",
+        "founders": "seven_plus",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "insurance",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PUB",
+      "runner_up": null
+    },
+    {
+      "id": "TC-19",
+      "title": "Group planning public issue",
+      "inputs": {
+        "objective": "profit",
+        "founders": "seven_plus",
+        "max_owners": "over_200",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "public",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "high",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "PUB",
+      "runner_up": null
+    },
+    {
+      "id": "TC-20",
+      "title": "Two partners, property development, profits withdrawn",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "gt_2cr",
+        "extraction": "withdraw",
+        "sector": "real_estate"
+      },
+      "expected": "LLP",
+      "runner_up": "PVT"
+    },
+    {
+      "id": "TC-21",
+      "title": "Professional services group expecting 60+ partners",
+      "inputs": {
+        "objective": "profit",
+        "founders": "seven_plus",
+        "max_owners": "51_200",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "professional",
+        "profit_level": "gt_2cr",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "LLP",
+      "runner_up": "PVT"
+    },
+    {
+      "id": "TC-22",
+      "title": "Two friends opening a restaurant",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "food"
+      },
+      "expected": "LLP",
+      "runner_up": "PF"
+    },
+    {
+      "id": "TC-23",
+      "title": "Solo e-commerce seller reinvesting profits",
+      "inputs": {
+        "objective": "profit",
+        "founders": "one",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "moderate",
+        "credibility": "low",
+        "exit": "none",
+        "business": "small",
+        "profit_level": "25L_2cr",
+        "extraction": "retain",
+        "sector": "ecommerce"
+      },
+      "expected": "OPC",
+      "runner_up": "PROP"
+    },
+    {
+      "id": "TC-24",
+      "title": "Exporter siblings planning succession, retaining profits",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "critical",
+        "compliance": "high",
+        "credibility": "high",
+        "exit": "succession",
+        "business": "small",
+        "profit_level": "gt_2cr",
+        "extraction": "retain",
+        "sector": "import_export"
+      },
+      "expected": "PVT",
+      "runner_up": "LLP"
+    },
+    {
+      "id": "TC-25",
+      "title": "Bootstrapped two-founder product startup, low compliance appetite",
+      "inputs": {
+        "objective": "profit",
+        "founders": "two_to_six",
+        "max_owners": "up_to_50",
+        "residency": "resident",
+        "foreign": "none",
+        "funding": "bank",
+        "esop": "no",
+        "profession": "none",
+        "activity": "none",
+        "liability": "preferred",
+        "compliance": "low",
+        "credibility": "low",
+        "exit": "none",
+        "business": "startup",
+        "profit_level": "lt_25L",
+        "extraction": "withdraw",
+        "sector": "other"
+      },
+      "expected": "LLP",
+      "runner_up": "PF"
+    }
+  ],
+  "tax_table": {
+    "lt_25L|retain": {
+      "PROP": {
+        "tax": 0,
+        "rate": 0.0
+      },
+      "PF": {
+        "tax": 68640,
+        "rate": 0.0686
+      },
+      "LLP": {
+        "tax": 68640,
+        "rate": 0.0686
+      },
+      "OPC": {
+        "tax": 251680,
+        "rate": 0.2517
+      },
+      "PVT": {
+        "tax": 251680,
+        "rate": 0.2517
+      },
+      "PUB": {
+        "tax": 251680,
+        "rate": 0.2517
+      }
+    },
+    "lt_25L|withdraw": {
+      "PROP": {
+        "tax": 0,
+        "rate": 0.0
+      },
+      "PF": {
+        "tax": 68640,
+        "rate": 0.0686
+      },
+      "LLP": {
+        "tax": 68640,
+        "rate": 0.0686
+      },
+      "OPC": {
+        "tax": 251680,
+        "rate": 0.2517
+      },
+      "PVT": {
+        "tax": 251680,
+        "rate": 0.2517
+      },
+      "PUB": {
+        "tax": 251680,
+        "rate": 0.2517
+      }
+    },
+    "25L_2cr|retain": {
+      "PROP": {
+        "tax": 2951520,
+        "rate": 0.2952
+      },
+      "PF": {
+        "tax": 2246400,
+        "rate": 0.2246
+      },
+      "LLP": {
+        "tax": 2246400,
+        "rate": 0.2246
+      },
+      "OPC": {
+        "tax": 2516800,
+        "rate": 0.2517
+      },
+      "PVT": {
+        "tax": 2516800,
+        "rate": 0.2517
+      },
+      "PUB": {
+        "tax": 2516800,
+        "rate": 0.2517
+      }
+    },
+    "25L_2cr|withdraw": {
+      "PROP": {
+        "tax": 2951520,
+        "rate": 0.2952
+      },
+      "PF": {
+        "tax": 2246400,
+        "rate": 0.2246
+      },
+      "LLP": {
+        "tax": 2246400,
+        "rate": 0.2246
+      },
+      "OPC": {
+        "tax": 4604554,
+        "rate": 0.4605
+      },
+      "PVT": {
+        "tax": 3977958,
+        "rate": 0.3978
+      },
+      "PUB": {
+        "tax": 3977958,
+        "rate": 0.3978
+      }
+    },
+    "gt_2cr|retain": {
+      "PROP": {
+        "tax": 18954000,
+        "rate": 0.3791
+      },
+      "PF": {
+        "tax": 16749845,
+        "rate": 0.335
+      },
+      "LLP": {
+        "tax": 16749845,
+        "rate": 0.335
+      },
+      "OPC": {
+        "tax": 12584000,
+        "rate": 0.2517
+      },
+      "PVT": {
+        "tax": 12584000,
+        "rate": 0.2517
+      },
+      "PUB": {
+        "tax": 12584000,
+        "rate": 0.2517
+      }
+    },
+    "gt_2cr|withdraw": {
+      "PROP": {
+        "tax": 18954000,
+        "rate": 0.3791
+      },
+      "PF": {
+        "tax": 16749845,
+        "rate": 0.335
+      },
+      "LLP": {
+        "tax": 16749845,
+        "rate": 0.335
+      },
+      "OPC": {
+        "tax": 26630240,
+        "rate": 0.5326
+      },
+      "PVT": {
+        "tax": 25004221,
+        "rate": 0.5001
+      },
+      "PUB": {
+        "tax": 25004221,
+        "rate": 0.5001
+      }
+    }
+  }
+}

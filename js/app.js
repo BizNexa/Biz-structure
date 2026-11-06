@@ -396,17 +396,23 @@ const ENTITIES={
 };
 
 const QUESTIONS=[
-{id:"objective",cat:"Business Objective",title:"What is the main purpose of the business?",desc:"This helps separate normal commercial businesses from non-profit or charitable organisations.",opts:[["profit","For-profit business","The business is intended to earn and distribute commercial profits."],["nonprofit","Non-profit / charitable / social initiative","The organisation will pursue charitable, educational, social, research, sports or similar objectives."]]},
-{id:"founders",cat:"Ownership",title:"How many owners will start the business?",desc:"The number of owners helps identify structures that can legally accommodate the ownership model.",opts:[["one","1 owner","Single entrepreneur / owner."],["two_to_six","2–6 owners","Closely held multi-owner business."],["seven_plus","7 or more owners / members","A larger ownership group; this does not by itself require a Public Limited Company."]]},
-{id:"liability",cat:"Risk & Liability",title:"Do you want to protect your personal assets?",desc:"Choose how important limited personal liability is to you as the owner or founder.",opts:[["critical","Yes — this is very important","I want a structure that generally separates business liability from my personal assets."],["preferred","Yes — preferably","Asset protection is important, but I also want flexibility and simpler administration."],["acceptable","No — personal liability is acceptable","I understand that some structures can expose my personal assets to business liabilities."]]},
-{id:"funding",cat:"Funding",title:"How do you plan to fund the business?",desc:"Funding plans can strongly influence the most suitable legal structure.",opts:[["vc","Investors / equity funding","VC, angel, institutional or other external equity investment."],["bank","Own funds / bank finance / loans","Founder funds, bank finance or debt without an immediate equity-investor requirement."],["public","Public issue / possible listing","Long-term public-market capital or listing is contemplated."]]},
-{id:"compliance",cat:"Compliance Capacity",title:"How much compliance can you handle?",desc:"Choose the level of ongoing governance and filing work you are comfortable maintaining.",opts:[["low","Keep it simple","I prefer the lowest practical compliance burden."],["moderate","Regular compliance is fine","I can manage regular tax and statutory filings."],["high","I can manage detailed compliance","I can maintain corporate records, audits, meetings and annual filings."]]},
-{id:"business",cat:"Business Model",title:"Which best describes your business?",desc:"The business model helps match the structure to how you expect to operate and grow.",opts:[["startup","Startup / scalable business","Growth, investment, ownership transfer and scale matter."],["professional","Professional / consultancy / service","Expertise-led business with partner-driven operations or services."],["small","Small local / owner-managed business","Direct control and lower administrative burden are important."]]},
-{id:"ownership",cat:"Ownership Structure",title:"How do you want ownership to be held?",desc:"Select the legal form in which ownership should be represented.",opts:[["shares","Through shares / shareholding","Ownership should be represented through shares and shareholding percentages."],["partners","Through partner contribution / LLP Agreement","Ownership should be represented through partner contribution and agreed partner rights — not company shares."],["single","Directly in one person's name","One person should own and control the business directly."]]},
-{id:"scale",cat:"Growth",title:"How do you expect the business to grow?",desc:"Your expected scale helps determine how valuable funding flexibility and stronger governance may become.",opts:[["small","Remain small / closely held","No major expansion is expected."],["growth","Grow and expand","More customers, capital, owners or operations are expected."],["large","Large / public-market oriented","Long-term public capital or large-scale institutional growth is contemplated."]]},
-{id:"foreign",cat:"Foreign / Cross-border",title:"Will there be foreign investment or foreign contribution?",desc:"Foreign ownership, investment or contribution can create additional FEMA/FCRA requirements.",opts:[["none","No","Domestic ownership and funding only."],["investment","Foreign investment","A foreign investor or FDI possibility is contemplated."],["contribution","Foreign contribution / donation","Foreign contribution or donation may be received, particularly for non-profit activity."]]}
+{id:"objective",cat:"Objective",title:"What is the main purpose of the organisation?",desc:"A charitable objective can only use a Section 8 company in this tool; a commercial objective rules it out (R-001, R-002).",opts:[["profit","Commercial / for-profit","Owners will earn and take out profits."],["nonprofit","Charitable / not-for-profit","Profits will be used only for charitable, educational, social or similar objects. No dividends."]]},
+{id:"founders",cat:"Owners at start",title:"How many owners will there be at the start?",desc:"The law sets minimum owner counts: proprietorship and OPC have exactly one, partnership, LLP and Pvt Ltd need two, a public company needs seven (R-003 to R-005).",opts:[["one","Just me (1 owner)","A single owner or founder."],["two_to_six","2 to 6 owners","Co-founders, partners or family members."],["seven_plus","7 or more owners","A larger founding group."]]},
+{id:"max_owners",cat:"Future owners",title:"How many people could own the business in 5 years, at most?",desc:"A partnership cannot exceed 50 partners and a private company cannot exceed 200 members (R-006, R-007).",opts:[["up_to_50","Up to 50","Closely held."],["51_200","51 to 200","Many partners, employee owners or small investors."],["over_200","More than 200","A large member or investor base."]]},
+{id:"residency",cat:"Residency & citizenship",title:"Where do the founders live and what citizenship do they hold?",desc:"OPC members must be Indian citizens; companies need one director resident in India and LLPs one resident designated partner (R-008, R-020, R-023).",opts:[["resident","All are resident Indians","Every founder is an Indian citizen living in India."],["nri","Includes an NRI, but someone will live in India","At least one founder is an Indian citizen living abroad; another founder or director lives in India."],["nri_all","All founders are NRIs living abroad","Indian citizens, none of whom lives in India."],["foreign_national","Includes a foreign national, but someone will live in India","At least one founder is not an Indian citizen."],["foreign_all","Includes a foreign national and no one will live in India","No founder or director will be resident in India."]]},
+{id:"profession",cat:"Regulated profession",title:"Are you a member of a regulated profession practising through this entity?",desc:"CAs, CSs, CMAs and advocates cannot practise through a company; other councils have their own rules (R-014 to R-016).",opts:[["none","No","The business is not a professional practice of this kind."],["ca_cs_cma","Chartered Accountant, Company Secretary or Cost Accountant","Members in practice."],["advocate","Advocate","A law practice."],["other_regulated","Doctor, architect or other regulated profession","Council rules must be checked before choosing a corporate form."]]},
+{id:"activity",cat:"Licensed activity",title:"Will the business do any of these?",desc:"Some licences are available only to certain structures: NBFC registration needs a company; an insurer must be a public company (R-017, R-018, R-021).",opts:[["none","None of these","No financial or specially licensed activity."],["nbfc","Lending / NBFC","Lending, investment or other non-banking financial activity."],["insurance","Insurance","Acting as an insurer."],["other_licensed","Other licensed activity","Telecom, defence, broadcasting or another licensed or FDI-capped sector."]]},
+{id:"foreign",cat:"Foreign money",title:"Will the business receive money from outside India?",desc:"FDI is not permitted in proprietorships and firms, an OPC cannot have a foreign shareholder, and foreign donations need FCRA (R-009, R-010).",opts:[["none","No","Indian money only."],["investment","Foreign investment","A foreign investor will put in equity or capital."],["contribution","Foreign donations","Grants or donations from foreign sources (for non-profits)."]]},
+{id:"funding",cat:"Funding route",title:"How will you fund the business?",desc:"Only companies issue shares to investors, and only a public company can raise money from the public (R-011, R-012).",np:true,opts:[["bank","Own money or bank loans","Founders' funds and borrowing, no outside equity."],["vc","Angel, VC or other equity investors","Investors will buy shares in the business."],["public","Public issue / listing","Raising money from the public or listing on an exchange."]]},
+{id:"esop",cat:"Employee stock options",title:"Do you plan to give employees stock options (ESOPs)?",desc:"Statutory ESOPs exist only for companies with more than one member (R-013).",np:true,opts:[["yes","Yes, within 3 years","ESOPs are part of the hiring plan."],["no","No","No employee equity planned."],["unsure","Not sure","Undecided. This does not rule anything out yet."]]},
+{id:"liability",cat:"Liability risk",title:"How much liability risk does the business activity carry?",desc:"Think about claims from customers, lenders, suppliers or accidents. Proprietors and partners are personally liable; LLP and company owners are generally not (factor F09, weight 20).",np:true,opts:[["critical","High: claims could exceed my personal assets","For example manufacturing, food, construction, real estate, healthcare, lending or large contracts."],["preferred","Moderate: some exposure","Typical trading or services with contracts, staff and premises."],["acceptable","Low: little risk of large claims","Small consulting, freelancing or a low-risk local business."]]},
+{id:"profit_level",cat:"Profit level",title:"What annual profit do you expect by year 3?",desc:"Slab, firm and company tax rates cross over at different profit levels (factor F10, weight 15).",np:true,opts:[["lt_25L","Up to ₹25 lakh","Small or early-stage profits."],["25L_2cr","₹25 lakh to ₹2 crore","A mid-sized, established business."],["gt_2cr","Above ₹2 crore","A large, high-profit business."]]},
+{id:"extraction",cat:"Use of profit",title:"What will you do with most of the profit?",desc:"Company profit taken out as dividends is taxed twice; firm and LLP profit share is taxed once (factor F10).",np:true,opts:[["withdraw","Take it out","Owners will take most of the profit home."],["retain","Reinvest in the business","Most profit will stay in the business to fund growth."]]},
+{id:"compliance",cat:"Compliance appetite",title:"How much ongoing compliance can you handle?",desc:"Companies need audits, board meetings and ROC filings; proprietorships and firms need far fewer (factor F14, weight 15).",np:true,opts:[["low","Keep it minimal","Tax returns and little else."],["moderate","Regular filings are fine","Annual returns, accounts and occasional audits."],["high","Full corporate compliance is fine","Board meetings, statutory audit and ROC filings with professional support."]]},
+{id:"credibility",cat:"Credibility",title:"Do you need credibility with banks, tenders or large corporate clients?",desc:"Lenders, tender documents and enterprise vendor onboarding often prefer incorporated entities (factor F15, weight 10).",np:true,opts:[["high","Yes, it matters a lot","Bank loans, government tenders or enterprise customers are central."],["low","Not really","Retail customers or small clients."]]},
+{id:"exit",cat:"Long-term plan",title:"What is your long-term plan for the business?",desc:"Selling shares is the cleanest exit; a proprietorship can only be sold as assets (factor F16, weight 10).",np:true,opts:[["sell","Sell it or bring in a buyer","An acquisition, strategic sale or investor exit."],["succession","Pass it to family","Continuity across generations."],["none","No plan yet","Run it for now."]]},
+{id:"business",cat:"Startup India",title:"Will you apply for Startup India (DPIIT) recognition?",desc:"DPIIT recognition is open to Pvt Ltd, LLP and registered firms, not to proprietorships, OPCs or public companies (factor F19, weight 5).",np:true,opts:[["startup","Yes, we plan to apply","An innovative or scalable business seeking DPIIT benefits."],["professional","No, it is a professional or consulting practice","Expertise-led services."],["small","No, it is a small or traditional business","Trading, local services or manufacturing without DPIIT plans."]]}
 ];
-
 const REGQ=[
 {id:"sector",type:"select",cat:"Industry sector",title:"Which industry sector best describes the business?",desc:"The sector decides which industry-specific licences, environmental, safety and regulatory registrations apply.",opts:Object.entries({mfg:"Manufacturing",trd:"Trading and Retail",svc:"IT, Technology and Professional Services",food:"Food and Beverage",pha:"Pharma, Cosmetics and Medical Products",hc:"Healthcare, Hospitals and Diagnostics",re:"Real Estate, Construction and Infrastructure",agr:"Agriculture, Agri-inputs and Food Processing",fin:"Banking, NBFC, FinTech and Financial Services",ins:"Insurance and Insurance Intermediaries",tel:"Telecom, Media, Broadcasting and Digital Content",edu:"Education, Training and EdTech",hos:"Hospitality, Hotels, Restaurants and Tourism",trn:"Transport, Logistics, Warehousing and Courier",auto:"Automotive and Auto Components",chem:"Chemicals, Petrochemicals and Fertilisers",gems:"Gems, Jewellery and Precious Metals",renew:"Renewable Energy, Solar and Power Projects",min:"Mining, Minerals and Natural Resources",sec:"Security, Facility and Manpower Services",waste:"Waste Management and Recycling",text:"Textiles, Apparel and Footwear",aero:"Aerospace and Defence",biotech:"Biotechnology and Life Sciences",ecom:"E-commerce and Online Marketplace",import:"Import / Export and International Trade",print:"Printing, Packaging and Publishing",other:"Other regulated / sector-specific activity"}).map(x=>[x[0],x[1],""])},
 {id:"state",type:"select",cat:"State / UT",title:"In which state or UT will the business operate?",desc:"Professional Tax, Labour Welfare Fund, Shops and Establishments, excise and many licences are state-specific.",opts:["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman and Nicobar","Chandigarh","Dadra, Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir","Ladakh","Lakshadweep","Puducherry"].map(x=>[x,x,""])},
@@ -442,225 +448,78 @@ let state={i:0,answers:{},scores:{},rec:null,docs:{}};
 window.addEventListener("error",ev=>{console.error("Application error:",ev.error||ev.message);if(typeof toast==="function")toast("A temporary error occurred. Please use Back or New Assessment and try again.");});
 window.addEventListener("unhandledrejection",ev=>{console.error("Unhandled promise rejection:",ev.reason);});
 
+/* ---- Decision engine adapter (BizMatrix Rulebook v1.0, js/engine.js) ---- */
+const ENGINE_FROM_APP={sole:"PROP",partnership:"PF",llp:"LLP",opc:"OPC",private_limited:"PVT",public_limited:"PUB",section8:"S8"};
+function qSkipped(q,a){return !!(q.np&&a.objective==="nonprofit")}
+function engineInputs(a){
+  const r=a.residency||"resident";
+  return {objective:a.objective,founders:a.founders,max_owners:a.max_owners,
+    residency:r==="nri_all"?"nri":r==="foreign_all"?"foreign_national":r,
+    all_non_resident:r==="nri_all"||r==="foreign_all",
+    foreign:a.foreign,funding:a.funding,esop:a.esop,profession:a.profession,activity:a.activity,
+    liability:a.liability,compliance:a.compliance,credibility:a.credibility,exit:a.exit,business:a.business,
+    profit_level:a.profit_level,extraction:a.extraction,sector:a.sector};
+}
 function score(a){
-  /*
-    RELIABILITY-FIRST DECISION ENGINE
-    ---------------------------------
-    The engine uses HARD COMPATIBILITY GATES before weighted preferences.
-    This prevents a structurally incompatible entity from winning merely
-    because several softer preferences add points.
-
-    Critical examples:
-    1. "Share-capital / shareholding ownership" is compatible with share-capital companies
-       (Private Limited / Public Limited / OPC), NOT LLP or Partnership.
-    2. "Partner contribution / LLP Agreement (no company shares)" strongly routes to LLP /
-       Partnership and removes company-share structures from consideration.
-    3. Non-profit objective strongly routes to Section 8.
-    4. Public-market funding requires the public-company route, subject to
-       the statutory minimum-member/director requirements.
-  */
-  const s={private_limited:0,llp:0,sole:0,partnership:0,opc:0,public_limited:0,section8:0};
-  const impossible=new Set();
-
-  // ---------- HARD STRUCTURAL GATES ----------
-  if(a.objective==="nonprofit"){
-    // Non-profit objective: Section 8 is the only entity in this engine.
-    ["private_limited","llp","sole","partnership","opc","public_limited"].forEach(k=>impossible.add(k));
-  } else if(a.objective==="profit"){
-    // Profit motive: Section 8 is not a commercial-profit alternative.
-    impossible.add("section8");
-  }
-
-  if(a.ownership==="shares"){
-    // LLP and partnership are NOT share-capital structures.
-    impossible.add("llp"); impossible.add("partnership");
-    // Direct proprietorship is not share-based.
-    impossible.add("sole");
-  }
-
-  if(a.ownership==="partners"){
-    // Partner contribution / agreement is not company shareholding.
-    impossible.add("private_limited"); impossible.add("public_limited");
-    impossible.add("opc"); impossible.add("sole");
-  }
-
-  if(a.ownership==="single"){
-    // Direct single-owner control excludes multi-owner partnership/company
-    // structures unless OPC is selected.
-    impossible.add("private_limited"); impossible.add("public_limited");
-    impossible.add("llp"); impossible.add("partnership");
-  }
-
-  if(a.funding==="public"){
-    // Public issue / listing is not routed to LLP, partnership, proprietorship
-    // or OPC. A public company also requires the relevant statutory structure.
-    ["llp","partnership","sole","opc"].forEach(k=>impossible.add(k));
-  }
-
-  if(a.funding==="vc"){
-    // The supplied business model treats Private Limited as the principal
-    // equity/VC/angel route. Other structures are not permitted to outrank it
-    // merely through soft scoring.
-    ["llp","partnership","sole","opc"].forEach(k=>impossible.add(k));
-  }
-
-
-  // ---------- BASE PREFERENCE SCORING ----------
-  if(a.objective==="nonprofit") s.section8+=1000;
-
-  if(a.founders==="one"){s.sole+=180;s.opc+=180;s.private_limited+=15}
-  if(a.founders==="two_to_six"){s.private_limited+=75;s.llp+=90;s.partnership+=90}
-  if(a.founders==="seven_plus"){
-    // Seven or more members does NOT by itself make the company public.
-    s.private_limited+=70;
-  }
-
-  if(a.liability==="critical"){
-    ["private_limited","llp","opc","public_limited","section8"].forEach(k=>s[k]+=75);
-    s.sole-=120;s.partnership-=120;
-  }
-  if(a.liability==="preferred"){
-    ["private_limited","llp","opc","public_limited","section8"].forEach(k=>s[k]+=45);
-  }
-  if(a.liability==="acceptable"){s.sole+=70;s.partnership+=60}
-
-  if(a.funding==="vc") s.private_limited+=500;
-  if(a.funding==="public") s.public_limited+=500;
-  if(a.funding==="bank"){s.llp+=20;s.partnership+=20;s.sole+=20;s.private_limited+=25}
-
-  if(a.compliance==="low"){
-    s.sole+=90;s.partnership+=35;s.llp+=25;
-    s.private_limited-=60;s.public_limited-=100;s.section8-=50;
-  }
-  if(a.compliance==="moderate"){s.llp+=50;s.partnership+=45;s.opc+=30;s.private_limited+=20}
-  if(a.compliance==="high"){s.private_limited+=45;s.public_limited+=75;s.section8+=45}
-
-  if(a.business==="startup") s.private_limited+=100;
-  if(a.business==="professional"){s.llp+=100;s.partnership+=75}
-  if(a.business==="small"){s.sole+=90;s.partnership+=40}
-
-  if(a.ownership==="shares"){
-    s.private_limited+=260;s.public_limited+=260;s.opc+=170;
-  }
-  if(a.ownership==="partners"){
-    s.llp+=280;s.partnership+=260;
-  }
-  if(a.ownership==="single"){
-    s.sole+=180;s.opc+=180;
-  }
-
-  if(a.scale==="small"){s.sole+=40;s.partnership+=30;s.llp+=20}
-  if(a.scale==="growth"){s.private_limited+=80;s.llp+=30}
-  if(a.scale==="large"){
-    // Large scale can still be privately held; do not infer public status from scale alone.
-    s.private_limited+=70;
-  }
-
-  if(a.foreign==="investment"){s.private_limited+=35;s.llp+=15}
-  if(a.foreign==="contribution")s.section8+=150;
-
-  // ---------- SECONDARY BUSINESS RULES ----------
-  if(a.founders==="one" && a.ownership==="shares") {
-    // A one-person shareholding preference points to OPC rather than LLP.
-    s.opc+=260; s.private_limited+=40;
-  }
-  if(a.founders==="one" && a.ownership==="single" && a.liability==="acceptable"){
-    s.sole+=260;
-  }
-  if(a.founders==="two_to_six" && a.ownership==="partners" && a.liability!=="acceptable"){
-    s.llp+=180;
-  }
-  if(a.founders==="two_to_six" && a.ownership==="partners" && a.liability==="acceptable"){
-    s.partnership+=180;
-  }
-
-  // ---------- APPLY HARD GATES ----------
-  impossible.forEach(k=>{s[k]=-1000000});
-
-  // Never allow an impossible structure to become the recommendation.
-  return s;
+  const r=BizEngine.evaluate(engineInputs(a)),out={};
+  (r.ranking||[]).forEach(([e,s])=>{out[BizEngine.APP_KEY[e]]=s});
+  out.__engine=r;return out;
 }
 function recommendation(){
-  const entries=Object.entries(state.scores)
-    .filter(([k,v])=>Number.isFinite(v) && v>-999999)
-    .sort((a,b)=>b[1]-a[1]);
-  if(!entries.length){
-    return {
-      key:null,
-      fit:0,
-      ranking:[],
-      conflict:true,
-      message:"The selected requirements are structurally incompatible. Review the ownership and funding choices before implementation."
-    };
+  const r=state.scores.__engine||BizEngine.evaluate(engineInputs(state.answers));
+  if(r.verdict==="NONE"){
+    const rule=BizEngine.RULES[r.emptiedBy]||{};
+    return {key:null,fit:0,ranking:[],conflict:true,engine:r,
+      message:`No structure in this tool's scope fits these answers. ${rule.plain||""}${r.emptiedBy?` [${r.emptiedBy}]`:""}`};
   }
-  const top=entries[0],second=entries[1]||[top[0],top[1]];
-  const gap=Math.max(0,top[1]-second[1]);
-  const fit=Math.max(78,Math.min(98,Math.round(78+Math.min(20,gap/10))));
-  return {key:top[0],fit,ranking:entries,conflict:false};
+  const key=BizEngine.APP_KEY[r.verdict];
+  const ranking=(r.ranking||[]).map(([e,s])=>[BizEngine.APP_KEY[e],s]);
+  return {key,fit:r.ranking[0][1],ranking,conflict:false,engine:r,confidence:r.confidence,margin:r.margin,
+    runnerUp:r.runner_up?BizEngine.APP_KEY[r.runner_up]:null,review:r.review||[]};
 }
 function drivers(a,k){
-  const x=[];
-  if(a.objective==="nonprofit")x.push("The non-profit objective routes the assessment to the Section 8 framework.");
-  if(a.ownership==="shares")x.push("Share-capital / shareholding ownership is a company share-capital requirement; LLP and Partnership are excluded from the recommendation set.");
-  if(a.ownership==="partners")x.push("Partner contribution and LLP-Agreement based ownership routes toward LLP / Partnership rather than a share-capital company.");
-  if(a.funding==="vc"&&k==="private_limited")x.push("VC / angel / institutional equity funding is a direct structural driver toward a Private Limited Company.");
-  if(a.funding==="public"&&k==="public_limited")x.push("Public-market capital objectives route toward a Public Limited Company, subject to statutory eligibility.");
-  if(a.founders==="one"&&k==="opc")x.push("One founder plus share-based limited-liability preference is aligned with the OPC structure.");
-  if(a.founders==="one"&&k==="sole")x.push("One owner plus acceptance of unlimited liability is aligned with proprietorship.");
-  if(a.founders==="two_to_six"&&k==="llp")x.push("Multiple founders plus partner-style ownership and limited liability support an LLP.");
-  if(a.founders==="two_to_six"&&k==="partnership")x.push("Multiple founders plus partner-style ownership and acceptance of unlimited liability support a Partnership Firm.");
-  if(a.founders==="seven_plus"&&k==="private_limited")x.push("Seven or more members can still fit a Private Limited Company; member count alone does not route the result to a Public Limited Company.");
-  if(a.liability==="critical")x.push("Personal asset protection is a core decision criterion in the assessment.");
-  if(a.compliance==="low")x.push("Low compliance capacity reduces suitability of structures with heavier corporate governance.");
-  return x.length?x.slice(0,5):["The result reflects the combined structural answers and the hard-compatibility rules of the engine."];
+  const r=state.rec&&state.rec.engine;if(!r)return["The result reflects the rulebook's hard rules and weighted factors."];
+  const x=BizEngine.explain(r,engineInputs(a));
+  return x.why.concat(x.whyNot).slice(0,6);
 }
 function alternativeStructures(a,k){
-  /*
-    Alternatives are filtered for legal/structural compatibility.
-    This avoids showing LLP as an "alternative" where the user explicitly
-    selected share-based ownership, and avoids presenting structurally
-    incompatible forms as credible recommendations.
-  */
-  const blocked=new Set();
-  if(a.ownership==="shares"){blocked.add("llp");blocked.add("partnership");blocked.add("sole")}
-  if(a.ownership==="partners"){blocked.add("private_limited");blocked.add("public_limited");blocked.add("opc");blocked.add("sole")}
-  if(a.ownership==="single"){blocked.add("private_limited");blocked.add("public_limited");blocked.add("llp");blocked.add("partnership")}
-  if(a.funding==="vc")["llp","partnership","sole","opc"].forEach(k=>blocked.add(k));
-  if(a.funding==="public")["llp","partnership","sole","opc"].forEach(k=>blocked.add(k));
-  if(a.objective==="nonprofit")["private_limited","llp","sole","partnership","opc","public_limited"].forEach(k=>blocked.add(k));
-  if(a.objective==="profit")blocked.add("section8");
-  return state.rec.ranking.filter(([key])=>key!==k && !blocked.has(key)).slice(0,3);
+  return state.rec.ranking.filter(([key])=>key!==k).slice(0,3);
 }
-
+function reviewFlags(){const r=state.rec&&state.rec.engine;return r?(r.review||[]).filter(id=>BizEngine.RULES[id]&&BizEngine.RULES[id].review&&id!=="R-022"):[]}
+function confidenceLabel(){const c=state.rec&&state.rec.confidence;return c==="clear"?"Clear result":c==="moderate"?"Moderate confidence":c==="near-tie"?"Near-tie":c==="only eligible structure"?"Only eligible structure":"—"}
 
 
 function optionLabel(q,v){if(q.type==="multi")return(v||[]).map(x=>(q.opts.find(o=>o[0]===x)||[0,x])[1]).join(", ")||"—";const o=q.opts.find(x=>x[0]===v);return o?o[1]:"—"}
+const visIdx=()=>ALLQ.map((q,i)=>i).filter(i=>!qSkipped(ALLQ[i],state.answers));
+const nextVis=i=>{for(let j=i+1;j<ALLQ.length;j++)if(!qSkipped(ALLQ[j],state.answers))return j;return -1};
+const prevVis=i=>{for(let j=i-1;j>=0;j--)if(!qSkipped(ALLQ[j],state.answers))return j;return -1};
+const lastP1=()=>{let k=-1;for(let j=0;j<QUESTIONS.length;j++)if(!qSkipped(QUESTIONS[j],state.answers))k=j;return k};
 function renderQuestion(){
- const q=ALLQ[state.i],sel=state.answers[q.id],pct=((state.i+1)/ALLQ.length)*100,p2=state.i>=QUESTIONS.length,g=id=>document.getElementById(id);
- g("qCount").textContent=`Question ${state.i+1} of ${ALLQ.length}`;
+ const vis=visIdx(),pos=Math.max(0,vis.indexOf(state.i)),q=ALLQ[state.i],sel=state.answers[q.id],pct=((pos+1)/vis.length)*100,p2=state.i>=QUESTIONS.length,g=id=>document.getElementById(id);
+ g("qCount").textContent=`Question ${pos+1} of ${vis.length}`;const p1n=vis.filter(i=>i<QUESTIONS.length).length,pt1s=document.querySelector("#pt1 small"),pt2s=document.querySelector("#pt2 small");if(pt1s)pt1s.textContent=p1n+" questions";if(pt2s)pt2s.textContent=REGQ.length+" questions";
  g("qCat").textContent=(p2?"Part 2 · Registration Profile · ":"Part 1 · Business Structure · ")+q.cat;
  g("qMsg").innerHTML=""; g("qProgress").style.width=pct+"%";g("pt1").className="part "+(p2?"done":"on");g("pt2").className="part "+(p2?"on":"");
  const on=v=>q.type==="multi"?(sel||[]).includes(v):sel===v;
  const body=q.type==="select"?`<select class="selbox" id="selq"><option value="">Select…</option>${q.opts.map(o=>`<option value="${o[0]}" ${sel===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select>`:`<div class="options">${q.opts.map(o=>`<label class="option ${on(o[0])?"selected":""}" data-v="${o[0]}"><span class="dot"></span><span><div class="option-title">${o[1]}</div><div class="option-detail">${o[2]}</div></span></label>`).join("")}</div>`;
- g("question").innerHTML=(state.i===QUESTIONS.length?`<div class="banner"><b>Part 1 complete.</b> Your structure answers are used to personalise the registration engine. Answer ${REGQ.length} short registration-profile questions to identify the registrations and licences that may apply to you.</div>`:"")+`<h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>${body}`;
+ g("question").innerHTML=(state.i===QUESTIONS.length&&state.answers.objective?`<div class="banner"><b>Part 1 complete.</b> Your structure answers are used to personalise the registration engine. Answer ${REGQ.length} short registration-profile questions to identify the registrations and licences that may apply to you.</div>`:"")+`<h2 class="q-title">${q.title}</h2><p class="q-desc">${q.desc}</p>${body}`;
  if(q.type==="select")g("selq").onchange=ev=>{state.answers[q.id]=ev.target.value};
  else document.querySelectorAll(".option").forEach(c=>c.addEventListener("click",()=>{const v=c.dataset.v;
   if(q.type==="multi"){let a=(state.answers[q.id]||[]).slice();a=a.includes(v)?a.filter(x=>x!==v):(v==="n"?["n"]:a.filter(x=>x!=="n").concat(v));state.answers[q.id]=a;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",a.includes(o.dataset.v)))}
   else{state.answers[q.id]=v;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",o===c))}}));
- g("prevQ").disabled=state.i===0;
- g("nextQ").textContent=state.i===ALLQ.length-1?"Generate Combined Intelligence Dashboard →":"Continue →";
+ g("prevQ").disabled=prevVis(state.i)<0;
+ g("nextQ").textContent=nextVis(state.i)<0?"Generate Combined Intelligence Dashboard →":"Continue →";
 }
-document.getElementById("prevQ").onclick=()=>{if(state.i>0){state.i--;renderQuestion()}};
+document.getElementById("prevQ").onclick=()=>{const p=prevVis(state.i);if(p>=0){state.i=p;renderQuestion()}};
 document.getElementById("nextQ").onclick=()=>{
  const g=id=>document.getElementById(id),m=g("qMsg");m.innerHTML="";
  const v=state.answers[ALLQ[state.i].id];
  if(!v||(Array.isArray(v)&&!v.length)){m.innerHTML='<div class="warnbox">Please answer this question before continuing.</div>';return}
- if(state.i===QUESTIONS.length-1&&state.ackKey!==JSON.stringify(state.answers)){
-  let bad=false;try{state.scores=score(state.answers);bad=recommendation().conflict}catch(e){}
-  if(bad){m.innerHTML='<div class="warnbox"><b>Your Part 1 answers conflict.</b> They do not produce a compatible structure (for example, a single owner seeking VC funding). You can go back and revise them, or continue to the registration questions anyway.<div style="margin-top:9px;display:flex;gap:8px"><button class="btn" id="cBack">Revise my answers</button><button class="btn primary" id="cGo">Continue anyway</button></div></div>';
-   g("cBack").onclick=()=>{m.innerHTML="";state.i=Math.max(0,state.i-1);renderQuestion()};
+ if(state.i===lastP1()&&state.ackKey!==JSON.stringify(state.answers)){
+  let bad=false,why="";try{state.scores=score(state.answers);const rc=recommendation();bad=rc.conflict;why=rc.message||""}catch(e){}
+  if(bad){m.innerHTML='<div class="warnbox"><b>Your Part 1 answers conflict.</b> '+escapeHtml(why)+' You can go back and revise them, or continue to the registration questions anyway.<div style="margin-top:9px;display:flex;gap:8px"><button class="btn" id="cBack">Revise my answers</button><button class="btn primary" id="cGo">Continue anyway</button></div></div>';
+   g("cBack").onclick=()=>{m.innerHTML="";state.i=0;renderQuestion()};
    g("cGo").onclick=()=>{state.ackKey=JSON.stringify(state.answers);g("nextQ").click()};return}}
- if(state.i<ALLQ.length-1){state.i++;renderQuestion();}
+ const n=nextVis(state.i);if(n>=0){state.i=n;renderQuestion();}
  else{generate()}
 };
 
@@ -1690,14 +1549,15 @@ function pdfBuild(meta){
   let py=128+tl.length*32+8;if(meta.biz||meta.name){ink(C.gold);doc.setFontSize(9);doc.setFont(undefined,"bold");doc.text("PREPARED FOR",M,py+4);doc.setFont(undefined,"normal");ink([255,255,255]);doc.setFontSize(15);doc.text(doc.splitTextToSize(pdfClean(meta.biz||meta.name),W*.55)[0],M,py+22);const sub=[meta.biz?meta.name:"",meta.city].filter(Boolean).map(pdfClean).join("  \u2022  ");if(sub){ink([203,225,215]);doc.setFontSize(10);doc.text(sub,M,py+37)}py+=52}
   ink([203,225,215]);doc.setFontSize(10);doc.text("Prepared "+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})+"   |   Report ID "+rid,M,py);
   // Fit gauge
-  const gx=W-M-80,gy=170,gr=58,fit=state.rec.fit||0;doc.setLineWidth(10);stroke([40,80,68]);doc.circle(gx,gy,gr,"S");
+  const gx=W-M-80,gy=170,gr=58,only=state.rec.confidence==="only eligible structure",fit=only?100:(state.rec.fit||0);doc.setLineWidth(10);stroke([40,80,68]);doc.circle(gx,gy,gr,"S");
   stroke(C.gold);const a0=-Math.PI/2,steps=60;for(let i=0;i<steps*fit/100;i++){const a=a0+i/steps*2*Math.PI,b=a0+(i+1.05)/steps*2*Math.PI;doc.line(gx+gr*Math.cos(a),gy+gr*Math.sin(a),gx+gr*Math.cos(b),gy+gr*Math.sin(b))}
-  doc.setLineWidth(.5);ink([255,255,255]);doc.setFont(undefined,"bold");doc.setFontSize(26);doc.text(fit+"%",gx,gy+6,{align:"center"});doc.setFont(undefined,"normal");doc.setFontSize(8);ink(C.goldS);doc.text("STRUCTURE FIT",gx,gy+22,{align:"center"});
+  doc.setLineWidth(.5);ink([255,255,255]);doc.setFont(undefined,"bold");doc.setFontSize(26);doc.text(only?"ONLY":String(fit),gx,gy+6,{align:"center"});doc.setFont(undefined,"normal");doc.setFontSize(8);ink(C.goldS);doc.text(only?"ELIGIBLE STRUCTURE":"FIT SCORE / 100",gx,gy+22,{align:"center"});doc.setFontSize(7.5);doc.text(pdfClean(confidenceLabel()).toUpperCase(),gx,gy+34,{align:"center"});
   // Ranking chart
   y=332;ink(C.forest);doc.setFont(undefined,"bold");doc.setFontSize(12);doc.text("How the structures compare",M,y);doc.setFont(undefined,"normal");y+=16;
-  const rk=state.rec.ranking.slice(0,7),mx=rk[0][1],mn=Math.min(...rk.map(r=>r[1])),bw=W-2*M-170;
+  const rk=state.rec.ranking.filter(r=>r[1]!=null).slice(0,7),mx=rk.length?rk[0][1]:0,mn=rk.length?Math.min(...rk.map(r=>r[1])):0,bw=W-2*M-210;
+  if(rk.length<2){ink(C.muted);doc.setFontSize(9);doc.text(doc.splitTextToSize("Only one structure passes the legal hard rules for your answers, so no weighted comparison is shown. See 'How We Decided' for the rules that excluded the others.",W-2*M),M,y+8);y+=30}
   rk.forEach(([k,v],i)=>{const pct=mx===mn?1:.25+.75*(v-mn)/(mx-mn),top=i===0;ink(top?C.emerald:C.muted);doc.setFontSize(9);if(top)doc.setFont(undefined,"bold");doc.text(pdfClean((ENTITIES[k]||{}).name||k),M,y+10);doc.setFont(undefined,"normal");
-   fill([235,241,238]);doc.roundedRect(M+150,y+2,bw,10,5,5,"F");fill(top?C.emerald:[143,180,166]);doc.roundedRect(M+150,y+2,Math.max(10,bw*pct),10,5,5,"F");if(top){fill(C.gold);doc.circle(M+150+Math.max(10,bw*pct)-5,y+7,3,"F")}y+=19});
+   fill([235,241,238]);doc.roundedRect(M+150,y+2,bw,10,5,5,"F");fill(top?C.emerald:[143,180,166]);doc.roundedRect(M+150,y+2,Math.max(10,bw*pct),10,5,5,"F");if(top){fill(C.gold);doc.circle(M+150+Math.max(10,bw*pct)-5,y+7,3,"F")}ink(top?C.emerald:C.muted);doc.setFontSize(9);doc.text(v.toFixed(1),W-M,y+10,{align:"right"});y+=19});
   y+=12;
   const cover=report.querySelector(".print-cover");
   if(cover){tbl({head:[["Key metric","Value"]],body:[...cover.querySelectorAll(".pkpi")].map(k=>[tx(k.querySelector(".pkpi-label")),tx(k.querySelector(".pkpi-value"))]),columnStyles:{0:{cellWidth:150,fontStyle:"bold",textColor:C.emerald}}});cover.querySelectorAll(".pcard").forEach(pc);flush()}
@@ -1727,7 +1587,7 @@ function pdfBuild(meta){
   /* ---------- HEADERS / FOOTERS ---------- */
   const n=doc.getNumberOfPages();
   for(let i=2;i<=n;i++){doc.setPage(i);if(i!==tocPage){fill(C.emerald);doc.rect(0,0,W,4,"F");doc.setFontSize(7.5);ink(C.muted);doc.text("BIZ MATRIX  |  "+pdfClean(ent.name).toUpperCase(),M,22);ink(C.emerald);doc.text("Back to contents",W-M,22,{align:"right"});doc.link(W-M-70,13,70,12,{pageNumber:tocPage})}
-   stroke(C.line);doc.setLineWidth(.5);doc.line(M,H-38,W-M,H-38);doc.setFontSize(7.5);ink(C.muted);doc.text("Preliminary decision support. Verify current law with a qualified professional before acting.  |  "+rid,M,H-24);fill(C.emerald);doc.roundedRect(W-M-54,H-33,54,14,7,7,"F");ink([255,255,255]);doc.text(i+" / "+n,W-M-27,H-23,{align:"center"})}
+   stroke(C.line);doc.setLineWidth(.5);doc.line(M,H-38,W-M,H-38);doc.setFontSize(7.5);ink(C.muted);doc.text("Decision support, law verified "+BizEngine.VERIFIED+". Not legal, tax or professional advice.  |  Engine v"+BizEngine.VERSION+"  |  "+rid,M,H-24);fill(C.emerald);doc.roundedRect(W-M-54,H-33,54,14,7,7,"F");ink([255,255,255]);doc.text(i+" / "+n,W-M-27,H-23,{align:"center"})}
   doc.setProperties({title:"Biz Matrix Report - "+(meta.biz?pdfClean(meta.biz)+" - ":"")+pdfClean(ent.name),subject:"Business structure & registration intelligence",author:"Biz Matrix",creator:"Biz Matrix"});
   window.__lastPdf=doc;
   const blob=doc.output("blob");

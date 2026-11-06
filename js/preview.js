@@ -43,9 +43,10 @@ function LockedPremiumSection(remainingCount, label = 'items') {
 }
 
 function analysisPreview(e) {
-  const ownership = state.answers.ownership;
+  const r = state.rec.engine || { eligible: [], excluded: {} };
+  const gate = 'Eligible after the legal hard rules: ' + (r.eligible || []).map(x => BizEngine.NAME[x]).join(', ') + '. ' + Object.entries(r.excluded || {}).map(([x, ids]) => BizEngine.NAME[x] + ' excluded by ' + ids.join(', ')).join('; ') + '.';
   return getPreviewItems([
-    ['Structural compatibility gate', ownership === 'shares' ? 'Share-capital ownership selected: LLP and Partnership are excluded from the primary recommendation.' : ownership === 'partners' ? 'Partner-contribution ownership selected: share-capital company structures are excluded from the primary recommendation.' : 'Direct single-owner control selected: the engine evaluates proprietorship and OPC routes.'],
+    ['Eligibility gate (hard rules)', gate],
     ['Legal identity', e.legal], ['Liability', e.liability],
     ['Founders and membership', e.members], ['Ownership and management', e.ownership],
     ['Funding routes', e.funding], ['Tax framework', e.tax], ['Compliance burden', e.compliance],
@@ -101,18 +102,25 @@ function renderDashboard() {
   document.getElementById('heroTitle').textContent = e.name;
   document.getElementById('heroDesc').textContent = e.best;
   document.getElementById('recTitle').textContent = e.name;
-  document.getElementById('recDesc').textContent = `${e.name} is the current structural fit based on your assessment.`;
-  document.getElementById('score').textContent = state.rec.fit;
+  const only = state.rec.confidence === 'only eligible structure';
+  const flags = reviewFlags();
+  document.getElementById('recDesc').textContent = only
+    ? `${e.name} is the only structure that passes the legal hard rules for your answers.`
+    : `${e.name} scored highest (${state.rec.fit}/100) across the rulebook's nine weighted factors. ${confidenceLabel()}: ${state.rec.margin} points ahead of ${ENTITIES[state.rec.runnerUp].name}.`;
+  document.getElementById('score').textContent = only ? '✓' : state.rec.fit;
+  const cap = document.querySelector('.ring-caption'); if (cap) cap.textContent = only ? 'Only eligible' : 'Fit score';
   const circumference = 2 * Math.PI * 78;
-  document.getElementById('ringFg').style.strokeDashoffset = circumference - state.rec.fit / 100 * circumference;
-  document.getElementById('recPills').innerHTML = `<span class="pill green">Current fit ${state.rec.fit}/100</span><span class="pill gray">FY 2026-27</span>`;
+  document.getElementById('ringFg').style.strokeDashoffset = only ? 0 : circumference - state.rec.fit / 100 * circumference;
+  const band = { clear: 'green', moderate: 'amber', 'near-tie': 'red' }[state.rec.confidence] || 'blue';
+  document.getElementById('recPills').innerHTML = `<span class="pill ${band}">${escapeHtml(confidenceLabel())}</span>${flags.length ? `<span class="pill red">${flags.length} review flag${flags.length > 1 ? 's' : ''}</span>` : ''}<span class="pill gray">Rulebook v${BizEngine.VERSION} · law verified ${BizEngine.VERIFIED}</span>`;
+  renderWhyResult();
   const driverPreview = getPreviewItems(drivers(state.answers, state.rec.key), 'drivers');
   document.getElementById('drivers').innerHTML = driverPreview.visibleItems.map((text, i) => `<div class="driver"><div class="driver-num">${i + 1}</div><div class="driver-text">${escapeHtml(text)}</div></div>`).join('') + (driverPreview.remainingCount ? `<p class="driver-text">${driverPreview.remainingCount} additional drivers in the full report.</p>` : '');
   metricCards(e);
   document.getElementById('executive').textContent = `${e.name} is the current best structural fit based on the information provided. Verify applicable requirements before incorporation or commencement.`;
   const overview = overviewPreview(e);
   document.getElementById('overviewCards').innerHTML = overview.visibleItems.map(([title, text]) => `<div class="text-card"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></div>`).join('') + LockedPremiumSection(overview.remainingCount, 'executive summary items');
-  document.getElementById('answers').innerHTML = ALLQ.map(q => `<div class="answer-item"><div class="answer-cat">${escapeHtml(q.cat)}</div><div class="answer-val">${escapeHtml(optionLabel(q, state.answers[q.id]))}</div></div>`).join('');
+  document.getElementById('answers').innerHTML = ALLQ.filter(q => !qSkipped(q, state.answers)).map(q => `<div class="answer-item"><div class="answer-cat">${escapeHtml(q.cat)}</div><div class="answer-val">${escapeHtml(optionLabel(q, state.answers[q.id]))}</div></div>`).join('');
   renderAnalysis(e); renderDocs(e); renderCompliance(e); renderRegs(); renderMatrix(); renderAction(e); buildPrint(e);
   document.getElementById('assessment').classList.add('hidden');
   document.getElementById('dashboard').classList.remove('hidden');
@@ -190,7 +198,8 @@ function buildPrint(e) {
   const decisionDrivers = getPreviewItems(drivers(state.answers, state.rec.key), 'drivers');
   document.getElementById('printReport').innerHTML = `<div class="print-page print-cover"><div><div class="print-brand"><img class="print-logo" src="../assets/bizmatrix-mark.png" alt=""><div><b>Biz Matrix</b><div class="print-small">FY 2026-27 - ${premium ? 'Full Report' : '35% Free Preview'}</div></div></div><div class="print-title">${escapeHtml(e.name)}</div><div class="print-sub">Business Structure &amp; Registration Intelligence - ${premium ? 'Full' : 'Preview'} Report</div><div class="print-kpis">${summary.visibleItems.map(([title, text]) => `<div class="pkpi"><div class="pkpi-label">${escapeHtml(title)}</div><div class="pkpi-value">${escapeHtml(text)}</div></div>`).join('')}</div><div class="pcard"><h4>Executive Decision</h4><p>${escapeHtml(e.name)} is the current structural fit based on your answers.</p></div><div class="pcard"><h4>Important limitation</h4><p>Preliminary decision support only. Verify current law and applicable requirements before acting.</p></div><div class="pcard"><h4>${premium ? 'Official website' : 'Full report: Rs. 49'}</h4><p>https://www.bizmatrix.in/</p><p>${APP_CONFIG.supportEmail}</p></div></div></div>`
     + section('Executive Summary' + suffix, cards(summary) + printGate(summary, 'summary items') + cards(overview) + printGate(overview, 'executive summary items') + cards({visibleItems: decisionDrivers.visibleItems.map((text, i) => [`Decision driver ${i + 1}`, text])}) + printGate(decisionDrivers, 'decision drivers'))
-    + section('Assessment Inputs', `<div class="print-grid2">${ALLQ.map(q => `<div class="pcard"><h4>${escapeHtml(q.cat)}</h4><p>${escapeHtml(optionLabel(q, state.answers[q.id]))}</p></div>`).join('')}</div>`)
+    + section('How We Decided', decisionPrintHtml())
+    + section('Assessment Inputs', `<div class="print-grid2">${ALLQ.filter(q => !qSkipped(q, state.answers)).map(q => `<div class="pcard"><h4>${escapeHtml(q.cat)}</h4><p>${escapeHtml(optionLabel(q, state.answers[q.id]))}</p></div>`).join('')}</div>`)
     + section('Detailed Analysis' + suffix, cards(analysis) + printGate(analysis, 'analysis items'))
     + section('Alternative Structures' + suffix, (alternatives.totalItems ? cards({visibleItems: alternatives.visibleItems.map(([key]) => [ENTITIES[key].name, ENTITIES[key].best])}) : '<p>No structurally compatible alternative.</p>') + printGate(alternatives, 'alternative structures'))
     + section('Document Checklist' + suffix, `<div class="print-grid2">${docs.visibleItems.map(doc => `<div class="pcard"><h4>${escapeHtml(doc.group)}</h4><p>${state.docs[doc.id] ? '[Done]' : '[ ]'} ${escapeHtml(docText(doc.item))}</p></div>`).join('')}</div>` + printGate(docs, 'documents'))
@@ -204,7 +213,8 @@ function renderConflict() {
   document.getElementById('printReport').innerHTML = '';
   document.getElementById('printBtn').disabled = true;
   ['heroTitle', 'recTitle'].forEach(id => { document.getElementById(id).textContent = 'Compatibility Check Required'; });
-  ['heroDesc', 'recDesc', 'executive'].forEach(id => { document.getElementById(id).textContent = 'The ownership and funding requirements do not produce a compatible structure. Start a new assessment to review them.'; });
+  ['heroDesc', 'recDesc', 'executive'].forEach(id => { document.getElementById(id).textContent = ((state.rec && state.rec.message) || 'Your answers do not produce a compatible structure.') + ' Start a new assessment to review them, or talk to a professional.'; });
+  const wr = document.getElementById('whyResult'); if (wr) wr.innerHTML = '';
   ['metrics', 'overviewCards', 'recPills', 'drivers', 'heroPills', 'snap', 'answers', 'matrixGate'].forEach(id => { document.getElementById(id).innerHTML = ''; });
   ['analysis', 'alternatives', 'documents', 'compliance', 'rgOut', 'actionPlan'].forEach(id => { document.getElementById(id).innerHTML = '<p>Resolve the compatibility issue to generate this section.</p>'; });
   document.getElementById('score').textContent = '-';
@@ -275,3 +285,35 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('printBtn').insertAdjacentHTML('afterbegin', '<span class="nav-icon" aria-hidden="true">' + ICONS.file + '</span>');
   activateTab('overview');
 });
+
+/* ---- "Why this result" (Rulebook Part F: exclusions, factor breakdown, confidence, review flags) ---- */
+function factorRows() {
+  const r = state.rec.engine; if (!r || !r.breakdown) return [];
+  const top = r.verdict, ru = r.runner_up;
+  return BizEngine.FACTORS.map(f => ({ id: f.id, name: f.name, weight: f.weight, basis: f.basis, top: r.breakdown[top][f.id] / 10, ru: ru ? r.breakdown[ru][f.id] / 10 : null }));
+}
+function exclusionRows() {
+  const r = state.rec.engine; if (!r) return [];
+  return Object.entries(r.excluded || {}).map(([e, ids]) => ({ e: BizEngine.NAME[e], ids, plain: BizEngine.RULES[ids[0]].plain, cite: ids.map(id => BizEngine.RULES[id].cite).join('; ') }));
+}
+function renderWhyResult() {
+  let host = document.getElementById('whyResult');
+  if (!host) { host = document.createElement('div'); host.id = 'whyResult'; host.className = 'why-result'; const anchor = document.getElementById('overviewCards'); anchor.parentNode.insertBefore(host, anchor); }
+  const r = state.rec.engine, flags = reviewFlags(), rows = factorRows(), ex = exclusionRows();
+  const ru = r.runner_up ? BizEngine.NAME[r.runner_up] : null;
+  const talk = flags.length || state.rec.confidence === 'near-tie';
+  host.innerHTML = (talk ? `<div class="card talk-pro" role="note"><div><b>Talk to a professional before acting.</b><p>${state.rec.confidence === 'near-tie' ? 'The top two structures are within 5 points. Compare both below. ' : ''}${flags.filter(f => f !== 'TIE').length ? 'Your answers raise points that depend on your specific facts:' : ''}</p>${flags.filter(f => f !== 'TIE').length ? '<ul>' + flags.filter(f => f !== 'TIE').map(id => `<li><b>${id}</b> ${escapeHtml(BizEngine.RULES[id].plain)} <span class="cite">${escapeHtml(BizEngine.RULES[id].cite)}</span></li>`).join('') + '</ul>' : ''}</div><a class="btn primary" href="../contact/">Talk to a professional</a></div>` : '')
+  + `<div class="card why-card"><div class="why-head"><h3>Why this result?</h3><span class="why-meta">Hard rules first, then 9 weighted factors · Rulebook v${BizEngine.VERSION}, law verified ${BizEngine.VERIFIED}</span></div>`
+  + (rows.length ? `<div class="fx-legend"><span><i class="fx-a"></i>${escapeHtml(BizEngine.NAME[r.verdict])}</span>${ru ? `<span><i class="fx-b"></i>${escapeHtml(ru)}</span>` : ''}</div><div class="fx-list">${rows.map(f => `<div class="fx-row"><div class="fx-name">${escapeHtml(f.name)} <small>w${f.weight} · ${f.basis}</small></div><div class="fx-bars"><div class="fx-bar"><span class="fx-a" style="width:${f.top / f.weight * 100}%"></span></div>${f.ru !== null ? `<div class="fx-bar"><span class="fx-b" style="width:${f.ru / f.weight * 100}%"></span></div>` : ''}</div><div class="fx-val">${f.top.toFixed(1)}${f.ru !== null ? ' / ' + f.ru.toFixed(1) : ''}</div></div>`).join('')}</div>` : '<p class="why-only">Only one structure passed the legal hard rules, so no weighted score is shown: a score with no competitor measures nothing.</p>')
+  + (ex.length ? `<h4 class="why-sub">Ruled out by law or regulation</h4><ul class="why-ex">${ex.map(x => `<li><b>${escapeHtml(x.e)}</b> <span class="rid">${x.ids.join(', ')}</span><br>${escapeHtml(x.plain)} <span class="cite">${escapeHtml(x.cite)}</span></li>`).join('')}</ul>` : '')
+  + `<p class="why-disc">Structured decision support based on the law as verified on ${BizEngine.VERIFIED}. Not legal, tax or professional advice for your specific facts. <a href="../methodology/">How we decide</a></p></div>`;
+}
+function decisionPrintHtml() {
+  const r = state.rec.engine, rows = factorRows(), ex = exclusionRows(), flags = reviewFlags();
+  const ru = r.runner_up ? BizEngine.NAME[r.runner_up] : null;
+  let h = `<div class="pcard"><h4>Result</h4><p>${escapeHtml(BizEngine.NAME[r.verdict])}: ${escapeHtml(confidenceLabel())}${r.margin != null ? ` (margin ${r.margin} points over ${escapeHtml(ru)})` : ''}. Engine v${BizEngine.VERSION}, law verified ${BizEngine.VERIFIED}.</p></div>`;
+  if (rows.length) h += `<table class="print-table"><thead><tr><th>Factor</th><th>Weight</th><th>Basis</th><th>${escapeHtml(BizEngine.NAME[r.verdict])}</th>${ru ? `<th>${escapeHtml(ru)}</th>` : ''}</tr></thead><tbody>${rows.map(f => `<tr><td>${escapeHtml(f.name)}</td><td>${f.weight}</td><td>${f.basis}</td><td>${f.top.toFixed(1)}</td>${ru ? `<td>${f.ru.toFixed(1)}</td>` : ''}</tr>`).join('')}</tbody></table>`;
+  if (ex.length) h += `<table class="print-table"><thead><tr><th>Structure</th><th>Rule</th><th>Reason</th><th>Citation</th></tr></thead><tbody>${ex.map(x => `<tr><td>${escapeHtml(x.e)}</td><td>${x.ids.join(', ')}</td><td>${escapeHtml(x.plain)}</td><td>${escapeHtml(x.cite)}</td></tr>`).join('')}</tbody></table>`;
+  if (flags.length) h += `<div class="pcard"><h4>Talk to a professional</h4><ul>${flags.map(id => `<li>${id}: ${escapeHtml(BizEngine.RULES[id].plain)}</li>`).join('')}</ul></div>`;
+  return h;
+}

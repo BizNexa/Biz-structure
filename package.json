@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
-    "test": "node --test worker/signature.test.js"
+    "test": "node --test worker/signature.test.js tests/engine.test.cjs"
   },
   "devDependencies": {
     "wrangler": "^4.42.0"

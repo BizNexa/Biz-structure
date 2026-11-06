@@ -12,3 +12,4 @@ exclude:
   - package.json
   - package-lock.json
   - wrangler.toml
+  - tests

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="How Biz Matrix decides: the legal hard rules, weighted factors, tax model and regression tests behind every business structure recommendation.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.bizmatrix.in/methodology/">
+  <title>How We Decide | Biz Matrix Methodology</title>
+  <link rel="icon" href="../favicon.png" type="image/png"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="../css/dark.css"><script src="../js/theme.js"></script></head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/bizmatrix-logo.png" alt="Biz Matrix"></a>
+    <nav aria-label="Main navigation"><a href="../assessment/">Assessment</a><a href="../about/">About Us</a><a href="../methodology/" aria-current="page">How we decide</a><a href="../contact/">Contact</a></nav>
+  </header>
+  <main class="page-shell method">
+    <p class="eyebrow">Methodology</p>
+    <h1>How we decide</h1>
+    <p class="updated" id="mVer"></p>
+    <div class="page-copy">
+      <p>Biz Matrix recommends one of seven structures: Sole Proprietorship, Partnership Firm, LLP, One Person Company, Private Limited, Public Limited (unlisted) and Section 8 Company. The decision follows the BizMatrix Knowledge Base &amp; Decision Rulebook in four steps.</p>
+      <ol class="steps"><li><b>Hard rules first.</b> Legal knock-out rules remove any structure the law does not allow for your answers, for example a partnership with one owner, or a company for a CA in practice.</li><li><b>No match, or only one match.</b> If no structure survives, we say so and explain the rule that removed the last one. If exactly one survives, it is shown as the &ldquo;only eligible structure&rdquo; with no score.</li><li><b>Weighted scoring.</b> Otherwise each eligible structure is scored 0&ndash;100 on nine factors. Weights add up to 100 and every weight is tagged by its basis: LAW (statute or rule), REG (regulator practice), MKT (market convention) or JDG (BizMatrix judgement). Weights are not law.</li><li><b>Confidence and review flags.</b> The margin between first and second sets the confidence band: 10+ points is clear, 5&ndash;9.9 is moderate, under 5 is a near-tie. Near-ties and any review flag show &ldquo;Talk to a professional&rdquo; instead of a confident verdict.</li></ol>
+      <h2>1. Hard rules (knock-outs)</h2><div class="tbl-wrap"><table class="legal-table" id="mRules"></table></div>
+      <h2>2. Weighted factors</h2><div class="tbl-wrap"><table class="legal-table" id="mFactors"></table></div>
+      <h2>3. Factor scores by structure (0&ndash;10)</h2><div class="tbl-wrap"><table class="legal-table" id="mScores"></table></div>
+      <h2>4. Tax model (factor F10)</h2><p>Effective total tax on profit, entity plus owners, under the Income-tax Act 2025 for tax year 2026-27 (new regime; owners with no other income; 2 owners for firm, LLP and companies). The structure with the lowest rate among those eligible scores 10, minus 1 point for every 2 percentage points above it.</p><div class="tbl-wrap"><table class="legal-table" id="mTax"></table></div>
+      <h2>5. Quality control</h2><p>The engine is tested against 25 published founder profiles on every release, and a release is blocked if any test fails. The rulebook is reviewed every quarter and immediately after any Finance Act or Companies/LLP amendment.</p>
+      <h2>Disclaimer</h2><p>Structured decision support based on the law as verified on the date shown. Not legal, tax or professional advice for your specific facts. Trusts, societies, HUFs, co-operatives, producer companies, Nidhis and branch or liaison offices are outside this tool&rsquo;s scope.</p>
+    </div>
+  </main>
+  <script src="../js/engine.js"></script>
+  <script>
+  (function(){var E=window.BizEngine,$=function(id){return document.getElementById(id)},esc=function(s){return String(s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})},ab={PROP:"Prop.",PF:"Firm",LLP:"LLP",OPC:"OPC",PVT:"Pvt Ltd",PUB:"Public"};
+  $("mVer").textContent="Rulebook v"+E.VERSION+" · law verified as of "+E.VERIFIED+" · next review "+E.NEXT_REVIEW;
+  $("mRules").innerHTML="<thead><tr><th>Rule</th><th>What it means</th><th>Basis</th><th>Citation</th></tr></thead><tbody>"+Object.keys(E.RULES).filter(function(k){return k!=="TIE"}).map(function(k){var r=E.RULES[k];return"<tr><td><b>"+k+"</b>"+(r.review?"<br><small>review flag</small>":"")+"</td><td>"+esc(r.plain)+"</td><td>"+r.basis+"</td><td>"+esc(r.cite)+"</td></tr>"}).join("")+"</tbody>";
+  $("mFactors").innerHTML="<thead><tr><th>Factor</th><th>Weight</th><th>Basis</th><th>Why</th></tr></thead><tbody>"+E.FACTORS.map(function(f){return"<tr><td><b>"+f.id+"</b> "+esc(f.name)+"</td><td>"+f.weight+"</td><td>"+f.basis+"</td><td>"+esc(E.JUSTIFY[f.id])+"</td></tr>"}).join("")+"</tbody>";
+  var L={liability:"Liability risk",funding:"Funding",compliance:"Compliance appetite",credibility:"Credibility need",exit:"Long-term plan",foreign:"Foreign money",business:"Startup India"},rows="";
+  Object.keys(L).forEach(function(f){Object.keys(E.SCORES[f]).forEach(function(o){rows+="<tr><td>"+L[f]+" = "+o.replace("_"," ")+"</td>"+E.SCORES[f][o].map(function(v){return"<td>"+v+"</td>"}).join("")+"</tr>"})});
+  rows+="<tr><td>Formation cost (always)</td>"+E.SCORES.cost.map(function(v){return"<td>"+v+"</td>"}).join("")+"</tr>";
+  $("mScores").innerHTML="<thead><tr><th>Answer</th>"+E.FORPROFIT.map(function(e){return"<th>"+ab[e]+"</th>"}).join("")+"</tr></thead><tbody>"+rows+"</tbody>";
+  var P={lt_25L:"₹10 lakh",["25L_2cr"]:"₹1 crore",gt_2cr:"₹5 crore"},tr="";
+  Object.keys(P).forEach(function(pk){["retain","withdraw"].forEach(function(m){var row=E.TAX[pk+"|"+m];tr+="<tr><td>"+P[pk]+", "+(m==="retain"?"retained":"withdrawn")+"</td>"+E.FORPROFIT.map(function(e){return"<td>"+(row[e].rate*100).toFixed(1)+"%</td>"}).join("")+"</tr>"})});
+  $("mTax").innerHTML="<thead><tr><th>Profit</th>"+E.FORPROFIT.map(function(e){return"<th>"+ab[e]+"</th>"}).join("")+"</tr></thead><tbody>"+tr+"</tbody>";
+  })();
+  </script>
+  <footer class="site-footer">
+      <div class="footer-grid">
+        <section>
+          <h2>About Us</h2>
+          <p>Biz Matrix – Business Structure Intelligence helps Indian founders choose the right business structure and understand their compliance obligations before they incorporate.</p>
+        </section>
+        <section>
+          <h2>Policies</h2>
+          <ul>
+          <li><a href="../terms/">Terms &amp; Conditions</a></li>
+          <li><a href="../privacy-policy/">Privacy Policy</a></li>
+          <li><a href="../refund-policy/">Refund and Cancellation Policy</a></li>
+          <li><a href="../cookie-policy/">Cookie Policy</a></li>
+          <li><a href="../disclaimer/">Advisory Disclaimer</a></li>
+          </ul>
+        </section>
+        <section>
+          <h2>Support</h2>
+          <ul>
+          <li><a href="../shipping-delivery/">Shipping and Delivery Policy</a></li>
+          <li><a href="../grievance-redressal/">Grievance Redressal</a></li>
+          <li><a href="../accessibility/">Accessibility</a></li>
+          <li><a href="../corporate-information/">Corporate Information</a></li>
+          <li><a href="../contact/">Contact Us</a></li>
+          </ul>
+        </section>
+        <section>
+          <h2>Resources</h2>
+          <ul>
+          <li><a href="../assessment/">Business Assessment</a></li><li><a href="../methodology/">How we decide</a></li>
+          </ul>
+        </section>
+      </div>
+      <div class="footer-bottom">
+        <p><a href="mailto:nexifydigital03@gmail.com">nexifydigital03@gmail.com</a> · Monday–Saturday, 10:00 AM – 6:00 PM IST</p>
+        <p>© 2026 Biz Matrix. All rights reserved.</p>
+      </div>
+    </footer>
+</body>
+</html>

@@ -48,3 +48,7 @@ a{color:#0E6B54}
 .page-copy h2{color:#0B231C;padding-left:12px;border-left:3px solid #C9A227}
 .site-footer{background:linear-gradient(160deg,#071A15,#0D2A22)}
 .site-footer h2,.site-footer a{color:#E9C46A}
+.method .steps{padding-left:20px;display:grid;gap:8px;color:#334155}
+.tbl-wrap{overflow-x:auto;margin:0 0 16px;-webkit-overflow-scrolling:touch}
+.method .legal-table{min-width:560px;font-size:13px}.method .legal-table small{color:#B8892B;font-weight:700}
+[data-theme="dark"] .method .steps{color:#B4C8C0}

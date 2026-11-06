@@ -9,7 +9,7 @@
   const createCard = () => {
     const card = document.createElement('aside');
     card.className = 'paywall-overlay-card';
-    card.innerHTML = '<div class="lock-icon">🔒</div><span class="paywall-price">₹49 only</span><h3>Unlock Complete Action Plan & Compliance Blueprint</h3><p>Get the complete 10-point legal analysis, statutory checklist, and download the official PDF report.</p><button class="unlock-cta" type="button">Unlock Everything for ₹49</button>';
+    card.innerHTML = '<div class="lock-icon">🔒</div><span class="paywall-price">₹49 only</span><h3>Unlock Complete Action Plan & Compliance Blueprint</h3><p>Get the full 10-point structure analysis, statutory checklist, and download the official PDF report.</p><button class="unlock-cta" type="button">Unlock Everything for ₹49</button>';
     card.querySelector('button').addEventListener('click', openCheckout);
     return card;
   };
