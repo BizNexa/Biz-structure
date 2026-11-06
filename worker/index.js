@@ -236,7 +236,7 @@ async function route(request, env, origin) {
     return json({ received: true }, 200, origin);
   }
 
-  if (request.method === 'GET' && (url.pathname === '/health' || url.pathname === '/')) return json({ ok: true, paymentsReady: ready, premiumReady: Boolean(catalog), credentialsConfigured: configured, mode }, 200, origin);
+  if (request.method === 'GET' && (url.pathname === '/health' || url.pathname === '/')) return json({ ok: true, paymentsReady: ready, premiumReady: Boolean(catalog), kbReady: Boolean(catalog?.kb), credentialsConfigured: configured, mode }, 200, origin);
   if (request.method === 'GET' && url.pathname === '/api/config') return json({ provider: 'Cashfree', amount: PRICE_PAISE, currency: 'INR', available: ready, mode }, 200, origin);
 
   if (request.method === 'POST' && url.pathname === '/api/setup/catalog') {
@@ -248,6 +248,20 @@ async function route(request, env, origin) {
     await db.prepare('INSERT OR REPLACE INTO catalog (id, body) VALUES (1, ?)').bind(JSON.stringify(body)).run();
     catalogCache = body;
     return json({ ok: true }, 200, origin);
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/setup/kb') {
+    if (!env.SETUP_TOKEN || !(await tokensMatch(env.SETUP_TOKEN, (request.headers.get('Authorization') || '').replace(/^Bearer /, '')))) return fail(401, 'Setup credentials were not accepted.', origin);
+    const raw = await request.text();
+    if (raw.length > 6_000_000) return fail(413, 'Knowledge base is too large.', origin);
+    const kb = JSON.parse(raw);
+    if (kb.version !== 2 || !kb.checklist || !Array.isArray(kb.registrations) || !kb.compliance) return fail(400, 'Invalid knowledge base.', origin);
+    const current = await readCatalog(db);
+    if (!current) return fail(409, 'Upload the full premium catalog first.', origin);
+    const merged = { ...current, kb };
+    await db.prepare('INSERT OR REPLACE INTO catalog (id, body) VALUES (1, ?)').bind(JSON.stringify(merged)).run();
+    catalogCache = merged;
+    return json({ ok: true, registrations: kb.registrations.length }, 200, origin);
   }
 
   if (request.method === 'POST' && url.pathname === '/api/session') {

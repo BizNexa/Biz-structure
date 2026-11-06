@@ -5,7 +5,7 @@ const TAGS = { L: ["Law", "tg-l"], P: ["Portal practice", "tg-p"], C: ["Commonly
 const LEVEL = { mandatory: ["Mandatory", "m2"], triggered: ["Applies to you", "m1"], watch: ["Watch threshold", "m3"], recommended: ["Recommended", "m3"] };
 const esc = s => escapeHtml(s == null ? "" : String(s));
 const portalLink = p => { const m = String(p || "").match(/([a-z0-9-]+\.)+(gov\.in|nic\.in|org|in|com)(\/[^\s,;)]*)?/i); return m ? `<a href="https://${m[0]}" target="_blank" rel="noopener">${esc(m[0])}</a>` : esc(p); };
-const lockLine = () => `<span class="kb-lock" title="Included in the full report">🔒 Full report</span>`;
+const lockLine = () => AccessProvider.isPremium() ? "" : `<span class="kb-lock" title="Included in the full report">🔒 Full report</span>`;
 
 function kbKey() { return state.rec && state.rec.key; }
 
