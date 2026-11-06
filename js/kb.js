@@ -40,6 +40,10 @@
 
   /* ------------------------------------------------------------------ activities (Part D) */
   const ACTIVITIES = [
+    ["ca_practice", "CA, CS or Cost Accountant practice", ["svc", "fin", "other"], []],
+    ["law_practice", "Advocate / law practice", ["svc", "other"], []],
+    ["reg_practice", "Doctor, architect or other regulated profession", ["hc", "svc", "re", "edu", "other"], []],
+    ["insurer", "Insurance company (insurer)", ["ins", "fin"], []],
     ["restaurant", "Restaurant, café, eating house or catering", ["food", "hos"], ["I01", "I02", "I03", "I04", "I06", "I60"]],
     ["cloud_kitchen", "Cloud kitchen / food delivery brand", ["food", "hos", "ecom"], ["I01", "I02", "I03", "I06"]],
     ["food_mfg", "Food manufacturing, processing or packaging", ["food", "agr", "mfg"], ["I01", "I02", "I03", "I17", "I24"]],

@@ -9,5 +9,5 @@ module.exports = [
   ["OPC, solo e-commerce seller", { ...base, founders: "one", profit_level: "25L_2cr", extraction: "retain", sector: "trd", supply: "g", turnover: "40_150", channels: ["marketplace"], interstate: "y", packaged: "y", premises: "rent" }],
   ["Section 8, education NGO", { ...base, objective: "nonprofit", founders: "seven_plus", sector: "edu", activities: ["coaching"], foreign: "contribution", workforce: "10_19", ec: "y", premises: "rent", corp_owner: "yes" }],
   ["Factory, 4 promoters, corporate shareholder", { ...base, liability: "critical", credibility: "high", profit_level: "gt_2cr", extraction: "retain", compliance: "high", sector: "mfg", activities: ["factory", "plastic"], supply: "g", turnover: "gt500", workforce: "50p", ec: "y", contract: "y", premises: "factory", interstate: "y", packaged: "y", plant: ["b", "h"], corp_owner: "yes", din: "yes" }],
-  ["CA practice, 3 partners", { ...base, profession: "ca_cs_cma", business: "professional", profit_level: "25L_2cr", turnover: "40_150", workforce: "1_9", premises: "rent" }]
+  ["CA practice, 3 partners", { ...base, profession: "ca_cs_cma", activities: ["ca_practice"], business: "professional", profit_level: "25L_2cr", turnover: "40_150", workforce: "1_9", premises: "rent" }]
 ];
