@@ -1630,6 +1630,18 @@ function printNow(){
  }catch(e){console.error("Print error:",e);toast("Print preparation failed. Press Ctrl+P (Cmd+P on Mac) to print or save as PDF.")}
 }
 const pdfClean=s=>String(s==null?"":s).replace(/₹/g,"Rs. ").replace(/→/g,"->").replace(/[✓✔]/g,"Yes").replace(/☐/g,"[ ]").replace(/≥/g,">=").replace(/[^\x09\x0A\x20-\x7E\xA0-\xFF\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026]/g,"");
+function askCover(done){
+ let s={};try{s=JSON.parse(localStorage.getItem("bm_cover")||"{}")}catch(e){}
+ const esc=v=>String(v||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+ const w=document.createElement("div");w.className="bm-cover-modal";w.setAttribute("role","dialog");w.setAttribute("aria-modal","true");w.setAttribute("aria-labelledby","bmCvT");
+ w.innerHTML='<form class="bm-cover-card"><div class="bm-cover-kicker">Personalise your report</div><h2 id="bmCvT">Who is this report for?</h2><p>These details appear on the PDF cover. They stay in your browser and are never uploaded.</p><label>Business name<input name="biz" maxlength="70" placeholder="e.g. Sharma Foods Pvt Ltd" value="'+esc(s.biz)+'"></label><label>Your name<input name="name" maxlength="60" placeholder="e.g. Priya Sharma" value="'+esc(s.name)+'"></label><label>City / State<input name="city" maxlength="50" placeholder="e.g. Pune, Maharashtra" value="'+esc(s.city)+'"></label><div class="bm-cover-btns"><button type="button" class="btn" data-skip>Skip</button><button type="submit" class="btn primary">Generate PDF</button></div></form>';
+ document.body.appendChild(w);const f=w.querySelector("form");setTimeout(()=>f.elements.biz.focus(),30);
+ const k=e=>{if(e.key==="Escape")close({})};
+ const close=m=>{w.remove();document.removeEventListener("keydown",k);done(m)};document.addEventListener("keydown",k);
+ w.querySelector("[data-skip]").onclick=()=>close({});
+ f.onsubmit=e=>{e.preventDefault();const el=f.elements,m={biz:el.biz.value.trim(),name:el.name.value.trim(),city:el.city.value.trim()};try{localStorage.setItem("bm_cover",JSON.stringify(m))}catch(x){}close(m)};
+}
+
 function pdfNow(){
  if(!state.rec||!state.rec.key){toast(state.rec&&state.rec.conflict?"No compatible structure was identified, so the report cannot be built. Revise your Part 1 answers and regenerate.":"Please complete the assessment first.");return}
  if(!AccessProvider.isPremium()){
@@ -1637,43 +1649,91 @@ function pdfNow(){
   else{const buy=document.querySelector("[data-buy]");if(buy)buy.click();}
   return;
  }
+ askCover(meta=>pdfBuild(meta));
+}
+function pdfBuild(meta){
+ meta=meta||{};
  try{
   if(!window.jspdf||typeof window.jspdf.jsPDF!=="function")throw new Error("PDF engine unavailable");
-  buildPrint(ENTITIES[state.rec.key]);
+  const ent=ENTITIES[state.rec.key];
+  buildPrint(ent);
   const report=document.getElementById("printReport");
   if(!report||!report.innerHTML.trim())throw new Error("PDF report could not be prepared");
   const doc=new window.jspdf.jsPDF({unit:"pt",format:"a4"}),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=40,tx=e=>pdfClean(e.textContent.replace(/\s+/g," ").trim());
-  let y=M,rows=[];
-  const need=n=>{if(y+n>H-50){doc.addPage();y=M}};
-  const tbl=(o,fs)=>{doc.autoTable({startY:y,margin:{left:M,right:M,top:M,bottom:50},theme:"grid",styles:{fontSize:fs||8,cellPadding:4,valign:"top",overflow:"linebreak",textColor:[30,41,59],lineColor:[203,213,225]},headStyles:{fillColor:[11,18,32],textColor:255},alternateRowStyles:{fillColor:[248,250,252]},didParseCell:d=>{d.cell.text=(d.cell.text||[]).map(pdfClean)},...o});y=doc.lastAutoTable.finalY+14};
-  const flush=()=>{if(rows.length){tbl({body:rows,columnStyles:{0:{cellWidth:120,fontStyle:"bold",textColor:[29,78,216]}}});rows=[]}};
-  const pc=el=>{const h=el.querySelector("h4");rows.push([h?tx(h):"",[...el.children].filter(c=>c.tagName!=="H4").map(c=>c.tagName==="UL"?[...c.children].map(li=>"- "+tx(li)).join("\n"):tx(c)).join("\n")])};
+  // Palette: refined green premium
+  const C={forest:[11,35,28],emerald:[14,107,84],em2:[20,135,106],mint:[221,241,233],gold:[201,162,39],goldS:[246,235,200],ink:[16,38,31],muted:[75,95,88],line:[213,223,219],soft:[247,251,249],red:[185,28,28],redS:[254,226,226],amb:[184,110,0],ambS:[255,241,214]};
+  const fill=c=>doc.setFillColor(...c),stroke=c=>doc.setDrawColor(...c),ink=c=>doc.setTextColor(...c);
+  const PORTALS=[["MCA (Company / LLP incorporation)","https://www.mca.gov.in",/\b(MCA|SPICe|incorporat|ROC|DIN|LLP|DSC|AOC|MGT)\b/i],["GST registration","https://www.gst.gov.in",/\bGST/i],["Income Tax (PAN / TAN)","https://www.incometax.gov.in",/\b(PAN|TAN|income tax|TDS)\b/i],["Udyam (MSME)","https://udyamregistration.gov.in",/udyam|MSME/i],["FSSAI food licence","https://foscos.fssai.gov.in",/FSSAI|food licen/i],["EPFO (Provident Fund)","https://www.epfindia.gov.in",/EPF|provident/i],["ESIC","https://www.esic.gov.in",/ESIC|ESI\b/i],["DGFT (IEC)","https://www.dgft.gov.in",/IEC|DGFT|import/i],["Startup India / DPIIT","https://www.startupindia.gov.in",/DPIIT|startup india/i],["Shram Suvidha (labour)","https://shramsuvidha.gov.in",/labour|shops and establishment|shop.?act/i]];
+  const portalFor=t=>{const p=PORTALS.find(p=>p[2].test(t));return p&&p[1]};
+  const rid="BM-"+Date.now().toString(36).toUpperCase().slice(-6)+"-"+state.rec.key.slice(0,3).toUpperCase();
+  let y=M,rows=[],checks=[],sec=0;const toc=[];
+  const need=n=>{if(y+n>H-56){doc.addPage();y=M+16}};
+  const badge=(d)=>{if(d.section!=="body")return;const t=String(d.cell.raw&&d.cell.raw.textContent!=null?d.cell.raw.textContent:d.cell.raw||"");
+   if(/^\s*(mandatory|required|yes|critical|high)\b/i.test(t)){d.cell.styles.fillColor=C.redS;d.cell.styles.textColor=C.red;d.cell.styles.fontStyle="bold"}
+   else if(/^\s*(conditional|medium|if applicable|depends)/i.test(t)){d.cell.styles.fillColor=C.ambS;d.cell.styles.textColor=C.amb;d.cell.styles.fontStyle="bold"}
+   else if(/^\s*(optional|recommended|low|no)\b/i.test(t)){d.cell.styles.fillColor=C.mint;d.cell.styles.textColor=C.emerald;d.cell.styles.fontStyle="bold"}};
+  const linkCell=d=>{if(d.section!=="body"||d.column.index>2)return;const t=(d.cell.text||[]).join(" "),u=portalFor(t);if(u){doc.link(d.cell.x,d.cell.y,d.cell.width,d.cell.height,{url:u})}};
+  const tbl=(o,fs)=>{doc.autoTable({startY:y,margin:{left:M,right:M,top:M+16,bottom:56},theme:"grid",styles:{fontSize:fs||8,cellPadding:5,valign:"top",overflow:"linebreak",textColor:C.ink,lineColor:C.line,lineWidth:.5},headStyles:{fillColor:C.emerald,textColor:255,fontStyle:"bold"},alternateRowStyles:{fillColor:C.soft},didParseCell:d=>{d.cell.text=(d.cell.text||[]).map(pdfClean);badge(d);if(o.__pc)o.__pc(d)},didDrawCell:d=>{linkCell(d);if(o.__dc)o.__dc(d)},...o});y=doc.lastAutoTable.finalY+16};
+  const flush=()=>{if(rows.length){tbl({body:rows,columnStyles:{0:{cellWidth:130,fontStyle:"bold",textColor:C.emerald}}});rows=[]}
+   if(checks.length){const cs=checks;checks=[];tbl({head:[["","Document","Item"]],body:cs.map(c=>["",c[0],c[1]]),columnStyles:{0:{cellWidth:26},1:{cellWidth:120,fontStyle:"bold",textColor:C.emerald}},__dc:d=>{if(d.section==="body"&&d.column.index===0){const cb=new doc.AcroFormCheckBox();cb.fieldName="chk_"+d.row.index+"_"+doc.getNumberOfPages()+"_"+Math.round(d.cell.y);cb.x=d.cell.x+7;cb.y=d.cell.y+5;cb.width=11;cb.height=11;cb.appearanceState=cs[d.row.index][2]?"On":"Off";cb.value=cs[d.row.index][2]?"On":"Off";doc.addField(cb)}}})}};
+  const pc=el=>{const h=el.querySelector("h4"),body=[...el.children].filter(c=>c.tagName!=="H4").map(c=>c.tagName==="UL"?[...c.children].map(li=>"• "+tx(li)).join("\n"):tx(c)).join("\n"),m=body.match(/^\s*\[(\s|Done)\]\s*/);
+   if(m){checks.push([h?tx(h):"",body.slice(m[0].length),m[1]==="Done"]);return}rows.push([h?tx(h):"",body])};
+  const head=(title)=>{sec++;need(80);const pg=doc.getNumberOfPages();toc.push([sec,title,pg,y]);doc.outline.add(null,sec+". "+title,{pageNumber:pg});
+   fill(C.forest);doc.roundedRect(M,y,W-2*M,34,6,6,"F");fill(C.gold);doc.roundedRect(M+10,y+8,26,18,4,4,"F");ink(C.forest);doc.setFont(undefined,"bold");doc.setFontSize(10);doc.text(String(sec).padStart(2,"0"),M+23,y+20.5,{align:"center"});
+   ink([255,255,255]);doc.setFontSize(13);doc.text(title,M+46,y+21.5);doc.setFont(undefined,"normal");y+=50};
+
+  /* ---------- COVER ---------- */
+  fill(C.forest);doc.rect(0,0,W,300,"F");fill(C.emerald);doc.triangle(W*.55,300,W,120,W,300,"F");fill(C.gold);doc.rect(0,300,W,4,"F");
+  ink(C.gold);doc.setFontSize(9);doc.setFont(undefined,"bold");doc.text("BIZ MATRIX  •  STRUCTURE & REGISTRATION INTELLIGENCE  •  FY 2026-27",M,52);
+  ink([255,255,255]);doc.setFontSize(11);doc.setFont(undefined,"normal");doc.text("Recommended business structure",M,96);
+  doc.setFontSize(30);doc.setFont(undefined,"bold");const tl=doc.splitTextToSize(pdfClean(ent.name),W*.55);doc.text(tl,M,128);doc.setFont(undefined,"normal");
+  let py=128+tl.length*32+8;if(meta.biz||meta.name){ink(C.gold);doc.setFontSize(9);doc.setFont(undefined,"bold");doc.text("PREPARED FOR",M,py+4);doc.setFont(undefined,"normal");ink([255,255,255]);doc.setFontSize(15);doc.text(doc.splitTextToSize(pdfClean(meta.biz||meta.name),W*.55)[0],M,py+22);const sub=[meta.biz?meta.name:"",meta.city].filter(Boolean).map(pdfClean).join("  \u2022  ");if(sub){ink([203,225,215]);doc.setFontSize(10);doc.text(sub,M,py+37)}py+=52}
+  ink([203,225,215]);doc.setFontSize(10);doc.text("Prepared "+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})+"   |   Report ID "+rid,M,py);
+  // Fit gauge
+  const gx=W-M-80,gy=170,gr=58,fit=state.rec.fit||0;doc.setLineWidth(10);stroke([40,80,68]);doc.circle(gx,gy,gr,"S");
+  stroke(C.gold);const a0=-Math.PI/2,steps=60;for(let i=0;i<steps*fit/100;i++){const a=a0+i/steps*2*Math.PI,b=a0+(i+1.05)/steps*2*Math.PI;doc.line(gx+gr*Math.cos(a),gy+gr*Math.sin(a),gx+gr*Math.cos(b),gy+gr*Math.sin(b))}
+  doc.setLineWidth(.5);ink([255,255,255]);doc.setFont(undefined,"bold");doc.setFontSize(26);doc.text(fit+"%",gx,gy+6,{align:"center"});doc.setFont(undefined,"normal");doc.setFontSize(8);ink(C.goldS);doc.text("STRUCTURE FIT",gx,gy+22,{align:"center"});
+  // Ranking chart
+  y=332;ink(C.forest);doc.setFont(undefined,"bold");doc.setFontSize(12);doc.text("How the structures compare",M,y);doc.setFont(undefined,"normal");y+=16;
+  const rk=state.rec.ranking.slice(0,7),mx=rk[0][1],mn=Math.min(...rk.map(r=>r[1])),bw=W-2*M-170;
+  rk.forEach(([k,v],i)=>{const pct=mx===mn?1:.25+.75*(v-mn)/(mx-mn),top=i===0;ink(top?C.emerald:C.muted);doc.setFontSize(9);if(top)doc.setFont(undefined,"bold");doc.text(pdfClean((ENTITIES[k]||{}).name||k),M,y+10);doc.setFont(undefined,"normal");
+   fill([235,241,238]);doc.roundedRect(M+150,y+2,bw,10,5,5,"F");fill(top?C.emerald:[143,180,166]);doc.roundedRect(M+150,y+2,Math.max(10,bw*pct),10,5,5,"F");if(top){fill(C.gold);doc.circle(M+150+Math.max(10,bw*pct)-5,y+7,3,"F")}y+=19});
+  y+=12;
+  const cover=report.querySelector(".print-cover");
+  if(cover){tbl({head:[["Key metric","Value"]],body:[...cover.querySelectorAll(".pkpi")].map(k=>[tx(k.querySelector(".pkpi-label")),tx(k.querySelector(".pkpi-value"))]),columnStyles:{0:{cellWidth:150,fontStyle:"bold",textColor:C.emerald}}});cover.querySelectorAll(".pcard").forEach(pc);flush()}
+  /* ---------- CONTENTS placeholder ---------- */
+  doc.addPage();const tocPage=doc.getNumberOfPages();doc.outline.add(null,"Contents",{pageNumber:tocPage});
+  doc.addPage();y=M+16;
+  /* ---------- SECTIONS ---------- */
   report.querySelectorAll(".print-page").forEach(pg=>{
-   if(pg.classList.contains("print-cover")){
-    doc.setFillColor(11,18,32);doc.rect(0,0,W,175,"F");
-    doc.setTextColor(147,197,253);doc.setFontSize(9);doc.text("STRUCTURE & REGISTRATION INTELLIGENCE  |  FY 2026-27",M,50);
-    doc.setTextColor(255);doc.setFontSize(26);doc.text(doc.splitTextToSize(pdfClean(pg.querySelector(".print-title").textContent),W-2*M),M,92);
-    doc.setFontSize(11);doc.setTextColor(203,213,225);doc.text(doc.splitTextToSize(pdfClean(pg.querySelector(".print-sub").textContent),W-2*M),M,118);
-    doc.setFontSize(9);doc.text("Prepared on "+new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}),M,158);
-    y=200;tbl({body:[...pg.querySelectorAll(".pkpi")].map(k=>[tx(k.querySelector(".pkpi-label")),tx(k.querySelector(".pkpi-value"))]),columnStyles:{0:{cellWidth:120,fontStyle:"bold"}}});
-    pg.querySelectorAll(".pcard").forEach(pc);flush();doc.addPage();y=M;return}
-   const st=pg.querySelector(".print-section-title");
-   if(st){need(70);doc.setFontSize(14);doc.setFont(undefined,"bold");doc.setTextColor(11,18,32);doc.text(tx(st),M,y+12);doc.setDrawColor(184,137,43);doc.setLineWidth(2);doc.line(M,y+19,W-M,y+19);doc.setFont(undefined,"normal");y+=36}
+   if(pg.classList.contains("print-cover"))return;
+   const st=pg.querySelector(".print-section-title");if(st)head(tx(st));
    [...pg.children].forEach(el=>{
     if(el===st||el.classList.contains("print-foot"))return;
     if(el.classList.contains("print-grid2"))el.querySelectorAll(".pcard").forEach(pc);
     else if(el.classList.contains("pcard"))pc(el);
-    else if(el.tagName==="TABLE"){flush();const nc=el.rows[0].cells.length,reg=nc===5&&/Registration/.test(el.rows[0].textContent),comp6=nc===6&&/Default timing/.test(el.rows[0].textContent);tbl({html:el,columnStyles:reg?{0:{cellWidth:24},1:{cellWidth:92},2:{cellWidth:56},4:{cellWidth:84}}:comp6?{0:{cellWidth:48},1:{cellWidth:70},2:{cellWidth:86},3:{cellWidth:105},4:{cellWidth:120},5:{cellWidth:85}}:undefined},nc>=7?6.5:8)}
-    else{flush();const t=tx(el);if(t){need(34);doc.setFontSize(9);doc.setTextColor(51,65,85);const ln=doc.splitTextToSize(t,W-2*M);doc.text(ln,M,y+8);y+=ln.length*11+10}}
-   });flush();y+=8
+    else if(el.tagName==="TABLE"){flush();const nc=el.rows[0].cells.length,reg=nc===5&&/Registration/.test(el.rows[0].textContent),comp6=nc===6&&/Default timing/.test(el.rows[0].textContent);tbl({html:el,columnStyles:reg?{0:{cellWidth:24},1:{cellWidth:92,textColor:C.emerald,fontStyle:"bold"},2:{cellWidth:56},4:{cellWidth:84}}:comp6?{0:{cellWidth:48},1:{cellWidth:70},2:{cellWidth:86},3:{cellWidth:105},4:{cellWidth:120},5:{cellWidth:85}}:{0:{fontStyle:"bold",textColor:C.emerald}}},nc>=7?6.5:8)}
+    else{flush();const t=tx(el);if(t){need(34);fill(C.goldS);const ln=doc.splitTextToSize(t,W-2*M-20);doc.roundedRect(M,y,W-2*M,ln.length*11+12,4,4,"F");fill(C.gold);doc.rect(M,y,3,ln.length*11+12,"F");doc.setFontSize(8.5);ink(C.ink);doc.text(ln,M+12,y+14);y+=ln.length*11+22}}
+   });flush();y+=6
   });
+  /* ---------- PORTALS ---------- */
+  head("Official Portals & Next Steps");doc.setFontSize(9);ink(C.muted);doc.text("Click any portal to open it. Registration names in the tables above are also clickable where a portal applies.",M,y);y+=14;
+  tbl({head:[["Portal","Link"]],body:PORTALS.map(p=>[p[0],p[1].replace("https://","")]),columnStyles:{0:{cellWidth:200,fontStyle:"bold"},1:{textColor:C.emerald}},__dc:d=>{if(d.section==="body")doc.link(d.cell.x,d.cell.y,d.cell.width,d.cell.height,{url:PORTALS[d.row.index][1]})}});
+  /* ---------- CONTENTS fill ---------- */
+  doc.setPage(tocPage);fill(C.forest);doc.rect(0,0,W,110,"F");fill(C.gold);doc.rect(0,110,W,3,"F");ink([255,255,255]);doc.setFont(undefined,"bold");doc.setFontSize(24);doc.text("Contents",M,70);doc.setFont(undefined,"normal");ink(C.goldS);doc.setFontSize(9);doc.text("Click a section to jump to it. Use the PDF bookmarks panel to navigate at any time.",M,90);
+  let ty=150;toc.forEach(([n,t,p,yy])=>{fill(n%2?C.soft:[255,255,255]);doc.rect(M,ty-14,W-2*M,24,"F");fill(C.emerald);doc.roundedRect(M+8,ty-9,22,15,3,3,"F");ink([255,255,255]);doc.setFontSize(8);doc.setFont(undefined,"bold");doc.text(String(n).padStart(2,"0"),M+19,ty+1,{align:"center"});
+   ink(C.ink);doc.setFontSize(11);doc.text(t,M+42,ty+2);doc.setFont(undefined,"normal");ink(C.emerald);doc.text(String(p),W-M-10,ty+2,{align:"right"});stroke(C.line);doc.setLineDashPattern([1,2],0);doc.line(M+48+doc.getTextWidth(t)+6,ty+2,W-M-28,ty+2);doc.setLineDashPattern([],0);
+   doc.link(M,ty-14,W-2*M,24,{pageNumber:p,top:yy});ty+=28});
+  /* ---------- HEADERS / FOOTERS ---------- */
   const n=doc.getNumberOfPages();
-  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(100,116,139);doc.setDrawColor(226,232,240);doc.setLineWidth(.5);doc.line(M,H-36,W-M,H-36);doc.text("Business Structure & Registration Intelligence | Preliminary decision support. Verify current law before acting.",M,H-24);doc.text("Page "+i+" of "+n,W-M,H-24,{align:"right"})}
+  for(let i=2;i<=n;i++){doc.setPage(i);if(i!==tocPage){fill(C.emerald);doc.rect(0,0,W,4,"F");doc.setFontSize(7.5);ink(C.muted);doc.text("BIZ MATRIX  |  "+pdfClean(ent.name).toUpperCase(),M,22);ink(C.emerald);doc.text("Back to contents",W-M,22,{align:"right"});doc.link(W-M-70,13,70,12,{pageNumber:tocPage})}
+   stroke(C.line);doc.setLineWidth(.5);doc.line(M,H-38,W-M,H-38);doc.setFontSize(7.5);ink(C.muted);doc.text("Preliminary decision support. Verify current law with a qualified professional before acting.  |  "+rid,M,H-24);fill(C.emerald);doc.roundedRect(W-M-54,H-33,54,14,7,7,"F");ink([255,255,255]);doc.text(i+" / "+n,W-M-27,H-23,{align:"center"})}
+  doc.setProperties({title:"Biz Matrix Report - "+(meta.biz?pdfClean(meta.biz)+" - ":"")+pdfClean(ent.name),subject:"Business structure & registration intelligence",author:"Biz Matrix",creator:"Biz Matrix"});
   window.__lastPdf=doc;
   const blob=doc.output("blob");
   if(!blob||!blob.size)throw new Error("Empty PDF generated");
   const url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=AccessProvider.isPremium()?"Biz_Matrix_Full_Report.pdf":"Biz_Matrix_35_Percent_Preview.pdf";a.style.display="none";document.body.appendChild(a);a.click();
+  a.href=url;a.download="Biz_Matrix_"+((meta.biz||"").replace(/[^A-Za-z0-9]+/g,"_").replace(/^_|_$/g,"")||"Full_Report")+".pdf";a.style.display="none";document.body.appendChild(a);a.click();
   setTimeout(()=>{a.remove();URL.revokeObjectURL(url)},2000);
   toast("PDF report generated successfully. Check your browser Downloads folder.");
  }catch(e){

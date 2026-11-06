@@ -1,0 +1,48 @@
+/* Biz Matrix — Refined Green Premium layer (assessment app) */
+:root{
+  --gold:#C9A227;--gold-soft:#F6EBC8;--forest:#0B231C;--emerald:#0E6B54;--emerald-2:#14876A;--mint:#DDF1E9;
+  --shadow:0 1px 2px rgba(16,38,31,.04),0 12px 32px -12px rgba(16,38,31,.14);
+  --shadow2:0 2px 4px rgba(16,38,31,.05),0 24px 60px -20px rgba(16,38,31,.28);
+}
+body{font-family:"Public Sans",Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(1200px 600px at 100% -10%,#E6F3EC 0,transparent 60%),#F4F8F6}
+h1,h2,h3,.page-title,.q-title,.brand-title{font-family:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;letter-spacing:-.02em}
+.sidebar{background:linear-gradient(180deg,#071A15 0%,#0D2A22 60%,#103A2E 100%);border-right:1px solid rgba(201,162,39,.18)}
+.nav-btn{transition:background .18s,color .18s,transform .18s}
+.nav-btn:hover{transform:translateX(2px)}
+.nav-btn.active{background:linear-gradient(135deg,#0E6B54,#14876A);box-shadow:inset 3px 0 0 var(--gold),0 8px 20px rgba(14,107,84,.3)}
+.topbar{background:rgba(255,255,255,.82);backdrop-filter:saturate(160%) blur(14px)}
+.btn{border-radius:11px;transition:transform .16s,box-shadow .16s,background .16s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#0E6B54,#14876A);border-color:#0E6B54;box-shadow:0 8px 18px -10px rgba(14,107,84,.8)}
+.btn.primary:hover{background:linear-gradient(135deg,#0A5543,#0E6B54)}
+.btn.dark{background:#0B231C;border-color:#0B231C}
+.hero{background:linear-gradient(135deg,#071A15 0%,#0E3D30 55%,#0E6B54 100%);border:1px solid rgba(201,162,39,.25)}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(500px 220px at 85% 0,rgba(201,162,39,.22),transparent 70%);pointer-events:none}
+.hero .kicker{color:var(--gold)}
+.hero .btn.primary{background:linear-gradient(135deg,#C9A227,#E0BC4A);border-color:#C9A227;color:#1B1405}
+.card{border-radius:18px;border-color:#DCE7E2;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:var(--shadow2)}
+.option{transition:border-color .15s,background .15s,transform .15s,box-shadow .15s}
+.option:hover{transform:translateY(-1px);box-shadow:0 10px 24px -16px rgba(14,107,84,.6)}
+.option.selected{border-color:var(--emerald)!important;background:linear-gradient(135deg,#F2FAF6,#E6F4EE)!important;box-shadow:0 0 0 3px rgba(14,107,84,.12)}
+.option.selected .dot{background:var(--emerald)!important;border-color:var(--emerald)!important;box-shadow:inset 0 0 0 3px #fff}
+#qProgress{background:linear-gradient(90deg,#0E6B54,#14876A 70%,#C9A227)!important;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.q-title{animation:bmIn .35s ease both}
+.options .option{animation:bmIn .35s ease both}
+.options .option:nth-child(2){animation-delay:.04s}.options .option:nth-child(3){animation-delay:.08s}.options .option:nth-child(4){animation-delay:.12s}.options .option:nth-child(5){animation-delay:.16s}
+@keyframes bmIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.selbox{border-radius:12px;border:1px solid #CFDDD7;padding:12px 14px;background:#fff}
+.selbox:focus{outline:none;border-color:var(--emerald);box-shadow:0 0 0 3px rgba(14,107,84,.15)}
+table th{background:#F2F8F5;color:#0B231C}
+tbody tr{transition:background .12s}tbody tr:hover{background:#F7FBF9}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.bm-cover-modal{position:fixed;inset:0;z-index:1000;background:rgba(7,26,21,.55);backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;animation:bmIn .2s ease}
+.bm-cover-card{background:#fff;border-radius:20px;padding:28px;width:min(440px,100%);max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 30px 80px -20px rgba(7,26,21,.6);border-top:4px solid var(--gold)}
+.bm-cover-kicker{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#B8892B}
+.bm-cover-card h2{margin:6px 0;font-size:22px;color:#0B231C}
+.bm-cover-card p{margin:0 0 16px;color:#4B5F58;font-size:13px;line-height:1.5}
+.bm-cover-card label{display:block;font-size:12px;font-weight:700;color:#0B231C;margin-bottom:12px}
+.bm-cover-card input{display:block;width:100%;margin-top:5px;padding:11px 13px;border:1px solid #CFDDD7;border-radius:11px;font-size:14px}
+.bm-cover-card input:focus{outline:none;border-color:#0E6B54;box-shadow:0 0 0 3px rgba(14,107,84,.15)}
+.bm-cover-btns{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}.bm-cover-btns .btn{font-size:13px;padding:10px 16px}
