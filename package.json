@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
-    "test": "node --test worker/signature.test.js tests/engine.test.cjs tests/kb.test.cjs"
+    "test": "node --test worker/signature.test.js tests/engine.test.cjs tests/kb.test.cjs",
+    "prepush": "node tools/bust-cache.cjs && npm test"
   },
   "devDependencies": {
     "wrangler": "^4.42.0"
