@@ -18,6 +18,7 @@
 
   function ctx(a, key) {
     a = a || {};
+    if (typeof effectiveAnswers === "function") a = effectiveAnswers(a);
     const acts = new Set((a.activities || []).filter(x => x !== "n")), ch = new Set((a.channels || []).filter(x => x !== "n")), plant = new Set((a.plant || []).filter(x => x !== "n"));
     const wf = WF[a.workforce] ?? 0, to = TO[a.turnover] ?? 0, st = a.state || "";
     const goodsOnly = a.supply === "g", special = SPECIAL.includes(st);
@@ -244,10 +245,11 @@
   /* ------------------------------------------------------------------ preview gating (35%) */
   const share = n => Math.max(1, Math.ceil(n * 0.35));
   function gate(list) {
-    if (FULL || AccessProvider.isPremium()) return { visible: list, locked: 0, total: list.length };
+    if (FULL || AccessProvider.isPremium()) return { visible: list, hidden: [], locked: 0, total: list.length };
     const withDetail = list.filter(x => x.detail);
     const n = Math.min(share(list.length), withDetail.length);
-    return { visible: withDetail.slice(0, n), locked: list.length - n, total: list.length };
+    const visible = withDetail.slice(0, n), shown = new Set(visible);
+    return { visible, hidden: list.filter(x => !shown.has(x)).map(x => Object.assign({}, x, { detail: null })), locked: list.length - n, total: list.length };
   }
 
   /* ------------------------------------------------------------------ action plan */
@@ -261,7 +263,7 @@
     add(1, "Lock the name and protect the brand", c.corporate ? "Shortlist two names, check the MCA name index and the IP India trademark register, then file a trademark application early." : "Check the IP India trademark register for your trade name; a proprietorship or firm name has no protection without a trademark.", "Week 0", "Founders", "High", "P01");
     const kyc = docs.docs.filter(d => /kyc|identity|address|pan|aadhaar|photo/i.test(d.cat + " " + d.name)).length;
     add(1, "Collect founder KYC and premises documents", kyc + " identity, address and premises documents are on your checklist" + (c.rented ? ", including the rent agreement, owner NOC and a utility bill under 2 months old" : "") + ".", "Week 0–1", "Founders", "High");
-    if (c.corporate) add(1, "Get Class 3 DSCs" + (a.din === "yes" ? "" : " and plan DIN / DPIN allotment"), "Every proposed director / designated partner needs a valid Class 3 digital signature" + (a.din === "yes" ? "." : "; DINs are allotted inside the incorporation form."), "Week 0–1", "Founders + CS", "High");
+    if (c.corporate) add(1, "Get Class 3 DSCs" + (c.a.din === "yes" ? "" : " and plan DIN / DPIN allotment"), "Every proposed director / designated partner needs a valid Class 3 digital signature" + (c.a.din === "yes" ? "." : "; DINs are allotted inside the incorporation form."), "Week 0–1", "Founders + CS", "High");
     // Phase 2: incorporate / register (entity steps)
     docs.steps.filter(s => !(c.corporate && /pre-registration|^name/i.test(s.stage))).forEach(s => add(2, s.stage, s.text, "Week 1–3", c.corporate ? "CS / CA" : "Founders", "High", s.id));
     // Phase 3: first 30 days — mandatory and triggered registrations

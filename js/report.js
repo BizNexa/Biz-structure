@@ -16,6 +16,11 @@ async function loadReportFonts(doc) {
   } catch (e) { console.warn("Report fonts unavailable, using Helvetica", e); REPORT_FONTS.loaded = null; return false; }
 }
 
+
+async function loadReportImage(src) {
+  try { const b = await (await fetch(src)).blob(); return await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(b); }); } catch (e) { return null; }
+}
+
 async function pdfBuild(meta) {
   meta = meta || {};
   try {
@@ -27,7 +32,8 @@ async function pdfBuild(meta) {
     const F = fontsOk ? "Inter" : "helvetica", FX = fontsOk ? "InterX" : "helvetica";
     const T = s => { s = String(s == null ? "" : s).replace(/[✓✔]/g, "Yes").replace(/☐/g, "[ ]").replace(/[\u{1F300}-\u{1FAFF}]/gu, ""); return fontsOk ? s.replace(/[^\x09\x0A\x20-\x7E\xA0-ɏ‐-‧‰-⁞₹←-↓−≤≥]/g, "") : pdfClean(s); };
     const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 44, CW = W - 2 * M;
-    const C = { forest: [11, 35, 28], emerald: [14, 107, 84], em2: [20, 135, 106], mint: [221, 241, 233], mint2: [240, 248, 244], gold: [201, 162, 39], goldS: [248, 239, 208], ink: [16, 38, 31], body: [52, 68, 62], muted: [100, 118, 111], line: [218, 228, 223], soft: [247, 251, 249], red: [185, 28, 28], redS: [253, 232, 232], amb: [161, 98, 7], ambS: [255, 243, 219], white: [255, 255, 255] };
+    // Navy + brass palette (mirrors css/tokens.css). goldT is the brass shade used for text on light paper.
+    const C = { forest: [31, 35, 40], emerald: [125, 96, 19], em2: [151, 117, 23], mint: [245, 238, 220], mint2: [251, 248, 241], gold: [201, 162, 39], goldT: [125, 96, 19], goldS: [245, 238, 220], ink: [31, 35, 40], body: [58, 61, 66], muted: [94, 90, 82], line: [233, 225, 207], soft: [251, 248, 241], red: [180, 35, 24], redS: [252, 232, 230], amb: [154, 91, 7], ambS: [251, 240, 220], white: [255, 255, 255] };
     const fill = c => doc.setFillColor(...c), stroke = c => doc.setDrawColor(...c), ink = c => doc.setTextColor(...c);
     const font = (w, size) => { if (w === "x") doc.setFont(FX, "normal"); else doc.setFont(F, w === "b" ? "bold" : "normal"); if (size) doc.setFontSize(size); };
     const docs = KB.documents(key, A), regs = KB.registrations(key, A), comp = KB.compliances(key, A), plan = KB.actionPlan(key, A), sum = KB.summary(key, A);
@@ -42,7 +48,7 @@ async function pdfBuild(meta) {
     const h2 = (title, sub) => {
       sec++; if (y > 64) { if (y + 120 > bottom) newPage(); else y += 10; }
       const pg = doc.getNumberOfPages(); toc.push([sec, title, pg, y]); doc.outline.add(null, sec + ". " + title, { pageNumber: pg });
-      font("b", 8.5); ink(C.gold); doc.text("SECTION " + String(sec).padStart(2, "0"), M, y + 8);
+      font("b", 8.5); ink(C.goldT); doc.text("SECTION " + String(sec).padStart(2, "0"), M, y + 8);
       font("x", 19); ink(C.forest); doc.text(T(title), M, y + 30);
       fill(C.gold); doc.rect(M, y + 38, 36, 2.5, "F");
       y += 50; if (sub) para(sub, { color: C.muted, size: 9.5, after: 10 });
@@ -61,7 +67,7 @@ async function pdfBuild(meta) {
       doc.autoTable(Object.assign({
         startY: y, head: [head], body, margin: { left: M, right: M, top: 64, bottom: 62 }, theme: "plain",
         styles: { font: F, fontSize: 8.4, cellPadding: { top: 5, bottom: 5, left: 6, right: 6 }, textColor: C.body, lineColor: C.line, lineWidth: { bottom: 0.5 }, valign: "top", overflow: "linebreak" },
-        headStyles: { font: F, fontStyle: "bold", fillColor: C.forest, textColor: 255, fontSize: 8.2, lineWidth: 0 },
+        headStyles: { font: F, fontStyle: "bold", fillColor: C.mint, textColor: C.ink, fontSize: 8.2, lineWidth: { bottom: 1 }, lineColor: C.gold },
         alternateRowStyles: { fillColor: C.soft },
         didParseCell: d => { d.cell.text = (d.cell.text || []).map(T); if (o.pc) o.pc(d); },
         didDrawCell: d => { if (o.dc) o.dc(d); }
@@ -73,57 +79,81 @@ async function pdfBuild(meta) {
     const short = (s, n) => { s = String(s || ""); return s.length > n ? s.slice(0, n - 1).trim() + "…" : s; };
     const url = p => { const m = String(p || "").match(/([a-z0-9-]+\.)+(gov\.in|nic\.in|org|in|com)(\/[^\s,;)]*)?/i); return m ? "https://" + m[0] : null; };
 
-    /* ================= COVER ================= */
-    fill(C.forest); doc.rect(0, 0, W, H * 0.62, "F");
-    fill(C.emerald); doc.triangle(W * 0.48, H * 0.62, W, H * 0.30, W, H * 0.62, "F");
-    fill(C.gold); doc.rect(0, H * 0.62, W, 5, "F");
-    font("b", 8.5); ink(C.gold); doc.text("BIZ MATRIX  ·  BUSINESS STRUCTURE & REGISTRATION REPORT  ·  FY 2026-27", M, 54);
-    font("r", 11); ink([206, 228, 218]); doc.text("Recommended structure", M, 118);
-    font("x", 34); ink(C.white); const tl = doc.splitTextToSize(T(ent.name), W * 0.62); doc.text(tl, M, 156); let cy = 156 + tl.length * 38;
-    const conf = confidenceLabel(); chip(conf.toUpperCase(), M, cy, C.gold, C.forest); cy += 30;
-    if (meta.biz || meta.name) { font("b", 8.5); ink(C.gold); doc.text("PREPARED FOR", M, cy); font("x", 16); ink(C.white); doc.text(T(short(meta.biz || meta.name, 44)), M, cy + 20); font("r", 10); ink([206, 228, 218]); const sub = [meta.biz ? meta.name : "", meta.city].filter(Boolean).join("  ·  "); if (sub) doc.text(T(sub), M, cy + 36); cy += 52; }
-    font("r", 9.5); ink([206, 228, 218]); doc.text(T("Prepared " + dateStr + "   ·   Report ID " + rid + "   ·   Rulebook v" + BizEngine.VERSION + ", law verified " + BizEngine.VERIFIED), M, cy + 4);
-    // gauge
-    const only = state.rec.confidence === "only eligible structure", fit = only ? 100 : state.rec.fit;
-    const gx = W - M - 70, gy = 150, gr = 52; doc.setLineWidth(9); stroke([38, 82, 68]); doc.circle(gx, gy, gr, "S"); stroke(C.gold);
-    for (let i = 0; i < 72 * fit / 100; i++) { const a0 = -Math.PI / 2 + i / 72 * 2 * Math.PI, a1 = -Math.PI / 2 + (i + 1.1) / 72 * 2 * Math.PI; doc.line(gx + gr * Math.cos(a0), gy + gr * Math.sin(a0), gx + gr * Math.cos(a1), gy + gr * Math.sin(a1)); }
-    doc.setLineWidth(0.5); font("x", only ? 17 : 26); ink(C.white); doc.text(only ? "ONLY" : String(fit), gx, gy + (only ? 5 : 8), { align: "center" }); font("b", 7); ink(C.goldS); doc.text(only ? "ELIGIBLE" : "FIT / 100", gx, gy + 22, { align: "center" });
-    // stat tiles
-    const tiles = [[sum.regsMandatory + sum.regsTriggered, "Registrations to obtain"], [sum.docs, "Documents to collect"], [sum.compInitial, "First-year compliances"], [plan.length, "Actions in your plan"]];
-    const tw = (CW - 3 * 10) / 4, ty = H * 0.62 + 34;
-    tiles.forEach(([v, t], i) => { const x = M + i * (tw + 10); fill(C.mint2); doc.roundedRect(x, ty, tw, 70, 8, 8, "F"); font("x", 24); ink(C.emerald); doc.text(String(v), x + 14, ty + 34); font("r", 8.6); ink(C.muted); doc.text(doc.splitTextToSize(t, tw - 24), x + 14, ty + 52); });
-    y = ty + 96;
-    font("b", 10.5); ink(C.forest); doc.text("What this report gives you", M, y); y += 8;
-    ["Why this structure fits, with the legal rules and weighted factors behind it", "Your personalised document checklist, step by step", "Every registration that applies to you, with portal, timing and penalty", "Your first-year and recurring compliance calendar", "A phased action plan with owners and deadlines, plus a one-page summary"].forEach(s => { y += 15; fill(C.gold); doc.circle(M + 3, y - 3, 2, "F"); font("r", 9.5); ink(C.body); doc.text(T(s), M + 12, y); });
+    /* ================= COVER (light, prints well in black and white) ================= */
+    const x = BizEngine.explain(R, engineInputs(A)), conf = confidenceLabel(), only = state.rec.confidence === "only eligible structure", fit = only ? 100 : state.rec.fit;
+    fill(C.gold); doc.rect(0, 0, 8, H, "F");
+    const logo = await loadReportImage("../assets/bizmatrix-logo.png");
+    if (logo) doc.addImage(logo, "PNG", M, 46, 150, 35); else { font("x", 20); ink(C.emerald); doc.text("Biz Matrix", M, 70); }
+    font("b", 8.5); ink(C.goldT); doc.text("BUSINESS STRUCTURE & REGISTRATION REPORT  ·  FY 2026-27", W - M, 66, { align: "right" });
+    stroke(C.line); doc.setLineWidth(0.6); doc.line(M, 98, W - M, 98);
+    let cy = 140;
+    font("b", 10); ink(C.muted); doc.text("OUR RECOMMENDATION", M, cy);
+    font("x", 32); ink(C.forest); const tl = doc.splitTextToSize(T(ent.name), W - 2 * M - 140); doc.text(tl, M, cy + 36); cy += 36 + tl.length * 36;
+    font("r", 11); ink(C.body); const fitLine = doc.splitTextToSize(T(ent.best || ""), W - 2 * M - 140); doc.text(fitLine, M, cy); cy += fitLine.length * 15 + 12;
+    chip(conf.toUpperCase(), M, cy + 4, C.goldS, C.goldT); cy += 26;
+    // seal
+    const gx = W - M - 58, gy = 196, gr = 50;
+    doc.setLineWidth(2); stroke(C.goldT); doc.circle(gx, gy, gr, "S"); doc.setLineWidth(0.8); doc.setLineDashPattern([2, 2], 0); doc.circle(gx, gy, gr - 6, "S"); doc.setLineDashPattern([], 0); doc.setLineWidth(0.5);
+    font("x", only ? 16 : 28); ink(C.forest); doc.text(only ? "ONLY" : String(fit), gx, gy + (only ? 5 : 9), { align: "center" });
+    font("b", 7); ink(C.goldT); doc.text(only ? "ELIGIBLE" : "FIT / 100", gx, gy + 23, { align: "center" });
+    // prepared for
+    if (meta.biz || meta.name) { font("b", 8.5); ink(C.muted); doc.text("PREPARED FOR", M, cy + 8); font("x", 15); ink(C.ink); doc.text(T(short(meta.biz || meta.name, 54)), M, cy + 27); const sub = [meta.biz ? meta.name : "", meta.city].filter(Boolean).join("  ·  "); if (sub) { font("r", 10); ink(C.body); doc.text(T(sub), M, cy + 42); } cy += 58; }
+    // client inputs summary
+    const PICK = ["objective", "founders", "residency", "practice", "funding", "liability", "profit_level", "extraction", "compliance", "sector", "state", "supply", "turnover", "workforce", "premises"];
+    const inputs = PICK.map(id => ALLQ.find(q => q.id === id)).filter(q => q && !qSkipped(q, A) && A[q.id] !== undefined).map(q => [q.cat, optionLabel(q, A[q.id])]);
+    y = Math.max(cy + 6, 330); font("b", 8.5); ink(C.muted); doc.text("YOUR INPUTS", M, y); y += 8;
+    const half = Math.ceil(inputs.length / 2), colW = (CW - 16) / 2;
+    [inputs.slice(0, half), inputs.slice(half)].forEach((col, ci) => { let yy = y; col.forEach(([k, v]) => { const x0 = M + ci * (colW + 16); stroke(C.line); doc.line(x0, yy, x0 + colW, yy); font("b", 7.6); ink(C.muted); doc.text(T(k.toUpperCase()), x0, yy + 11); font("r", 9); ink(C.ink); doc.text(T(short(v, 46)), x0, yy + 23); yy += 30; }); });
+    y += half * 30 + 10;
+    // prepared using + disclaimer
+    const fy = H - 120; stroke(C.line); doc.line(M, fy, W - M, fy);
+    font("b", 9); ink(C.ink); doc.text(T("Prepared using Biz Matrix on " + dateStr), M, fy + 18);
+    font("r", 8.5); ink(C.muted); doc.text(T("Report ID " + rid + "  ·  Rulebook v" + BizEngine.VERSION + ", law verified " + BizEngine.VERIFIED), M, fy + 32);
+    font("r", 8); ink(C.muted); doc.text(doc.splitTextToSize(T("Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules with a qualified professional before filing."), CW), M, fy + 50);
+
+    /* ================= PAGE 2: EXECUTIVE SUMMARY (one page) ================= */
+    newPage(); y = 58;
+    doc.outline.add(null, "Executive summary", { pageNumber: doc.getNumberOfPages() });
+    font("b", 8.5); ink(C.goldT); doc.text("EXECUTIVE SUMMARY", M, y + 8); font("x", 20); ink(C.forest); doc.text("Your result on one page", M, y + 32); fill(C.gold); doc.rect(M, y + 40, 36, 2.5, "F"); y += 56;
+    // verdict box
+    const vb = 92; stroke(C.emerald); doc.setLineWidth(1.2); doc.roundedRect(M, y, CW, vb, 6, 6, "S"); doc.setLineWidth(0.5);
+    font("b", 8); ink(C.muted); doc.text("RECOMMENDED STRUCTURE", M + 16, y + 20); font("x", 19); ink(C.forest); doc.text(T(short(ent.name, 40)), M + 16, y + 44);
+    font("r", 9.2); ink(C.body); doc.text(doc.splitTextToSize(T(only ? "The only structure that passes the legal hard rules for your answers." : conf + ": " + state.rec.margin + " points ahead of " + ENTITIES[state.rec.runnerUp].name + "."), CW - 150), M + 16, y + 62);
+    const sx = W - M - 62, sy = y + vb / 2; doc.setLineWidth(1.6); stroke(C.goldT); doc.circle(sx, sy, 34, "S"); doc.setLineWidth(0.5); font("x", only ? 12 : 20); ink(C.forest); doc.text(only ? "ONLY" : String(fit), sx, sy + (only ? 3 : 6), { align: "center" }); font("b", 6.5); ink(C.goldT); doc.text(only ? "ELIGIBLE" : "FIT / 100", sx, sy + 17, { align: "center" });
+    y += vb + 16;
+    // top reasons
+    font("b", 11); ink(C.emerald); doc.text("Why this structure", M, y + 8); y += 18;
+    x.why.slice(0, 3).forEach((t, i) => { font("x", 11); ink(C.goldT); doc.text(String(i + 1), M + 2, y + 10); font("r", 9.6); ink(C.ink); const ls = doc.splitTextToSize(T(t), CW - 24); doc.text(ls, M + 20, y + 10); y += ls.length * 13 + 5; });
+    y += 8;
+    // the equation
+    const eq = [[sum.regsMandatory, "Mandatory"], ["+", ""], [sum.regsTriggered, "Triggered by your answers"], ["=", ""], [sum.regsMandatory + sum.regsTriggered, "Registrations to obtain"]];
+    font("b", 11); ink(C.emerald); doc.text("What you need to set up", M, y + 8); y += 16;
+    const bw = (CW - 2 * 26) / 3; let ex0 = M;
+    eq.forEach(([v, l]) => { if (!l) { font("x", 18); ink(C.muted); doc.text(String(v), ex0 + 8, y + 32); ex0 += 26; return; } fill(C.soft); stroke(C.line); doc.roundedRect(ex0, y, bw, 52, 6, 6, "FD"); font("x", 22); ink(C.forest); doc.text(String(v), ex0 + 12, y + 28); font("r", 8.4); ink(C.muted); doc.text(T(l), ex0 + 12, y + 43); ex0 += bw; });
+    y += 60; font("r", 9); ink(C.body); doc.text(T("Plus " + sum.docs + " documents to collect and " + sum.compInitial + " first-year compliances (" + sum.compAnnual + " recurring)."), M, y + 8); y += 22;
+    // next 3 actions
+    font("b", 11); ink(C.emerald); doc.text("Your next 3 actions", M, y + 8); y += 16;
+    sum.next.slice(0, 3).forEach((p, i) => { stroke(C.emerald); doc.setLineWidth(1); doc.circle(M + 8, y + 8, 8, "S"); doc.setLineWidth(0.5); font("b", 8.5); ink(C.emerald); doc.text(String(i + 1), M + 8, y + 11, { align: "center" }); font("b", 9.8); ink(C.ink); doc.text(T(short(p.title, 78)), M + 24, y + 11); font("r", 8.4); ink(C.muted); doc.text(T("When: " + short(p.when, 64) + "   ·   Who: " + p.owner), M + 24, y + 23); y += 31; });
+    // key deadlines callout
+    const soon = comp.filter(r => r.detail && compPeriod(r) === "first30").slice(0, 4);
+    if (soon.length) { y += 4; callout("Key deadlines: first 30 days", soon.map(r => "• " + short(r.title, 60) + ": " + short(r.detail.due, 70)).join("\n"), "amber"); }
+    if (flags.length && y < bottom - 40) { font("r", 8.6); ink(C.amb); doc.text(doc.splitTextToSize(T("Talk to a professional before filing: " + flags.length + " point(s) depend on your specific facts (" + flags.join(", ") + "). See Section 2."), CW), M, y + 6); }
 
     /* ================= CONTENTS (filled later) ================= */
     newPage(); const tocPage = doc.getNumberOfPages(); doc.outline.add(null, "Contents", { pageNumber: tocPage });
-
-    /* ================= 1. AT A GLANCE ================= */
     newPage();
-    h2("Your plan at a glance", "The short version. Every point is expanded in the sections that follow.");
-    const x = BizEngine.explain(R, engineInputs(A));
-    callout("Recommendation: " + ent.name, (only ? "This is the only structure that passes the legal hard rules for your answers. " : `Fit score ${state.rec.fit}/100 (${conf.toLowerCase()}${state.rec.margin != null ? `, ${state.rec.margin} points ahead of ${ENTITIES[state.rec.runnerUp].name}` : ""}). `) + x.why.slice(0, 3).join(" "));
-    if (flags.length) callout("Talk to a professional before filing", flags.map(f => f + ": " + BizEngine.RULES[f].plain).join("  "), "amber");
-    h3("Do these first");
-    sum.next.forEach((p, i) => {
-      need(40); fill(C.emerald); doc.circle(M + 9, y + 7, 9, "F"); font("b", 9); ink(C.white); doc.text(String(i + 1), M + 9, y + 10.5, { align: "center" });
-      font("b", 10); ink(C.ink); doc.text(T(short(p.title, 80)), M + 26, y + 10); font("r", 8.6); ink(C.muted); doc.text(T("When: " + short(p.when, 60) + "   ·   Who: " + p.owner), M + 26, y + 23); y += 34;
-    });
-    h3("Key numbers");
-    table(["Area", "For your profile", "Where"], [
-      ["Registrations", `${sum.regsMandatory} mandatory, ${sum.regsTriggered} triggered by your answers, ${sum.regsRecommended} recommended`, "Section 5"],
-      ["Documents", `${sum.docs} documents (${sum.docsMandatory} always required)`, "Section 4"],
-      ["Compliance", `${sum.compInitial} first-year setup items, ${sum.compAnnual} recurring (${sum.monthly} monthly, ${sum.quarterly} quarterly)`, "Section 6"],
-      ["Time & cost to form", `${sum.time["Typical time"] || "—"}; government cost: ${sum.time["Government cost"] || "—"}`, "Section 3"]
-    ], { opts: { columnStyles: { 0: { cellWidth: 100, fontStyle: "bold", textColor: C.emerald }, 2: { cellWidth: 60 } } } });
+    /* ================= 1. ENTITY PROFILE ================= */
+    h2("Entity profile: " + ent.name, "The legal shape of your entity and what it takes to form and run it.");
+    table(["Aspect", "Position"], Object.entries(docs.summary || {}).map(([k, v]) => [k, v]).concat([["Liability", ent.liability], ["Tax", ent.tax], ["Audit", ent.audit], ["Compliance load", ent.compliance], ["Funding routes", ent.funding]]).filter(r => r[1]), { opts: { columnStyles: { 0: { cellWidth: 130, fontStyle: "bold", textColor: C.emerald } } } });
 
     /* ================= 2. WHY THIS STRUCTURE ================= */
     h2("Why this structure", "Legal knock-out rules run first; the structures that survive are scored on nine weighted factors (BizMatrix Rulebook v" + BizEngine.VERSION + ").");
+    if (R.runner_up) { const a = R.breakdown[R.verdict], b = R.breakdown[R.runner_up]; let lost = null; BizEngine.FACTORS.forEach(f => { const g = (a[f.id] - b[f.id]) / 10; if (!lost || g > lost.g) lost = { g, f }; }); para(`Runner-up: ${BizEngine.NAME[R.runner_up]} (${R.ranking[1][1].toFixed(1)}).` + (lost && lost.g > 0 ? ` It lost most ground on ${lost.f.name.toLowerCase()} (−${lost.g.toFixed(1)}).` : ""), { color: C.muted, size: 9.2, after: 10 }); }
+    if (flags.length) callout("Talk to a professional before filing", flags.map(f => f + ": " + BizEngine.RULES[f].plain).join("  "), "amber");
     const rk = state.rec.ranking.filter(r => r[1] != null);
     if (rk.length > 1) {
       const mx = rk[0][1], mn = Math.min(...rk.map(r => r[1])), bw = CW - 210;
-      rk.forEach(([k, v], i) => { need(22); const top = i === 0, pct = mx === mn ? 1 : 0.25 + 0.75 * (v - mn) / (mx - mn); font(top ? "b" : "r", 9.5); ink(top ? C.emerald : C.body); doc.text(T(ENTITIES[k].name), M, y + 10); fill([234, 241, 238]); doc.roundedRect(M + 170, y + 2, bw, 10, 5, 5, "F"); fill(top ? C.emerald : [150, 186, 172]); doc.roundedRect(M + 170, y + 2, Math.max(10, bw * pct), 10, 5, 5, "F"); font("b", 9.5); doc.text(v.toFixed(1), W - M, y + 10, { align: "right" }); y += 20; });
+      rk.forEach(([k, v], i) => { need(22); const top = i === 0, pct = mx === mn ? 1 : 0.25 + 0.75 * (v - mn) / (mx - mn); font(top ? "b" : "r", 9.5); ink(top ? C.emerald : C.body); doc.text(T(ENTITIES[k].name), M, y + 10); fill([235, 240, 244]); doc.roundedRect(M + 170, y + 2, bw, 10, 5, 5, "F"); fill(top ? C.emerald : [157, 188, 207]); doc.roundedRect(M + 170, y + 2, Math.max(10, bw * pct), 10, 5, 5, "F"); font("b", 9.5); doc.text(v.toFixed(1), W - M, y + 10, { align: "right" }); y += 20; });
       y += 6;
     }
     const fr = factorRows();
@@ -131,29 +161,16 @@ async function pdfBuild(meta) {
     const ex = exclusionRows();
     if (ex.length) { h3("Ruled out by law or regulation"); table(["Structure", "Rule", "Reason", "Citation"], ex.map(e => [e.e, e.ids.join(", "), e.plain, e.cite]), { opts: { columnStyles: { 0: { cellWidth: 92, fontStyle: "bold" }, 1: { cellWidth: 46 }, 3: { cellWidth: 120, textColor: C.muted } } } }); }
 
-    /* ================= 3. ENTITY IN BRIEF ================= */
-    h2(ent.name + " in brief", "The legal shape of your entity and what it takes to form and run it.");
-    table(["Aspect", "Position"], Object.entries(docs.summary || {}).map(([k, v]) => [k, v]).concat([["Liability", ent.liability], ["Tax", ent.tax], ["Audit", ent.audit], ["Compliance load", ent.compliance], ["Funding routes", ent.funding]]).filter(r => r[1]), { opts: { columnStyles: { 0: { cellWidth: 130, fontStyle: "bold", textColor: C.emerald } } } });
-
-    /* ================= 4. DOCUMENTS ================= */
-    h2("Incorporation roadmap & document checklist", `${docs.docs.length} documents across ${docs.steps.length} steps, filtered to your answers. Tick each box in the PDF as you collect it.`);
-    const legend = [["Law", C.redS, C.red], ["Portal practice", C.ambS, C.amb], ["Commonly asked", C.mint, C.emerald], ["Verify", [235, 235, 245], [80, 80, 140]]];
-    let lx = M; legend.forEach(([t, b, f]) => { lx += chip(t, lx, y + 9, b, f) + 6; }); y += 22;
-    const TAGC = { L: ["Law", C.redS, C.red], P: ["Portal", C.ambS, C.amb], C: ["Common", C.mint, C.emerald], U: ["Verify", [235, 235, 245], [80, 80, 140]] };
-    docs.steps.forEach(s => {
-      const list = docs.docs.filter(d => d.step === s.id);
-      need(54); fill(C.emerald); doc.roundedRect(M, y, 30, 18, 4, 4, "F"); font("b", 8.5); ink(C.white); doc.text(s.id, M + 15, y + 12.5, { align: "center" });
-      font("b", 11); ink(C.ink); doc.text(T(s.stage), M + 40, y + 12.5); y += 22; para(s.text, { color: C.muted, size: 8.8, x: M + 40, width: CW - 40, after: 4 });
-      if (!list.length) { y += 4; return; }
-      table(["", "Document", "Provided by", "Type", "Notes"], list.map(d => ["", d.name + (d.mandatory ? "" : " (if applicable)"), d.who, TAGC[d.tag] ? TAGC[d.tag][0] : d.tag, [d.trigger && "When: " + d.trigger, d.detail && d.detail.validity, d.detail && d.detail.notes].filter(Boolean).join(" · ")]), {
-        opts: { columnStyles: { 0: { cellWidth: 22 }, 1: { cellWidth: 190, fontStyle: "bold", textColor: C.ink }, 2: { cellWidth: 82 }, 3: { cellWidth: 52 } } },
-        pc: d => { if (d.section === "body" && d.column.index === 3 && list[d.row.index]) { const t = TAGC[list[d.row.index].tag]; if (t) { d.cell.styles.textColor = t[2]; d.cell.styles.fontStyle = "bold"; } } },
-        dc: d => { const it = list[d.row.index]; if (d.section === "body" && d.column.index === 0 && it && d.cell.height > 14) check(d.cell.x + 6, d.cell.y + 5, "doc_" + it.id + "_" + d.row.index + "_" + doc.getNumberOfPages(), !!KBU.done[it.id]); }
-      });
-    });
-
-    /* ================= 5. REGISTRATIONS ================= */
-    h2("Registrations & licences you need", "Built from the Registration Master Map FY 2026-27 and your answers. Registration names link to the official portal.");
+    /* ================= 3. REGISTRATION ROADMAP ================= */
+    h2("Registration roadmap", "From preparation to a fully registered business. Built from the Registration Master Map FY 2026-27 and your answers; registration names link to the official portal.");
+    {
+      const steps = [[docs.steps[0] ? docs.steps[0].stage : "Prepare", "Week 0", ""], [docs.steps.length > 1 ? (key === "sole" ? "Register the business" : key === "partnership" ? "Deed & registration" : "Incorporate") : "Register", "Weeks 1–3", (docs.steps.length - 1) + " filing steps"], ["Registrations", "First 30 days", sum.regsMandatory + " + " + sum.regsTriggered + " = " + (sum.regsMandatory + sum.regsTriggered)], ["Documents", "Before filing", String(sum.docs)], ["First-year compliance", "Days 30–365", sum.compInitial + " (+" + sum.compAnnual + " recurring)"]];
+      need(96); const sw = CW / steps.length, ly = y + 14;
+      stroke(C.line); doc.setLineWidth(1); doc.line(M + 12, ly, M + CW - sw + 12, ly); doc.setLineWidth(0.5);
+      steps.forEach(([t, when, fig], i) => { const cx = M + i * sw + 12; if (i === 0) { fill(C.gold); doc.circle(cx, ly, 11, "F"); } else { fill(C.white); stroke(C.emerald); doc.setLineWidth(1.2); doc.circle(cx, ly, 11, "FD"); doc.setLineWidth(0.5); } font("b", 9); ink(i === 0 ? C.forest : C.emerald); doc.text(String(i + 1), cx, ly + 3.2, { align: "center" });
+        font("b", 9.2); ink(C.ink); doc.text(doc.splitTextToSize(T(t), sw - 8), cx - 11, ly + 28); font("r", 8); ink(C.muted); doc.text(T(when), cx - 11, ly + 52); if (fig) { font("x", 10.5); ink(C.forest); doc.text(T(fig), cx - 11, ly + 66); } });
+      y += 92;
+    }
     const regTable = (title, list, tone) => {
       if (!list.length) return; h3(title + " (" + list.length + ")");
       table(["Registration", "Why it applies", "Authority & when", "Fee / if missed"], list.map(r => [r.name, r.why, [r.detail && r.detail.authority, r.detail && (r.detail.timeline || r.detail.validity)].filter(Boolean).join(" · ") || "—", [r.detail && r.detail.fee, r.detail && r.detail.penalty].filter(Boolean).join(" · ") || "—"]), {
@@ -166,12 +183,34 @@ async function pdfBuild(meta) {
     regTable("Watch: close to a threshold", regs.filter(r => r.level === "watch"), C.amb);
     regTable("Recommended (optional, but valuable)", regs.filter(r => r.level === "recommended"), C.emerald);
 
-    /* ================= 6. COMPLIANCE ================= */
-    h2("Compliance: first year and every year", "From the Initial & Annual Compliance Master (law as of 6 Nov 2026). Due dates are statutory; authorities often extend them by circular. Rows marked UV must be confirmed on the portal.");
-    const ctab = (title, list) => { if (!list.length) return; h3(title + " (" + list.length + ")"); table(["Compliance", "When", "Form / law", "If missed"], list.map(r => [r.title, r.detail ? r.detail.due : "", r.detail ? [r.detail.form, r.detail.law].filter(Boolean).join(" — ") : "", r.detail ? r.detail.penalty : ""]), { opts: { columnStyles: { 0: { cellWidth: 150, fontStyle: "bold", textColor: C.ink }, 1: { cellWidth: 105 } } } }); };
-    ctab("First-year setup (formation to end of first FY)", comp.filter(r => r.part === "initial"));
-    const KL = { monthly: "Monthly", quarterly: "Quarterly", "half-yearly": "Half-yearly", annual: "Annual", event: "Event-based (when it happens)" };
-    ["monthly", "quarterly", "half-yearly", "annual", "event"].forEach(k => ctab("Recurring: " + KL[k], comp.filter(r => r.part === "annual" && r.kind === k)));
+    /* ================= 4. DOCUMENTS ================= */
+    h2("Document checklist", `${docs.docs.length} documents across ${docs.steps.length} steps, filtered to your answers. Tick each box in the PDF as you collect it.`);
+    const legend = [["Law", C.redS, C.red], ["Portal practice", C.ambS, C.amb], ["Commonly asked", C.mint, C.emerald], ["Verify", [235, 235, 245], [80, 80, 140]]];
+    let lx = M; legend.forEach(([t, b, f]) => { lx += chip(t, lx, y + 9, b, f) + 6; }); y += 22;
+    const TAGC = { L: ["Law", C.redS, C.red], P: ["Portal", C.ambS, C.amb], C: ["Common", C.mint, C.emerald], U: ["Verify", [235, 235, 245], [80, 80, 140]] };
+    docs.steps.forEach(s => {
+      const list = docs.docs.filter(d => d.step === s.id);
+      need(54); fill(C.gold); doc.roundedRect(M, y, 30, 18, 4, 4, "F"); font("b", 8.5); ink(C.ink); doc.text(s.id, M + 15, y + 12.5, { align: "center" });
+      font("b", 11); ink(C.ink); doc.text(T(s.stage), M + 40, y + 12.5); y += 22; para(s.text, { color: C.muted, size: 8.8, x: M + 40, width: CW - 40, after: 4 });
+      if (!list.length) { y += 4; return; }
+      table(["", "Document", "Provided by", "Type", "Notes"], list.map(d => ["", d.name + (d.mandatory ? "" : " (if applicable)"), d.who, TAGC[d.tag] ? TAGC[d.tag][0] : d.tag, [d.trigger && "When: " + d.trigger, d.detail && d.detail.validity, d.detail && d.detail.notes].filter(Boolean).join(" · ")]), {
+        opts: { columnStyles: { 0: { cellWidth: 22 }, 1: { cellWidth: 190, fontStyle: "bold", textColor: C.ink }, 2: { cellWidth: 82 }, 3: { cellWidth: 52 } } },
+        pc: d => { if (d.section === "body" && d.column.index === 3 && list[d.row.index]) { const t = TAGC[list[d.row.index].tag]; if (t) { d.cell.styles.textColor = t[2]; d.cell.styles.fontStyle = "bold"; } } },
+        dc: d => { const it = list[d.row.index]; if (d.section === "body" && d.column.index === 0 && it && d.cell.height > 14) check(d.cell.x + 6, d.cell.y + 5, "doc_" + it.id + "_" + d.row.index + "_" + doc.getNumberOfPages(), !!KBU.done[it.id]); }
+      });
+    });
+
+    /* ================= COMPLIANCE BY PERIOD ================= */
+    h2("Compliance calendar", "Grouped by when each item falls due. From the Initial & Annual Compliance Master (law as of 6 Nov 2026). Due dates are statutory; authorities often extend them by circular.");
+    para("Status: VP = checked against an official government source; VS = confirmed through reputable secondary sources; UV = established position not re-verified, confirm on the named portal.", { size: 8.6, color: C.muted, after: 8 });
+    const deadlines = comp.filter(r => r.detail && compPeriod(r) === "first30");
+    if (deadlines.length) callout("Key deadlines in your first 30 days", deadlines.slice(0, 6).map(r => "• " + short(r.title, 62) + ": " + short(r.detail.due, 80)).join("\n"), "amber");
+    const ctab = (title, list) => { if (!list.length) return; h3(title + " (" + list.length + ")"); table(["Compliance", "When", "Form / law", "If missed", "Status"], list.map(r => [r.title, r.detail ? r.detail.due : "", r.detail ? [r.detail.form, r.detail.law].filter(Boolean).join(" — ") : "", r.detail ? r.detail.penalty : "", r.detail ? r.detail.status : ""]), { opts: { columnStyles: { 0: { cellWidth: 140, fontStyle: "bold", textColor: C.ink }, 1: { cellWidth: 100 }, 4: { cellWidth: 38, halign: "center", fontStyle: "bold" } } } }); };
+    ctab("Before incorporation", comp.filter(r => compPeriod(r) === "before"));
+    ctab("First 30 days", comp.filter(r => compPeriod(r) === "first30"));
+    ctab("First year", comp.filter(r => compPeriod(r) === "firstyear"));
+    const KL = { monthly: "Recurring: monthly", quarterly: "Recurring: quarterly", "half-yearly": "Recurring: half-yearly", annual: "Recurring: annual", event: "Recurring: when an event happens" };
+    ["monthly", "quarterly", "half-yearly", "annual", "event"].forEach(k => ctab(KL[k], comp.filter(r => r.part === "annual" && r.kind === k)));
     // month-by-month calendar
     const MON = ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"], cal = MON.map(() => []);
     comp.filter(r => r.part === "annual" && r.detail && r.kind !== "monthly" && r.kind !== "event").forEach(r => { const due = r.detail.due; MON.forEach((m, i) => { const re = new RegExp("\\b(\\d{1,2})\\s*" + m + "|" + m + "[a-z]*\\s+(\\d{1,2})\\b", "i"); const mm = due.match(re); if (mm) cal[i].push((mm[1] || mm[2]) + " " + m + ": " + short(r.title, 46)); }); });
@@ -190,10 +229,10 @@ async function pdfBuild(meta) {
 
     /* ================= 7. ACTION PLAN ================= */
     h2("Your action plan", "Six phases from decision to a running, compliant business. Tick each action as you complete it.");
-    const PRI = { Critical: [C.redS, C.red], High: [C.ambS, C.amb], Medium: [C.mint, C.emerald], Optional: [[236, 239, 238], C.muted] };
+    const PRI = { Critical: [C.redS, C.red], High: [C.ambS, C.amb], Medium: [C.mint, C.emerald], Optional: [[238, 236, 232], C.muted] };
     Object.keys(KB.PHASES).forEach(k => {
       const items = plan.filter(p => String(p.phase) === String(k)); if (!items.length) return;
-      need(70); fill(C.forest); doc.roundedRect(M, y, CW, 26, 6, 6, "F"); font("x", 11); ink(C.gold); doc.text("PHASE " + k, M + 12, y + 17); font("b", 11); ink(C.white); doc.text(T(KB.PHASES[k][0]), M + 72, y + 17); font("r", 9); ink([206, 228, 218]); doc.text(T(KB.PHASES[k][1]), W - M - 12, y + 17, { align: "right" }); y += 34;
+      need(70); fill(C.mint); doc.roundedRect(M, y, CW, 26, 6, 6, "F"); fill(C.gold); doc.rect(M, y, 3.5, 26, "F"); font("x", 11); ink(C.goldT); doc.text("PHASE " + k, M + 12, y + 17); font("b", 11); ink(C.ink); doc.text(T(KB.PHASES[k][0]), M + 72, y + 17); font("r", 9); ink(C.muted); doc.text(T(KB.PHASES[k][1]), W - M - 12, y + 17, { align: "right" }); y += 34;
       items.forEach((p, i) => {
         font("r", 8.8); const lines = doc.splitTextToSize(T(p.text), CW - 40), h = 30 + lines.length * 11.5;
         need(h + 4); check(M + 4, y + 3, "act_" + k + "_" + i, !!KBU.actDone[p.phase + p.title]);
@@ -217,6 +256,12 @@ async function pdfBuild(meta) {
     [["MCA (company / LLP filings)", "https://www.mca.gov.in"], ["Income Tax e-filing", "https://www.incometax.gov.in"], ["GST portal", "https://www.gst.gov.in"]].forEach(([n, u]) => { if (!seen.has(u)) portals.unshift([n, u.replace("https://", ""), u]); });
     table(["For", "Portal"], portals.map(p => [p[0], p[1]]), { opts: { columnStyles: { 0: { cellWidth: 260, fontStyle: "bold", textColor: C.ink }, 1: { textColor: C.emerald } } }, dc: d => { if (d.section === "body" && portals[d.row.index]) doc.link(d.cell.x, d.cell.y, d.cell.width, d.cell.height, { url: portals[d.row.index][2] }); } });
 
+    /* ================= ASSUMPTIONS ================= */
+    { const asm = assumptions(A);
+      h2("Assumptions we made", "Where a question was not asked, we used a documented default. If any of these is wrong, change it in the online assessment and download the report again.");
+      if (asm.length) table(["Topic", "What we assumed"], asm.map(a => [a.cat, a.text]), { opts: { columnStyles: { 0: { cellWidth: 150, fontStyle: "bold", textColor: C.ink } } } });
+      else para("No defaults were needed: every relevant question was answered.", { color: C.muted });
+    }
     /* ================= 10. SUMMARY ================= */
     newPage(); h2("Summary", "Everything that matters, on one page.");
     const block = (title, lines) => { need(30 + lines.length * 14); font("b", 10.5); ink(C.emerald); doc.text(T(title), M, y + 10); y += 18; lines.forEach(l => { font("r", 9.4); ink(C.ink); const ls = doc.splitTextToSize(T(l), CW - 14); need(ls.length * 13); fill(C.gold); doc.circle(M + 3, y + 6.5, 1.8, "F"); doc.text(ls, M + 12, y + 9); y += ls.length * 13 + 2; }); y += 6; };
@@ -224,26 +269,36 @@ async function pdfBuild(meta) {
     block("Do first", sum.next.slice(0, 5).map(p => p.title + " (" + short(p.when, 40) + ")"));
     block("Registrations", [`${sum.regsMandatory} mandatory: ` + regs.filter(r => r.level === "mandatory").slice(0, 6).map(r => short(r.name, 34)).join(", ") + (sum.regsMandatory > 6 ? " …" : ""), `${sum.regsTriggered} triggered by your answers` + (sum.regsTriggered ? ": " + regs.filter(r => r.level === "triggered").slice(0, 6).map(r => short(r.name, 34)).join(", ") : ".")]);
     block("Documents", [`${sum.docs} documents across ${docs.steps.length} steps; start with founder KYC, premises proof and DSCs.`]);
-    block("Compliance rhythm", [`First year: ${sum.compInitial} setup items. Then ${sum.monthly} monthly, ${sum.quarterly} quarterly and the annual filings in Section 6.`, "Keep one shared calendar; review it monthly with your CA / CS."]);
+    block("Compliance rhythm", [`First year: ${sum.compInitial} setup items. Then ${sum.monthly} monthly, ${sum.quarterly} quarterly and the annual filings in Section 5.`, "Keep one shared calendar; review it monthly with your CA / CS."]);
     const watch = plan.find(p => p.phase === 6 && /threshold/i.test(p.title)); if (watch) block("Watch", [watch.text]);
     if (flags.length) block("Get professional help on", flags.map(f => BizEngine.RULES[f].plain));
-    callout("", "Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules before filing.", "mint");
+    // disclaimer moved to its own page
+    if (false) callout("", "Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules before filing.", "mint");
 
+
+    /* ================= DISCLAIMER ================= */
+    newPage(); h2("Important notice", "Please read before relying on this report.");
+    [["What this report is", "Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". It is not legal, tax or professional advice for your specific facts and does not create a professional engagement."],
+     ["How the recommendation is made", "Legal hard rules run first; the structures that survive are scored on nine weighted factors (BizMatrix Rulebook v" + BizEngine.VERSION + "). Weights are judgements tagged by basis, not law. The full method is published at bizmatrix.in/methodology."],
+     ["Sources", (KB.full ? "BizMatrix Master Registration Checklist v1.0; Registration Master Map FY 2026-27; Initial & Annual Compliance Master (law as of 6 Nov 2026); " : "") + "BizMatrix Knowledge Base & Decision Rulebook v" + BizEngine.VERSION + "."],
+     ["Verification status", "VP: checked against an official government source. VS: confirmed through reputable secondary sources. UV: established position not re-verified; confirm on the named portal before relying on it."],
+     ["Before you file", "Thresholds, fees, forms and due dates change by notification and vary by state. Confirm current requirements with the issuing authority or a Chartered Accountant, Company Secretary or advocate. Final responsibility for the chosen structure, registrations and filings rests with you."]
+    ].forEach(([t, b]) => { need(50); font("b", 10.5); ink(C.emerald); doc.text(T(t), M, y + 10); y += 16; para(b, { size: 9.4, color: C.ink, after: 10 }); });
     /* ================= CONTENTS ================= */
     doc.setPage(tocPage); y = 64;
-    font("b", 8.5); ink(C.gold); doc.text("CONTENTS", M, y + 8); font("x", 22); ink(C.forest); doc.text("What's inside", M, y + 34); fill(C.gold); doc.rect(M, y + 42, 36, 2.5, "F"); y += 70;
-    toc.forEach(([n, t, p, yy]) => { fill(n % 2 ? C.soft : C.white); doc.rect(M, y - 15, CW, 28, "F"); font("x", 12); ink(C.gold); doc.text(String(n).padStart(2, "0"), M + 10, y + 3); font("b", 11); ink(C.ink); doc.text(T(t), M + 42, y + 3); font("b", 10); ink(C.emerald); doc.text(String(p), W - M - 10, y + 3, { align: "right" }); doc.link(M, y - 15, CW, 28, { pageNumber: p, top: yy }); y += 30; });
+    font("b", 8.5); ink(C.goldT); doc.text("CONTENTS", M, y + 8); font("x", 22); ink(C.forest); doc.text("What's inside", M, y + 34); fill(C.gold); doc.rect(M, y + 42, 36, 2.5, "F"); y += 70;
+    toc.forEach(([n, t, p, yy]) => { fill(n % 2 ? C.soft : C.white); doc.rect(M, y - 15, CW, 28, "F"); font("x", 12); ink(C.goldT); doc.text(String(n).padStart(2, "0"), M + 10, y + 3); font("b", 11); ink(C.ink); doc.text(T(t), M + 42, y + 3); font("b", 10); ink(C.emerald); doc.text(String(p), W - M - 10, y + 3, { align: "right" }); doc.link(M, y - 15, CW, 28, { pageNumber: p, top: yy }); y += 30; });
     y += 10; para("Tip: click a section to jump to it, use the bookmarks panel in your PDF reader, and tick the checkboxes as you complete each item.", { color: C.muted, size: 9 });
 
     /* ================= HEADERS & FOOTERS ================= */
     const n = doc.getNumberOfPages();
     for (let i = 2; i <= n; i++) {
-      doc.setPage(i); fill(C.emerald); doc.rect(0, 0, W, 4, "F");
+      doc.setPage(i); fill(C.gold); doc.rect(0, 0, W, 4, "F");
       font("b", 7.5); ink(C.muted); doc.text(T("BIZ MATRIX  ·  " + ent.name.toUpperCase() + (meta.biz ? "  ·  " + short(meta.biz, 36).toUpperCase() : "")), M, 26);
       if (i !== tocPage) { ink(C.emerald); doc.text("Contents", W - M, 26, { align: "right" }); doc.link(W - M - 44, 17, 44, 12, { pageNumber: tocPage }); }
       stroke(C.line); doc.setLineWidth(0.5); doc.line(M, H - 40, W - M, H - 40);
       font("r", 7.2); ink(C.muted); doc.text(T("Decision support, law verified " + BizEngine.VERIFIED + ". Not legal, tax or professional advice.  ·  Rulebook v" + BizEngine.VERSION + "  ·  " + rid), M, H - 26);
-      fill(C.emerald); doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, "F"); font("b", 7.5); ink(C.white); doc.text(i + " / " + n, W - M - 24, H - 25, { align: "center" });
+      fill(C.gold); doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, "F"); font("b", 7.5); ink(C.ink); doc.text(i + " / " + n, W - M - 24, H - 25, { align: "center" });
     }
     doc.setProperties({ title: "Biz Matrix Report - " + (meta.biz ? meta.biz + " - " : "") + ent.name, subject: "Business structure, registration and compliance plan", author: "Biz Matrix", creator: "Biz Matrix" });
     window.__lastPdf = doc;

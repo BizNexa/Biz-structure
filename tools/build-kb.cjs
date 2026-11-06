@@ -8,7 +8,7 @@
      saas-backend/private/catalog.json  FULL data, uploaded to the Worker (never committed; gitignored)
      js/kb-public.js                     public skeleton: names, applicability keys, and details for the
                                          core 35% of each list only. Paid users receive the rest from the Worker.
-   Usage: node tools/build-kb.cjs --checklist <file> --regmap <file> --compliance <file> */
+   Usage: node tools/build-kb.cjs --checklist <file> --regmap <file> --compliance <file> --base <current private catalog.json> */
 "use strict";
 const fs = require("fs"), path = require("path");
 const arg = k => { const i = process.argv.indexOf("--" + k); if (i < 0) throw new Error("missing --" + k); return process.argv[i + 1]; };
@@ -112,7 +112,12 @@ for (const r of REG.partD) {
 /* ---------------- outputs ---------------- */
 const full = { version: 2, kbVersion: "1.0", verified: "6 Nov 2026", sources: ["BizMatrix Master Registration Checklist v1.0", "Registration Master Map FY 2026-27", "Initial & Annual Compliance Master (law as of 6 Nov 2026)"], checklist, compliance, registrations };
 // legacy keys required by the Worker's catalog validation
-const catalog = Object.assign({ entities: { private_limited: { docs: [], comp: [] } }, registrations: { groups: [] } }, { version: 1, kb: full });
+// --base <existing private catalog.json>: keep the premium entity text (members, audit, tax, docs, comp),
+// docNotes and legacy registrations, and only add/replace the "kb" block. Strongly recommended.
+const bi = process.argv.indexOf("--base");
+let catalog;
+if (bi > 0) { const base = JSON.parse(fs.readFileSync(process.argv[bi + 1], "utf8")); if (base.version !== 1 || !base.entities) throw new Error("--base is not a v1 private catalog"); catalog = Object.assign({}, base, { kb: full }); console.log("merged kb into base catalog (" + Object.keys(base.entities).length + " entities kept)"); }
+else { catalog = { version: 1, entities: { private_limited: { docs: [], comp: [] } }, registrations: { groups: [] }, kb: full }; console.warn("WARNING: no --base catalog. Paid users will lose the premium entity text (Membership, Audit, Tax). Do not upload this file; rerun with --base <current catalog.json>."); }
 
 const strip = (list) => { const n = Math.ceil(list.length * SHARE); return list.map((x, i) => i < n ? x : Object.assign({}, x, { detail: null })); };
 const pub = { version: 2, kbVersion: "1.0", verified: full.verified, checklist: {}, compliance: {}, registrations: [] };

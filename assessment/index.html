@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en-IN"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#FBF8F1">
 <meta name="description" content="Run the Biz Matrix assessment to compare Indian business structures, get a registration checklist and preview a FY 2026-27 compliance plan.">
 <title>Business Structure Assessment India | Biz Matrix</title>
 
@@ -11,7 +11,7 @@
 <meta property="og:site_name" content="Biz Matrix">
 <meta property="og:locale" content="en_IN">
 <meta property="og:title" content="Business Structure Assessment India | Biz Matrix">
-<meta property="og:description" content="Answer up to 32 questions to get a structure recommendation, registration planner, document checklist and compliance calendar for India.">
+<meta property="og:description" content="Answer 21 to 28 questions in about 5 minutes to get a structure recommendation, registration planner, document checklist and compliance calendar for India.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.bizmatrix.in/assessment/">
 <meta property="og:image" content="https://www.bizmatrix.in/assets/og-image.png">
@@ -20,7 +20,7 @@
 <meta name="twitter:title" content="Business Structure Assessment India | Biz Matrix">
 <meta name="twitter:description" content="Compare entity structures and plan registrations for an Indian business in one guided assessment.">
 <meta name="twitter:image" content="https://www.bizmatrix.in/assets/og-image.png">
-<link rel="icon" href="../favicon.png" type="image/png"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="stylesheet" href="../css/app.css"><link rel="stylesheet" href="../css/preview.css"><link rel="stylesheet" href="../css/payments.css"><link rel="stylesheet" href="../css/theme.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="../favicon.png" type="image/png"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="stylesheet" href="../css/tokens.css"><link rel="stylesheet" href="../css/app.css"><link rel="stylesheet" href="../css/preview.css"><link rel="stylesheet" href="../css/payments.css"><link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/assess.css"><link rel="stylesheet" href="../css/lists.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -43,21 +43,29 @@
   }
 }
 </script>
-<link rel="stylesheet" href="../css/dark.css"><script src="../js/theme.js"></script></head>
+<link rel="stylesheet" href="../css/dark.css"><script src="../js/theme.js"></script><link rel="stylesheet" href="../css/footer.css"><link rel="stylesheet" href="../css/whitegold.css"></head>
 
 <body>
 
 <div class="app" id="app">
 
   <!-- ASSESSMENT -->
-  <section id="assessment" class="assess">
-    <div class="assess-top">
-      <img class="assess-logo" src="../assets/bizmatrix-logo.png" alt="Biz Matrix">
-      <h1>Biz Matrix</h1>
-    <p class="assess-intro">Business Structure &amp; Registration Intelligence · FY 2026–27</p><span class="preview-badge">35% Free Preview</span></div>
-
-    <div class="parts"><div id="pt1" class="part on"><i>1</i><span>Business Structure<small>16 questions</small></span></div><div class="part-line"></div><div id="pt2" class="part"><i>2</i><span>Registration Profile<small>10 questions</small></span></div></div>
-    <div class="card assess-card">
+  <section id="assessment" class="assess aq">
+    <header class="aq-head">
+      <a class="aq-brand" href="../" aria-label="Biz Matrix home"><img src="../assets/bizmatrix-logo.png" alt="Biz Matrix" width="140" height="33"></a>
+      <div class="aq-right"><span class="preview-badge">35% Free Preview</span></div>
+    </header>
+    <div class="aq-grid">
+      <aside class="aq-rail" aria-label="Assessment progress">
+        <ol class="aq-steps parts">
+          <li id="pt1" class="part on"><i>1</i><span>Business structure<small>16 questions</small></span></li>
+          <li id="pt2" class="part"><i>2</i><span>Registration profile<small>16 questions</small></span></li>
+        </ol>
+        <div class="aq-prog"><div class="aq-bar"><i id="aqBar"></i></div><p id="aqLeft" class="aq-left num"></p></div>
+        <div class="aq-why" id="aqWhyBox"><p class="aq-why-h">Why we ask this</p><p id="aqWhy"></p><p class="aq-saved" id="aqSaved" hidden>Progress saved on this device.</p></div>
+      </aside>
+      <div class="aq-main">
+      <div class="card assess-card">
       <div class="q-meta">
         <div id="qCount" class="q-count">Question 1 of 9</div>
         <div id="qCat" class="q-cat">Business objective</div>
@@ -69,45 +77,30 @@
         <button class="btn primary" id="nextQ">Continue →</button>
       </div>
     </div>
+      <p class="aq-keys" aria-hidden="true">Tip: press <kbd>1</kbd>–<kbd>9</kbd> to choose, <kbd>Enter</kbd> to continue, <kbd>Backspace</kbd> to go back.</p>
+      </div>
+    </div>
     <div class="footer">Two-part assessment • Preliminary decision support • Verify applicable law before filing</div>
-  <footer class="site-footer">
-      <div class="site-footer-grid">
-        <section>
-          <h2>About Us</h2>
-          <p>Biz Matrix – Business Structure Intelligence helps Indian founders choose the right business structure and understand their compliance obligations before they incorporate.</p>
-        </section>
-        <section>
-          <h2>Policies</h2>
-          <ul>
-          <li><a href="../terms/">Terms &amp; Conditions</a></li>
+  <footer class="bm-footer">
+    <div class="bm-footer-in">
+      <section class="bm-f-about" aria-labelledby="bmFootAbout">
+        <h2 id="bmFootAbout">About Us</h2>
+        <p>Biz Matrix helps Indian founders choose the right business structure and see the registrations, documents and compliances that follow, before they incorporate.</p>
+        <p>Recommendations follow a published rulebook of legal rules and weighted factors. They are structured decision support, not legal, tax or professional advice.</p>
+      </section>
+      <nav class="bm-f-support" aria-labelledby="bmFootSupport">
+        <h2 id="bmFootSupport">Support</h2>
+        <ul>
+          <li><a href="../terms/">Terms of Service</a></li>
           <li><a href="../privacy-policy/">Privacy Policy</a></li>
-          <li><a href="../refund-policy/">Refund and Cancellation Policy</a></li>
-          <li><a href="../cookie-policy/">Cookie Policy</a></li>
-          <li><a href="../disclaimer/">Advisory Disclaimer</a></li>
-          </ul>
-        </section>
-        <section>
-          <h2>Support</h2>
-          <ul>
+          <li><a href="../refund-policy/">Refund Policy</a></li>
           <li><a href="../shipping-delivery/">Shipping and Delivery Policy</a></li>
-          <li><a href="../grievance-redressal/">Grievance Redressal</a></li>
-          <li><a href="../accessibility/">Accessibility</a></li>
-          <li><a href="../corporate-information/">Corporate Information</a></li>
           <li><a href="../contact/">Contact Us</a></li>
-          </ul>
-        </section>
-        <section>
-          <h2>Resources</h2>
-          <ul>
-          <li><a href="./" aria-current="page">Business Assessment</a></li>
-          </ul>
-        </section>
-      </div>
-      <div class="site-footer-bottom">
-        <p><a href="mailto:nexifydigital03@gmail.com">nexifydigital03@gmail.com</a> · Monday–Saturday, 10:00 AM – 6:00 PM IST</p>
-        <p>© 2026 Biz Matrix. All rights reserved.</p>
-      </div>
-    </footer></section>
+        </ul>
+      </nav>
+    </div>
+    <p class="bm-f-copy">&copy; 2026 Biz Matrix. All rights reserved.</p>
+  </footer></section>
 
   <!-- DASHBOARD -->
   <section id="dashboard" class="hidden">
@@ -144,15 +137,16 @@
       <div class="topbar">
         <div style="display:flex;align-items:center;gap:10px">
           <button class="btn mobile-menu" id="menuBtn" aria-label="Open navigation" aria-expanded="false">☰</button>
-          <div><div class="page-title" id="topTitle">Business Structure and Registration Dashboard</div><div class="page-sub">FY 2026–27 • Professional advisory workflow</div></div>
+          <div><div class="page-title" id="topTitle">Structure opinion <span class="preview-badge" id="accessBadge">35% Free Preview</span></div><div class="page-sub">FY 2026–27 · Business structure &amp; registration</div></div>
         </div>
         <div class="top-actions">
           <button class="btn secondary-hide" id="newBtn">↻ New Assessment</button>
-          <button class="btn primary" id="printBtn">Download PDF · ₹49</button>
+          <button class="btn primary" id="printBtn">Download PDF · ₹49</button><div class="acct"><button class="btn acct-btn" id="acctBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="acctMenu" aria-label="Account: restore access or purchase receipt">⋯</button><div class="acct-menu" id="acctMenu" role="menu" hidden><button class="btn" type="button" role="menuitem" data-restore="">Restore Access</button><button class="btn hidden" type="button" role="menuitem" data-receipt="">Purchase Receipt</button></div></div>
         </div>
-      </div><div class="preview-status"><span class="preview-badge" id="accessBadge">35% Free Preview</span><div class="purchase-actions"><button class="btn" type="button" data-restore="">Restore Access</button><button class="btn primary" type="button" data-buy="">Unlock for ₹49</button><button class="btn hidden" type="button" data-receipt="">Purchase Receipt</button></div></div>
+      </div>
 
       <div class="content">
+        <section class="opinion" id="opinion" aria-label="Structure opinion" hidden></section>
         <div class="hero">
           <div class="hero-grid">
             <div>
@@ -173,7 +167,7 @@
 
         <div class="grid g4 metrics" id="metrics"></div>
 
-        <div class="section">
+        <div class="section op-hide">
           <div class="card recommend">
             <div class="recommend-grid">
               <div class="score-wrap">
@@ -243,7 +237,7 @@
           </div>
 
           <div class="tab-panel hidden" id="panel-compliance">
-            <div class="section-head"><div><div class="section-title">FY 2026–27 Compliance Intelligence</div><div class="section-sub">Detailed annual, tax, audit, labour, GST and event-based obligations • Position aligned to the Compliance Intelligence Baseline verified to 5 October 2026.</div></div><select class="filter" id="compFilter"><option value="all">All obligations</option><option>Initial</option><option>Annual</option><option>Tax</option><option>Audit</option><option>Event Based</option><option>State</option><option>Employees</option></select></div>
+            <div class="section-head"><div><div class="section-title">FY 2026–27 Compliance Intelligence</div><div class="section-sub">Everything you must file, grouped by when it falls due. Filter by frequency, search, or tap a row for details.</div></div><select class="filter" id="compFilter"><option value="all">All obligations</option><option>Initial</option><option>Annual</option><option>Tax</option><option>Audit</option><option>Event Based</option><option>State</option><option>Employees</option></select></div>
             <div class="timeline" id="compliance"></div>
           </div>
 
@@ -274,44 +268,26 @@
         <div class="footer">
           Business Structure Intelligence • Commercial Release v1.0 • FY 2026–27 • Verify amendment-sensitive and state/activity-specific requirements before filing.
         </div>
-      <footer class="site-footer">
-      <div class="site-footer-grid">
-        <section>
-          <h2>About Us</h2>
-          <p>Biz Matrix – Business Structure Intelligence helps Indian founders choose the right business structure and understand their compliance obligations before they incorporate.</p>
-        </section>
-        <section>
-          <h2>Policies</h2>
-          <ul>
-          <li><a href="../terms/">Terms &amp; Conditions</a></li>
+      <footer class="bm-footer">
+    <div class="bm-footer-in">
+      <section class="bm-f-about" aria-labelledby="bmFootAbout">
+        <h2 id="bmFootAbout">About Us</h2>
+        <p>Biz Matrix helps Indian founders choose the right business structure and see the registrations, documents and compliances that follow, before they incorporate.</p>
+        <p>Recommendations follow a published rulebook of legal rules and weighted factors. They are structured decision support, not legal, tax or professional advice.</p>
+      </section>
+      <nav class="bm-f-support" aria-labelledby="bmFootSupport">
+        <h2 id="bmFootSupport">Support</h2>
+        <ul>
+          <li><a href="../terms/">Terms of Service</a></li>
           <li><a href="../privacy-policy/">Privacy Policy</a></li>
-          <li><a href="../refund-policy/">Refund and Cancellation Policy</a></li>
-          <li><a href="../cookie-policy/">Cookie Policy</a></li>
-          <li><a href="../disclaimer/">Advisory Disclaimer</a></li>
-          </ul>
-        </section>
-        <section>
-          <h2>Support</h2>
-          <ul>
+          <li><a href="../refund-policy/">Refund Policy</a></li>
           <li><a href="../shipping-delivery/">Shipping and Delivery Policy</a></li>
-          <li><a href="../grievance-redressal/">Grievance Redressal</a></li>
-          <li><a href="../accessibility/">Accessibility</a></li>
-          <li><a href="../corporate-information/">Corporate Information</a></li>
           <li><a href="../contact/">Contact Us</a></li>
-          </ul>
-        </section>
-        <section>
-          <h2>Resources</h2>
-          <ul>
-          <li><a href="./" aria-current="page">Business Assessment</a></li>
-          </ul>
-        </section>
-      </div>
-      <div class="site-footer-bottom">
-        <p><a href="mailto:nexifydigital03@gmail.com">nexifydigital03@gmail.com</a> · Monday–Saturday, 10:00 AM – 6:00 PM IST</p>
-        <p>© 2026 Biz Matrix. All rights reserved.</p>
-      </div>
-    </footer></div>
+        </ul>
+      </nav>
+    </div>
+    <p class="bm-f-copy">&copy; 2026 Biz Matrix. All rights reserved.</p>
+  </footer></div>
     </div>
   </section>
 </div>
@@ -324,5 +300,5 @@
 
 
 
-<script src="../js/config.js?v=20261015b"></script><script src="../js/pdf.min.js"></script><script src="../js/engine.js"></script><script src="../js/kb-public.js"></script><script src="../js/kb.js"></script><script src="../js/preview.js"></script><script src="../js/app.js"></script><script src="../js/kb-ui.js"></script><script src="../js/report.js"></script><script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<script src="../js/config.js?v=20261015b"></script><script src="../js/pdf.min.js"></script><script src="../js/engine.js"></script><script src="../js/kb-public.js"></script><script src="../js/kb.js"></script><script src="../js/preview.js"></script><script src="../js/app.js"></script><script src="../js/kb-ui.js"></script><script src="../js/opinion.js"></script><script src="../js/nav.js"></script><script src="../js/assess.js"></script><script src="../js/report.js"></script><script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 <script src="../js/payments.js"></script></body></html>

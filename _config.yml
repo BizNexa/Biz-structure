@@ -13,3 +13,4 @@ exclude:
   - package-lock.json
   - wrangler.toml
   - tests
+  - _design

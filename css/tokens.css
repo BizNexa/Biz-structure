@@ -1,0 +1,28 @@
+/* Biz Matrix colour tokens — white & gold.
+   White / ivory surfaces, gold accents (#C9A227), charcoal text. The logo keeps its own navy.
+   Note: the scale is still named "--navy-*" so existing rules keep working; it now runs ivory → gold → charcoal.
+   Status colours (success / warning / danger) are used for status only. */
+:root{
+  /* main scale: ivory (50) → gold (400–700) → charcoal (900–950) */
+  --navy-50:#FBF8F1;--navy-100:#F5EEDC;--navy-200:#EADCB4;--navy-300:#DCC587;--navy-400:#C9A227;--navy-500:#B08A1B;
+  --navy-600:#977517;--navy-700:#7D6013;--navy-800:#5F4A10;--navy-900:#2A2621;--navy-950:#1F2328;
+  --navy-700-rgb:125,96,19;--navy-950-rgb:31,35,40;
+  /* gold accent scale */
+  --brass-50:#FBF8F1;--brass-100:#F5EEDC;--brass-200:#EADCB4;--brass-300:#DCC587;--brass-400:#C9A227;--brass-500:#B08A1B;
+  --brass-600:#977517;--brass-700:#7D6013;--brass-800:#5F4A10;
+  /* neutrals */
+  --paper:#FBF8F1;--paper-2:#F5F0E4;--surface:#FFFFFF;--line:#E9E1CF;--line-2:#F0EADC;--ink:#1F2328;--ink-2:#3A3D42;--muted:#5E5A52;
+  /* status (status only) */
+  --success:#1E7A4C;--success-bg:#E5F3EC;--warning:#9A5B07;--warning-bg:#FBF0DC;--danger:#B42318;--danger-bg:#FCE8E6;
+  /* semantic */
+  --bg:var(--paper);--text:var(--ink);--text-muted:var(--muted);--border:var(--line);
+  --primary:var(--navy-700);--primary-hover:var(--navy-800);--primary-soft:var(--navy-50);--on-primary:#FFFFFF;
+  --accent:var(--brass-400);--accent-strong:var(--brass-700);--accent-soft:var(--brass-100);--on-accent:#1F2328;
+  --focus:var(--brass-700);
+}
+:root[data-theme="dark"]{
+  --paper:#16181B;--paper-2:#1C1F23;--surface:#1E2125;--line:#33302A;--line-2:#28272A;--ink:#ECE7DC;--ink-2:#CFC8BA;--muted:#A9A194;
+  --success:#5CC490;--success-bg:#12301F;--warning:#E6B05A;--warning-bg:#2E230E;--danger:#F1867C;--danger-bg:#3A1714;
+  --primary:var(--navy-300);--primary-hover:var(--navy-200);--primary-soft:#2A2518;--on-primary:#1F2328;
+  --accent:var(--brass-400);--accent-strong:var(--brass-300);--accent-soft:#2A2518;--on-accent:#1F2328;--focus:var(--brass-300);
+}

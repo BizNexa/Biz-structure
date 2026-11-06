@@ -1,0 +1,95 @@
+/* Assessment page (Phase 4) — navy/brass tokens from css/tokens.css */
+.aq{max-width:1180px;margin:0 auto;padding:0 20px 28px}
+.aq-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);margin-bottom:22px;position:relative}
+.aq-brand img{display:block;height:32px;width:auto}
+.aq-right{display:flex;align-items:center;gap:10px}
+.aq-right .preview-badge{margin:0!important}
+.aq-right .assess-acct{position:static}
+.aq-right .acct-menu{right:0}
+.aq-grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;align-items:start}
+.aq-rail{position:sticky;top:20px;display:grid;gap:18px}
+.aq-steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.aq-steps .part{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);box-shadow:none!important;min-height:0}
+.aq-steps .part i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 13px/1 inherit;font-style:normal;background:var(--paper-2);color:var(--muted)}
+.aq-steps .part span{font-weight:700;font-size:14px;color:var(--ink-2)}.aq-steps .part small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.aq-steps .part.on{border-color:var(--navy-700);background:var(--navy-50)}.aq-steps .part.on i{background:var(--navy-700);color:#fff}
+.aq-steps .part.done i{background:var(--navy-100);color:var(--navy-800)}.aq-steps .part.done i:after{content:""}
+.aq-prog{padding:0 2px}.aq-bar{height:6px;border-radius:99px;background:var(--line-2);overflow:hidden}.aq-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--navy-700),var(--accent));border-radius:99px;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.aq-left{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.aq-why{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:14px 16px}
+.aq-why-h{margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.aq-why p#aqWhy{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.aq-saved{margin:10px 0 0;font-size:12px;color:var(--success)}
+.aq-main{min-width:0}
+.aq .assess-card{padding:28px 30px 22px;border-radius:14px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(10,30,42,.04),0 18px 40px -28px rgba(10,30,42,.35);background:var(--surface)}
+.aq .q-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.aq .q-count{font-size:13px;color:var(--muted);font-weight:600}
+.aq .q-cat{font-size:11px;padding:4px 10px;border-radius:99px;background:var(--paper-2)!important;color:var(--ink-2)!important;border:1px solid var(--line)!important}
+.aq .qbar{display:none}
+.aq .q-title{font-size:clamp(22px,2.6vw,28px);line-height:1.2;margin:18px 0 18px;color:var(--ink);letter-spacing:-.01em}
+.aq-info{position:relative;display:inline-block;vertical-align:4px}
+.aq-info-btn{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:var(--paper-2);color:var(--muted);font:700 11px/1 Georgia,serif;cursor:help;padding:0}
+.aq-info-btn:hover,.aq-info-btn:focus-visible{background:var(--navy-700);color:#fff;border-color:var(--navy-700)}
+.aq-tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:max-content;max-width:min(320px,80vw);background:var(--navy-950);color:#E8EDF1;font:500 12px/1.45 "Public Sans",system-ui,sans-serif;letter-spacing:0;text-transform:none;padding:9px 11px;border-radius:8px;box-shadow:0 12px 30px -12px rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:opacity .15s;z-index:30}
+.aq-info:hover .aq-tip,.aq-info-btn:focus-visible+.aq-tip{opacity:1;visibility:visible}
+.aq-why-m{display:none}
+.aq .options{display:grid;gap:10px}
+.aq .option{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:14px;padding:16px 16px;border:1.5px solid var(--line)!important;border-radius:12px;background:var(--surface)!important;cursor:pointer;min-height:68px;transform:none}
+.aq .option:before{display:none!important}
+.aq .option:hover{border-color:var(--navy-300)!important;box-shadow:0 8px 20px -16px rgba(10,30,42,.5)}
+.aq .option .dot{display:none}
+.aq .option .aq-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--navy-50);color:var(--navy-700)}
+.aq .option-title{font-size:15px;font-weight:700;color:var(--ink)}.aq .option-detail{font-size:13px;color:var(--muted);margin-top:2px}
+.aq .option .aq-num{font:600 11px/1 ui-monospace,monospace;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:3px 6px;background:var(--paper)}
+.aq .option.selected{border-color:var(--navy-700)!important;background:var(--navy-50)!important;box-shadow:0 0 0 3px rgba(var(--navy-700-rgb),.12)!important}
+.aq .option.selected .aq-ico{background:var(--navy-700);color:#fff}
+.aq .option.selected .aq-num{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.aq .option:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.aq .selbox{font-size:15px;padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);width:100%}
+.aq .assess-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line-2)}
+.aq .assess-nav .btn{min-height:46px;padding:0 20px;font-size:14px;border-radius:10px}
+.aq-keys{margin:10px 4px 0;font-size:12px;color:var(--muted)}
+.aq-keys kbd{font:600 11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 5px;background:var(--surface)}
+.aq .banner{margin-bottom:6px;border-radius:10px;background:var(--navy-50)!important;border:1px solid var(--navy-100)!important;color:var(--ink-2)!important}
+/* question transitions */
+.aq-in-fwd{animation:aqFwd .28s cubic-bezier(.2,.8,.2,1) both}.aq-in-back{animation:aqBack .28s cubic-bezier(.2,.8,.2,1) both}
+@keyframes aqFwd{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@keyframes aqBack{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.aq .options .option{animation:none!important}
+/* analysing moment */
+.aq-analyse{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:rgba(10,30,42,.72);backdrop-filter:blur(4px);animation:aqFade .2s ease both;padding:16px}
+.aq-analyse.out{animation:aqFadeOut .25s ease both}
+.aq-an-card{background:var(--surface);color:var(--ink);border-radius:16px;padding:28px 30px;width:min(420px,100%);box-shadow:0 30px 80px -30px rgba(0,0,0,.6);border-top:4px solid var(--accent);text-align:left}
+.aq-an-card h2{margin:12px 0 14px;font-size:22px}
+.aq-an-seal{width:44px;height:44px;border-radius:50%;border:2px solid var(--brass-500);position:relative;animation:aqSpin 1.4s linear infinite}
+.aq-an-seal:after{content:"";position:absolute;inset:5px;border-radius:50%;border:1px dashed var(--brass-500)}
+.aq-an-card ol{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.aq-an-card li{position:relative;padding-left:26px;font-size:14px;color:var(--muted);transition:color .2s}
+.aq-an-card li:before{content:"";position:absolute;left:0;top:3px;width:14px;height:14px;border-radius:50%;border:1.5px solid var(--line)}
+.aq-an-card li.done{color:var(--ink)}.aq-an-card li.done:before{background:var(--navy-700);border-color:var(--navy-700);box-shadow:inset 0 0 0 3px var(--surface)}
+@keyframes aqFade{from{opacity:0}to{opacity:1}}@keyframes aqFadeOut{to{opacity:0}}@keyframes aqSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.aq-in-fwd,.aq-in-back,.aq-analyse,.aq-an-seal{animation:none!important}.aq-bar i{transition:none}}
+/* old big header & stepper are gone on this layout */
+.aq .assess-top,.aq>.parts{display:none}
+/* tablet / mobile */
+@media(max-width:900px){
+ .aq-grid{grid-template-columns:1fr;gap:12px}
+ .aq-rail{position:static;gap:10px}
+ .aq-steps{grid-template-columns:1fr 1fr}.aq-steps .part{padding:8px 10px}.aq-steps .part small{display:none}.aq-steps .part i{width:22px;height:22px;font-size:11px}.aq-steps .part span{font-size:12.5px}
+ .aq-why{display:none}
+ .aq-why-m{display:block;margin:-6px 0 14px;font-size:13px;color:var(--muted)}.aq-why-m summary{cursor:pointer;color:var(--navy-700);font-weight:600;font-size:13px}.aq-why-m p{margin:6px 0 0}
+ .aq-keys{display:none}
+}
+@media(max-width:560px){
+ .aq{padding:0 12px 20px}.aq-head{padding:10px 0;margin-bottom:12px}.aq-brand img{height:26px}.aq-right .preview-badge{display:none}
+ .aq .assess-card{padding:18px 16px 14px}.aq .q-title{font-size:21px;margin:12px 0 12px}
+ .aq .option{grid-template-columns:34px minmax(0,1fr);padding:12px;min-height:58px;gap:12px}.aq .option .aq-ico{width:34px;height:34px}.aq .option .aq-num{display:none}
+ .aq .option-detail{font-size:12.5px}
+}
+[data-theme="dark"] .aq .option .aq-ico{background:#14293A;color:var(--navy-200)}
+[data-theme="dark"] .aq .option.selected{background:#14293A!important;border-color:var(--navy-300)!important}
+[data-theme="dark"] .aq .option.selected .aq-ico{background:var(--navy-300);color:var(--navy-950)}
+[data-theme="dark"] .aq-steps .part.on{background:#14293A;border-color:var(--navy-300)}[data-theme="dark"] .aq-steps .part.on i{background:var(--navy-300);color:var(--navy-950)}
+[data-theme="dark"] .aq-tip{background:#E8EDF1;color:#0A1E2A}
+html{background:var(--paper)}
+[data-theme="dark"] .aq-brand img{filter:brightness(0) invert(1) opacity(.92)}

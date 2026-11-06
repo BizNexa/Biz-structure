@@ -112,10 +112,12 @@
   }
 
   function saveDraft() {
+    if (window.BizAssess) return window.BizAssess.save();
     storage.set(keys.draft, JSON.stringify({ answers: state.answers, docs: state.docs, index: state.i }));
   }
 
   function restoreDraft() {
+    if (window.BizAssess) return window.BizAssess.restore();
     try {
       const draft = JSON.parse(storage.get(keys.draft));
       if (!draft?.answers) return;
@@ -176,7 +178,7 @@
   }
 
   async function initialize() {
-    document.querySelector('.assess-top').insertAdjacentHTML('beforeend', '<div class="purchase-actions assess-purchase"><button class="btn primary" type="button" data-buy>Unlock for &#8377;49</button><button class="btn" type="button" data-restore>Restore Access</button><button class="btn hidden" type="button" data-receipt>Purchase Receipt</button></div>');
+    (document.querySelector('.aq-right') || document.querySelector('.assess-top')).insertAdjacentHTML('beforeend', '<div class="acct assess-acct"><button class="btn acct-btn" id="acctBtnQ" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="acctMenuQ" aria-label="Account: unlock, restore access or purchase receipt">⋯</button><div class="acct-menu" id="acctMenuQ" role="menu" hidden><button class="btn" type="button" role="menuitem" data-buy>Unlock full report · &#8377;49</button><button class="btn" type="button" role="menuitem" data-restore>Restore Access</button><button class="btn hidden" type="button" role="menuitem" data-receipt>Purchase Receipt</button></div></div>');
     dialog = document.createElement('dialog');
     dialog.className = 'payment-dialog';
     dialog.setAttribute('aria-labelledby', 'paymentTitle');
@@ -238,7 +240,7 @@
     };
     dialog.querySelector('#receiptDownload').onclick = () => { if (premium) { close(); pdfNow(); } };
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveDraft(); });
-    document.getElementById('newBtn').addEventListener('click', () => { if (!state.rec) storage.remove(keys.draft); });
+    document.getElementById('newBtn').addEventListener('click', () => { if (!state.rec) { storage.remove(keys.draft); if (window.BizAssess) window.BizAssess.clear(); } });
     try {
       config = await api('/config', undefined, false);
       if (token) {

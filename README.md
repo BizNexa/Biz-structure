@@ -71,7 +71,7 @@ About, Contact, Privacy, Terms, Refunds, Digital Delivery, Cookies, Disclaimer, 
 Rebuild the parsed tables with `tools/parse-sources.cjs` (see its header), then run `tools/build-kb.cjs`. The document checklist, registration planner, compliance calendar, action plan and PDF report are generated from four reference sources kept **outside** this repository: the Master Registration Checklist v1.0 (JSON), the Registration Master Map FY 2026-27, and the Initial & Annual Compliance Master (law as of 6 Nov 2026).
 
 ```powershell
-node tools/build-kb.cjs --checklist <bizmatrix_master_checklist.json> --regmap <regmap.json> --compliance <compliance.json>
+node tools/build-kb.cjs --checklist <bizmatrix_master_checklist.json> --regmap <regmap.json> --compliance <compliance.json> --base <current private catalog.json>
 ```
 
 This writes two files:

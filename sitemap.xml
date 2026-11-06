@@ -25,12 +25,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.bizmatrix.in/corporate-information/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
     <loc>https://www.bizmatrix.in/privacy-policy/</loc>
     <lastmod>2026-10-13</lastmod>
     <changefreq>yearly</changefreq>
@@ -53,30 +47,6 @@
     <lastmod>2026-10-13</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.bizmatrix.in/cookie-policy/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.bizmatrix.in/disclaimer/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.bizmatrix.in/grievance-redressal/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.bizmatrix.in/accessibility/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
   </url>
   <url>
     <loc>https://www.bizmatrix.in/methodology/</loc>

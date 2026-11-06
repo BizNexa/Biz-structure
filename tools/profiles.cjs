@@ -1,0 +1,13 @@
+// Representative profiles for before/after checks of question changes (Phase 1).
+// Each profile is the full set of real-world facts; the harness decides which answers the flow actually asks.
+const base = { objective: "profit", founders: "two_to_six", max_owners: "up_to_50", residency: "resident", profession: "none", activity: "none", foreign: "none", funding: "bank", esop: "no", liability: "preferred", profit_level: "lt_25L", extraction: "withdraw", compliance: "moderate", credibility: "low", exit: "none", business: "small", sector: "svc", activities: ["n"], state: "Maharashtra", supply: "s", turnover: "lt20", trade: "none", channels: ["n"], workforce: "none", ec: "n", contract: "n", premises: "home", interstate: "n", packaged: "n", plant: ["n"], din: "no", corp_owner: "no" };
+module.exports = [
+  ["Sole proprietor (freelance designer)", { ...base, founders: "one", liability: "acceptable", compliance: "low", business: "professional", turnover: "20_40" }],
+  ["2 partners, service firm", { ...base, liability: "acceptable", compliance: "low", sector: "svc", turnover: "40_150", workforce: "1_9", premises: "rent", channels: ["website"] }],
+  ["LLP, logistics, Maharashtra", { ...base, sector: "trn", activities: ["transport", "warehouse"], supply: "s", turnover: "40_150", workforce: "10_19", ec: "y", premises: "rent", trade: "export" }],
+  ["Pvt Ltd, funded startup", { ...base, funding: "vc", esop: "yes", liability: "critical", compliance: "high", exit: "sell", business: "startup", sector: "ecom", activities: ["marketplace_op"], supply: "b", turnover: "150_500", workforce: "20_49", ec: "y", premises: "rent", channels: ["website", "sms"], din: "some" }],
+  ["OPC, solo e-commerce seller", { ...base, founders: "one", profit_level: "25L_2cr", extraction: "retain", sector: "trd", supply: "g", turnover: "40_150", channels: ["marketplace"], interstate: "y", packaged: "y", premises: "rent" }],
+  ["Section 8, education NGO", { ...base, objective: "nonprofit", founders: "seven_plus", sector: "edu", activities: ["coaching"], foreign: "contribution", workforce: "10_19", ec: "y", premises: "rent", corp_owner: "yes" }],
+  ["Factory, 4 promoters, corporate shareholder", { ...base, liability: "critical", credibility: "high", profit_level: "gt_2cr", extraction: "retain", compliance: "high", sector: "mfg", activities: ["factory", "plastic"], supply: "g", turnover: "gt500", workforce: "50p", ec: "y", contract: "y", premises: "factory", interstate: "y", packaged: "y", plant: ["b", "h"], corp_owner: "yes", din: "yes" }],
+  ["CA practice, 3 partners", { ...base, profession: "ca_cs_cma", business: "professional", profit_level: "25L_2cr", turnover: "40_150", workforce: "1_9", premises: "rent" }]
+];

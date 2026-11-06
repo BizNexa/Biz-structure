@@ -37,7 +37,18 @@ function previewNotice(preview) {
   return `<p class="preview-count">${AccessProvider.isPremium() ? 'Full report' : '35% free preview'}: ${preview.visibleItems.length} of ${preview.totalItems} items</p>`;
 }
 
+/* Free preview: the remaining 65% is shown blurred and inert, with one unlock card on top. */
+function BlurredLock(innerHtml, remainingCount, label = 'items') {
+  if (!remainingCount || AccessProvider.isPremium()) return '';
+  return `<div class="bm-lock"><div class="bm-lock-content" aria-hidden="true" inert>${innerHtml}</div><div class="bm-lock-cta" role="group" aria-label="Locked content"><p><b>${remainingCount} more ${escapeHtml(label)}</b> in the full report</p><button type="button" class="btn primary" data-buy>Unlock for &#8377;49</button></div></div>`;
+}
+function lockSkeleton(n) {
+  return Array.from({ length: Math.min(Math.max(n, 2), 5) }, (_, i) => `<div class="bm-skel"><span style="width:${38 + (i * 17) % 40}%"></span><span style="width:${70 + (i * 11) % 25}%"></span><span style="width:${50 + (i * 23) % 35}%"></span></div>`).join('');
+}
 function LockedPremiumSection(remainingCount, label = 'items') {
+  return BlurredLock(lockSkeleton(remainingCount), remainingCount, label);
+}
+function LockedPremiumSectionOld(remainingCount, label = 'items') {
   if (!remainingCount) return '';
   return `<aside class="locked-premium" aria-label="Full report access"><h3>Full Report</h3><p>${remainingCount} additional ${escapeHtml(label)} are included in the full report.</p><button type="button" class="btn primary" data-buy>Unlock for &#8377;49</button></aside>`;
 }

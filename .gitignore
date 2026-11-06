@@ -18,3 +18,5 @@ saas-backend/data/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+_design/
+.claude/

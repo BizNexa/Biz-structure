@@ -10,39 +10,71 @@ const lockLine = () => `<span class="kb-lock" title="Included in the full report
 function kbKey() { return state.rec && state.rec.key; }
 
 /* ---------------- Documents ---------------- */
+KBU.docTag = KBU.docTag || "all"; KBU.docQuery = KBU.docQuery || "";
 function renderDocs() {
-  const key = kbKey(), d = KB.documents(key, state.answers), g = KB.gate(d.docs);
+  const key = kbKey(), d0 = KB.documents(key, state.answers), dq = KBU.docQuery.trim().toLowerCase();
+  const d = Object.assign({}, d0, { docs: d0.docs.filter(x => (KBU.docTag === "all" || (KBU.docTag === "todo" ? !KBU.done[x.id] : x.tag === KBU.docTag)) && (!dq || (x.name + " " + x.who + " " + x.cat).toLowerCase().includes(dq))) });
+  const g = KB.gate(d.docs);
   const byStep = new Map(d.steps.map(s => [s.id, { s, docs: [] }]));
   g.visible.forEach(x => { (byStep.get(x.step) || byStep.set(x.step, { s: { id: x.step, stage: x.cat, text: "" }, docs: [] }).get(x.step)).docs.push(x); });
   state.docs = {}; g.visible.forEach(x => { state.docs[x.id] = !!KBU.done[x.id]; });
   const summ = Object.entries(d.summary || {}).map(([k, v]) => `<div class="kb-fact"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
   document.getElementById("documents").innerHTML =
     `<div class="kb-facts">${summ}</div>` +
+    `<div class="cx-tools"><div class="cx-chips" role="group" aria-label="Filter documents">${[["all", "All"], ["todo", "Still to collect"], ["L", "Law"], ["P", "Portal practice"], ["C", "Commonly asked"], ["U", "Verify"]].map(([v, t]) => `<button type="button" class="cx-chip${KBU.docTag === v ? " on" : ""}" data-dt="${v}" aria-pressed="${KBU.docTag === v}">${t}</button>`).join("")}</div><label class="cx-search"><span class="sr-only">Search documents</span><input type="search" id="dxQ" placeholder="Search documents" value="${esc(KBU.docQuery)}"></label></div>` +
     `<p class="preview-count">${AccessProvider.isPremium() ? "Full checklist" : "35% free preview"}: ${g.visible.length} of ${g.total} documents for your profile · Tags: <span class="tg tg-l">Law</span> <span class="tg tg-p">Portal practice</span> <span class="tg tg-c">Commonly asked</span> <span class="tg tg-u">Verify</span></p>` +
-    [...byStep.values()].map(({ s, docs }) => `<div class="kb-step"><div class="kb-step-h"><span class="kb-step-n">${esc(s.id)}</span><div><h4>${esc(s.stage)}</h4><p>${esc(s.text)}</p></div></div>${docs.length ? docs.map(x => `<label class="kb-doc${KBU.done[x.id] ? " done" : ""}"><input type="checkbox" data-kdoc="${x.id}"${KBU.done[x.id] ? " checked" : ""}><span><b>${esc(x.name)}</b> <span class="tg ${TAGS[x.tag] ? TAGS[x.tag][1] : ""}">${TAGS[x.tag] ? TAGS[x.tag][0] : esc(x.tag)}</span>${x.mandatory ? "" : ' <span class="tg tg-o">If applicable</span>'}<small>${esc(x.who)}${x.trigger ? " · When: " + esc(x.trigger) : ""}</small>${x.detail ? `<small class="kb-d">${[x.detail.validity && "Rules: " + x.detail.validity, x.detail.form && "Used in: " + x.detail.form, x.detail.notes].filter(Boolean).map(esc).join(" · ")}</small>` : ""}</span></label>`).join("") : `<p class="kb-empty">${g.locked ? "Documents for this step are in the full report." : "No separate documents for this step."}</p>`}</div>`).join("") +
-    LockedPremiumSection(g.locked, "documents");
+    [...byStep.values()].filter(({ docs }) => docs.length || (KBU.docTag === "all" && !dq)).map(({ s, docs }) => `<div class="kb-step"><div class="kb-step-h"><span class="kb-step-n">${esc(s.id)}</span><div><h4>${esc(s.stage)}</h4><p>${esc(s.text)}</p></div></div>${docs.length ? docs.map(x => `<label class="kb-doc${KBU.done[x.id] ? " done" : ""}"><input type="checkbox" data-kdoc="${x.id}"${KBU.done[x.id] ? " checked" : ""}><span><b>${esc(x.name)}</b> <span class="tg ${TAGS[x.tag] ? TAGS[x.tag][1] : ""}">${TAGS[x.tag] ? TAGS[x.tag][0] : esc(x.tag)}</span>${x.mandatory ? "" : ' <span class="tg tg-o">If applicable</span>'}<small>${esc(x.who)}${x.trigger ? " · When: " + esc(x.trigger) : ""}</small>${x.detail ? `<small class="kb-d">${[x.detail.validity && "Rules: " + x.detail.validity, x.detail.form && "Used in: " + x.detail.form, x.detail.notes].filter(Boolean).map(esc).join(" · ")}</small>` : ""}</span></label>`).join("") : `<p class="kb-empty">${g.locked ? "Documents for this step are in the full report." : "No separate documents for this step."}</p>`}</div>`).join("") +
+    BlurredLock(`<div class="kb-step"><div class="kb-step-h"><div><h4>Remaining documents</h4></div></div>${g.hidden.map(x => `<label class="kb-doc"><input type="checkbox" disabled tabindex="-1"><span><b>${esc(x.name)}</b> <small>${esc(x.who)}</small></span></label>`).join("")}</div>`, g.locked, "documents");
   updateDocs();
+  document.querySelectorAll("[data-dt]").forEach(b => b.onclick = () => { KBU.docTag = b.dataset.dt; renderDocs(); });
+  const dqi = document.getElementById("dxQ"); dqi.oninput = () => { KBU.docQuery = dqi.value; const p = dqi.selectionStart; renderDocs(); const n = document.getElementById("dxQ"); n.focus(); n.setSelectionRange(p, p); };
   document.querySelectorAll("[data-kdoc]").forEach(i => i.onchange = () => { KBU.done[i.dataset.kdoc] = i.checked; state.docs[i.dataset.kdoc] = i.checked; i.closest(".kb-doc").classList.toggle("done", i.checked); updateDocs(); });
 }
 
-/* ---------------- Compliance ---------------- */
+/* ---------------- Compliance (Phase 5: filter tiles, search, grouped expandable list) ---------------- */
 const KIND_LABEL = { once: "One-time (first year)", monthly: "Monthly", quarterly: "Quarterly", "half-yearly": "Half-yearly", annual: "Annual", event: "Event-based" };
+const STATUS = { VP: ["Verified", "Checked against an official government source."], VS: ["Secondary source", "Confirmed through reputable secondary sources citing the notification; primary text not opened."], UV: ["Confirm at portal", "Established position from the governing law, not re-verified in this compilation. Confirm on the named portal before relying on it."] };
+const PERIODS = [["before", "Before incorporation", "Do these before or while you file to form the entity."], ["first30", "First 30 days", "Right after incorporation or before you start trading."], ["firstyear", "First year", "Setup items with longer windows, thresholds or continuing duties."], ["recurring", "Recurring", "Monthly, quarterly, annual and event-based filings."]];
+function compPeriod(r) {
+  if (r.part !== "initial") return "recurring";
+  const t = ((r.detail && r.detail.due) || "") + " | " + r.title;
+  if (/before any mca|name valid|one-time at formation|^continuous|name reservation|digital signature|incorporation: e-moa|minimum members/i.test(t)) return "before";
+  if (/within (15|30) days|immediately|before (business starts|first|starting|commencement)|within 1 month/i.test(t)) return "first30";
+  return "firstyear";
+}
+KBU.compFilter = KBU.compFilter || "all"; KBU.compQuery = KBU.compQuery || "";
 function renderCompliance() {
-  const sel = document.getElementById("compFilter");
-  if (!sel.dataset.kb) { sel.innerHTML = '<option value="all">All obligations</option><option value="initial">First-year setup</option>' + ["monthly", "quarterly", "half-yearly", "annual", "event"].map(k => `<option value="${k}">${KIND_LABEL[k]}</option>`).join(""); sel.dataset.kb = 1; }
-  const f = sel.value, all = KB.compliances(kbKey(), state.answers);
-  const list = all.filter(r => f === "all" || (f === "initial" ? r.part === "initial" : r.kind === f && r.part === "annual"));
+  const sel = document.getElementById("compFilter"); if (sel) sel.hidden = true;
+  const all = KB.compliances(kbKey(), state.answers);
+  const counts = { all: all.length, initial: all.filter(r => r.part === "initial").length };
+  ["monthly", "quarterly", "half-yearly", "annual", "event"].forEach(k => { counts[k] = all.filter(r => r.part === "annual" && r.kind === k).length; });
+  const f = KBU.compFilter, q = KBU.compQuery.trim().toLowerCase();
+  const list = all.filter(r => (f === "all" || (f === "initial" ? r.part === "initial" : r.part === "annual" && r.kind === f))
+    && (!q || (r.title + " " + (r.detail ? [r.detail.form, r.detail.law, r.detail.authority, r.detail.applicability].join(" ") : "")).toLowerCase().includes(q)));
   const g = KB.gate(list);
-  const part = p => g.visible.filter(r => r.part === p);
-  const table = rows => `<div class="annual-table-wrap"><table class="annual-table kb-ct"><thead><tr><th>Compliance</th><th>When</th><th>Form &amp; law</th><th>Applies if</th><th>If missed</th></tr></thead><tbody>${rows.map(r => `<tr><td><b>${esc(r.title)}</b><small class="kb-freq">${esc(KIND_LABEL[r.kind] || r.freq)}</small></td>${r.detail ? `<td>${esc(r.detail.due)}</td><td>${esc(r.detail.form)}<small>${esc(r.detail.law)}</small></td><td>${esc(r.detail.applicability)}</td><td>${esc(r.detail.penalty)}</td>` : `<td colspan="4">${lockLine()}</td>`}</tr>`).join("")}</tbody></table></div>`;
-  const ini = part("initial"), ann = part("annual");
+  const tiles = [["all", "All"], ["initial", "First-year setup"], ["monthly", "Monthly"], ["quarterly", "Quarterly"], ["half-yearly", "Half-yearly"], ["annual", "Annual"], ["event", "Event-based"]].filter(([k]) => k === "all" || counts[k]);
+  const row = r => {
+    const d = r.detail, st = d && STATUS[d.status];
+    if (!d) return `<div class="cx-row cx-locked"><div class="cx-sum"><span class="cx-title">${esc(r.title)}</span><span class="cx-when">${esc(KIND_LABEL[r.kind] || r.freq)}</span><span class="cx-applies">${lockLine()}</span></div></div>`;
+    return `<details class="cx-row"><summary class="cx-sum"><span class="cx-title">${esc(r.title)}<small class="cx-freq">${esc(KIND_LABEL[r.kind] || r.freq)}</small></span><span class="cx-when"><span class="cx-lab">When</span>${esc(d.due)}</span><span class="cx-applies"><span class="cx-lab">Applies if</span>${esc(d.applicability)}</span>${st ? `<span class="cx-st cx-st-${d.status}" title="${esc(st[1])}">${esc(st[0])}</span>` : ""}<span class="cx-chev" aria-hidden="true"></span></summary>
+      <div class="cx-body"><div><span class="cx-lab">Form</span>${esc(d.form || "—")}</div><div><span class="cx-lab">Law</span>${esc(d.law || "—")}</div><div><span class="cx-lab">If missed</span>${esc(d.penalty || "—")}</div><div><span class="cx-lab">Authority / portal</span>${portalLink(d.source || d.authority)}</div>${st ? `<div class="cx-wide"><span class="cx-lab">Status: ${esc(d.status)}</span>${esc(st[1])}</div>` : ""}</div></details>`;
+  };
+  let groups = "";
+  for (const [k, title, sub] of PERIODS) {
+    const rows = g.visible.filter(r => compPeriod(r) === k);
+    if (!rows.length) continue;
+    groups += `<section class="cx-group"><div class="cx-gh"><h3>${title} <span class="num">(${rows.length})</span></h3><p>${sub}</p></div>${rows.map(row).join("")}</section>`;
+  }
   document.getElementById("compliance").innerHTML =
-    `<div class="kb-kpis">${[["First-year setup", all.filter(r => r.part === "initial").length], ["Monthly", all.filter(r => r.kind === "monthly").length], ["Quarterly", all.filter(r => r.kind === "quarterly").length], ["Annual", all.filter(r => r.kind === "annual" && r.part === "annual").length], ["Event-based", all.filter(r => r.kind === "event").length]].map(([t, n]) => `<div class="card kb-kpi"><span>${t}</span><b>${n}</b></div>`).join("")}</div>` +
-    `<p class="preview-count">${AccessProvider.isPremium() ? "Full compliance list" : "35% free preview"}: ${g.visible.length} of ${g.total} obligations that apply to your profile. Status UV/VS rows must be confirmed on the named portal. Due dates are statutory; authorities often extend them.</p>` +
-    (ini.length ? `<h3 class="kb-h">Initial compliances: formation to end of first year</h3>${table(ini)}` : "") +
-    (ann.length ? `<h3 class="kb-h">Annual &amp; periodic compliances</h3>${table(ann)}` : "") +
-    (!ini.length && !ann.length ? '<p class="empty-preview">No preview obligations match this filter.</p>' : "") +
-    LockedPremiumSection(g.locked, "compliance obligations");
+    `<div class="cx-top"><span class="cx-badge">Compliance Intelligence Baseline verified to 5 October 2026</span><span class="cx-badge">Compliance Master: law as of 6 Nov 2026</span></div>
+    <div class="cx-tiles" role="group" aria-label="Filter by frequency">${tiles.map(([k, t]) => `<button type="button" class="cx-tile${f === k ? " on" : ""}" data-cf="${k}" aria-pressed="${f === k}"><b class="num">${counts[k]}</b><span>${t}</span></button>`).join("")}</div>
+    <div class="cx-tools"><label class="cx-search"><span class="sr-only">Search compliances</span><input type="search" id="cxQ" placeholder="Search by name, form or law" value="${esc(KBU.compQuery)}"></label>
+      <details class="cx-legend"><summary>What do the status labels mean?</summary><ul>${Object.entries(STATUS).map(([c, [t, d]]) => `<li><span class="cx-st cx-st-${c}">${t}</span> <b>${c}</b>: ${esc(d)}</li>`).join("")}</ul><p>Due dates are statutory; authorities often extend them by circular.</p></details></div>
+    <p class="preview-count">${AccessProvider.isPremium() ? "Full compliance list" : "35% free preview"}: ${g.visible.length} of ${g.total} obligations${f !== "all" || q ? " matching your filter" : " that apply to your profile"}. Tap a row for form, law, penalty and portal.</p>
+    ${groups || '<p class="empty-preview">No obligations match this filter.</p>'}
+    ${BlurredLock(g.hidden.map(row).join(""), g.locked, "compliance obligations")}`;
+  document.querySelectorAll("[data-cf]").forEach(b => b.onclick = () => { KBU.compFilter = b.dataset.cf; renderCompliance(); });
+  const qi = document.getElementById("cxQ"); qi.oninput = () => { KBU.compQuery = qi.value; const p = qi.selectionStart; renderCompliance(); const n = document.getElementById("cxQ"); n.focus(); n.setSelectionRange(p, p); };
 }
 
 /* ---------------- Registrations ---------------- */
@@ -59,11 +91,11 @@ function renderRegs() {
   const q = KBU.regQuery.toLowerCase();
   const filtered = regs.filter(r => (KBU.regFilter === "all" || r.level === KBU.regFilter || (KBU.regFilter === "recommended" && r.level === "watch")) && (!q || (r.name + " " + r.cat + " " + r.why).toLowerCase().includes(q)));
   const g = KB.gate(filtered);
-  const card = r => `<div class="oc kb-reg v${r.level === "mandatory" ? 2 : r.level === "triggered" ? 1 : 3}${KBU.regDone[r.id] ? " dn" : ""}"><div class="oh"><span class="no">${esc(r.id)}</span><h3>${esc(r.name)}</h3><span class="b ${LEVEL[r.level][1]}">${LEVEL[r.level][0]}</span></div><p class="why"><b>Why:</b> ${esc(r.why)}.</p>${r.detail ? `<div class="kb-grid"><div><span>Authority</span>${esc(r.detail.authority)}</div><div><span>Portal</span>${portalLink(r.detail.portal)}</div><div><span>When</span>${esc(r.detail.timeline || r.detail.validity || "")}</div><div><span>Law</span>${esc(r.detail.statute)}</div>${r.detail.fee ? `<div><span>Fee (approx.)</span>${esc(r.detail.fee)}</div>` : ""}${r.detail.penalty ? `<div><span>If missed</span>${esc(r.detail.penalty)}</div>` : ""}<div class="kb-wide"><span>Trigger / threshold</span>${esc(r.detail.trigger)} ${/V/.test(r.detail.tag || "") ? '<span class="tg tg-u">Verify</span>' : '<span class="tg tg-l">Confirmed</span>'}</div></div>` : `<p>${lockLine()}</p>`}<div class="ft"><span>${esc(r.cat)}</span><button class="rdone${KBU.regDone[r.id] ? " on" : ""}" data-kregd="${r.id}">${KBU.regDone[r.id] ? "✓ Obtained" : "Mark as obtained"}</button></div></div>`;
+  const card = r => `<div class="oc kb-reg v${r.level === "mandatory" ? 2 : r.level === "triggered" ? 1 : 3}${KBU.regDone[r.id] ? " dn" : ""}"><div class="oh"><span class="no">${esc(r.id)}</span><h3>${esc(r.name)}</h3><span class="b ${LEVEL[r.level][1]}">${LEVEL[r.level][0]}</span></div><p class="why"><b>Why:</b> ${esc(r.why)}.</p>${r.detail ? `<details class="kb-more"><summary>Authority, portal, timing and penalty</summary><div class="kb-grid"><div><span>Authority</span>${esc(r.detail.authority)}</div><div><span>Portal</span>${portalLink(r.detail.portal)}</div><div><span>When</span>${esc(r.detail.timeline || r.detail.validity || "")}</div><div><span>Law</span>${esc(r.detail.statute)}</div>${r.detail.fee ? `<div><span>Fee (approx.)</span>${esc(r.detail.fee)}</div>` : ""}${r.detail.penalty ? `<div><span>If missed</span>${esc(r.detail.penalty)}</div>` : ""}<div class="kb-wide"><span>Trigger / threshold</span>${esc(r.detail.trigger)} ${/V/.test(r.detail.tag || "") ? '<span class="tg tg-u">Verify</span>' : '<span class="tg tg-l">Confirmed</span>'}</div></div></details>` : `<p>${lockLine()}</p>`}<div class="ft"><span>${esc(r.cat)}</span><button class="rdone${KBU.regDone[r.id] ? " on" : ""}" data-kregd="${r.id}">${KBU.regDone[r.id] ? "✓ Obtained" : "Mark as obtained"}</button></div></div>`;
   let html = `<p class="preview-count">${AccessProvider.isPremium() ? "Full registration plan" : "35% free preview"}: ${g.visible.length} of ${g.total} registrations for your profile.</p>`;
   for (const l of ["mandatory", "triggered", "watch", "recommended"]) { const rows = g.visible.filter(r => r.level === l); if (rows.length) html += `<h2 class="gh">${LEVEL[l][0]} (${rows.length})</h2><div class="og">${rows.map(card).join("")}</div>`; }
   if (!filtered.length) html += '<p class="empty-preview">No registrations match these filters.</p>';
-  $("rgOut").innerHTML = html + LockedPremiumSection(g.locked, "registrations");
+  $("rgOut").innerHTML = html + BlurredLock(`<div class="og">${g.hidden.map(card).join("")}</div>`, g.locked, "registrations");
   $("rgChips").querySelectorAll("[data-kreg]").forEach(b => b.onclick = () => { KBU.regFilter = b.dataset.kreg; renderRegs(); });
   $("rgKpi").querySelectorAll("[data-kf]").forEach(b => b.onclick = () => { KBU.regFilter = b.dataset.kf; renderRegs(); });
   $("rgOut").querySelectorAll("[data-kregd]").forEach(b => b.onclick = () => { KBU.regDone[b.dataset.kregd] = !KBU.regDone[b.dataset.kregd]; renderRegs(); });
@@ -74,7 +106,6 @@ function kbSnap(regs) {
   const key = kbKey(), s = KB.summary(key, state.answers), an = state.answers;
   const next = s.next[0];
   document.getElementById("snap").innerHTML = [[2, "Mandatory registrations", s.regsMandatory, "For a " + ENTITIES[key].name], [1, "Triggered by your answers", s.regsTriggered, "Licences and thresholds"], [4, "Documents to collect", s.docs, s.docsMandatory + " always required"], [3, "First-year compliances", s.compInitial, "+ " + s.compAnnual + " recurring"]].map(([k, t, v, sub]) => `<div class="card rk k${k}" data-jump="${k === 4 ? "documents" : k === 3 ? "compliance" : "registrations"}"><span>${t}</span><b>${v}</b><small>${esc(sub)}</small></div>`).join("");
-  document.querySelectorAll("#snap [data-jump]").forEach(x => x.onclick = () => activateTab(x.dataset.jump));
   const sector = (REGQ[0].opts.find(o => o[0] === an.sector) || [])[1];
   document.getElementById("heroPills").innerHTML = [sector, an.state, s.regsMandatory + s.regsTriggered + " registrations to obtain"].filter(Boolean).map(x => `<span class="pill">${esc(x)}</span>`).join("");
   if (next) document.getElementById("heroPills").innerHTML += `<span class="pill">Next: ${esc(next.title)}</span>`;
@@ -88,7 +119,7 @@ function renderAction() {
   document.getElementById("actionPlan").innerHTML =
     `<div class="kb-plan-head"><div><b>${plan.length}</b> actions in 6 phases · <b>${plan.filter(p => p.priority === "Critical").length}</b> critical</div><div class="kb-prog"><i style="width:${plan.length ? done / plan.length * 100 : 0}%"></i></div><small>${done} done</small></div>` +
     Object.keys(KB.PHASES).filter(k => byPhase[k]).map(k => `<section class="kb-phase"><div class="kb-phase-h"><span>${k}</span><div><h3>${KB.PHASES[k][0]}</h3><small>${KB.PHASES[k][1]}</small></div></div>${byPhase[k].map(p => { const id = p.phase + p.title; return `<label class="kb-act${KBU.actDone[id] ? " done" : ""}"><input type="checkbox" data-kact="${esc(id)}"${KBU.actDone[id] ? " checked" : ""}><div><div class="kb-act-t"><b>${esc(p.title)}</b><span class="pri pri-${p.priority.toLowerCase()}">${p.priority}</span></div><p>${esc(p.text)}</p><small>⏱ ${esc(p.when)} · 👤 ${esc(p.owner)}${p.ref ? " · Ref " + esc(p.ref) : ""}</small></div></label>`; }).join("")}</section>`).join("") +
-    LockedPremiumSection(g.locked, "action steps");
+    BlurredLock(g.hidden.map(p => `<div class="kb-act"><input type="checkbox" disabled tabindex="-1"><div><div class="kb-act-t"><b>${esc(p.title)}</b><span class="pri pri-${p.priority.toLowerCase()}">${p.priority}</span></div><p>${esc(p.text)}</p><small>${esc(p.when)} · ${esc(p.owner)}</small></div></div>`).join(""), g.locked, "action steps");
   document.querySelectorAll("[data-kact]").forEach(i => i.onchange = () => { KBU.actDone[i.dataset.kact] = i.checked; renderAction(); });
 }
 

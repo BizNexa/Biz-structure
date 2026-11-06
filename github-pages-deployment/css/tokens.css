@@ -1,0 +1,27 @@
+/* Biz Matrix colour tokens — derived from the logo: petrol navy #184F6B and ochre #DFA95E.
+   Ladders are constant across themes; semantic tokens switch for dark mode.
+   Status colours (success / warning / danger) are used for status only, never decoration. */
+:root{
+  /* navy ladder (hue ≈ 201°) */
+  --navy-50:#F0F5F8;--navy-100:#E1EBF1;--navy-200:#C3D6E2;--navy-300:#9DBCCF;--navy-400:#6E9AB3;--navy-500:#3F7895;
+  --navy-600:#24607F;--navy-700:#184F6B;--navy-800:#143F56;--navy-900:#102F40;--navy-950:#0A1E2A;
+  --navy-700-rgb:24,79,107;--navy-950-rgb:10,30,42;
+  /* brass ladder (hue ≈ 35°) */
+  --brass-50:#FBF5EC;--brass-100:#F6E9D4;--brass-200:#EDD3A8;--brass-300:#E6BF83;--brass-400:#DFA95E;--brass-500:#C98F3F;
+  --brass-600:#A87228;--brass-700:#87591B;--brass-800:#684414;
+  /* warm neutrals */
+  --paper:#F8F6F2;--paper-2:#F2EEE7;--surface:#FFFFFF;--line:#E2DDD3;--line-2:#EDE9E1;--ink:#1B2229;--ink-2:#373F48;--muted:#5C6168;
+  /* status (status only) */
+  --success:#1E7A4C;--success-bg:#E5F3EC;--warning:#9A5B07;--warning-bg:#FBF0DC;--danger:#B42318;--danger-bg:#FCE8E6;
+  /* semantic */
+  --bg:var(--paper);--text:var(--ink);--text-muted:var(--muted);--border:var(--line);
+  --primary:var(--navy-700);--primary-hover:var(--navy-800);--primary-soft:var(--navy-50);--on-primary:#FFFFFF;
+  --accent:var(--brass-400);--accent-strong:var(--brass-700);--accent-soft:var(--brass-100);--on-accent:#1B1405;
+  --focus:var(--brass-700);
+}
+:root[data-theme="dark"]{
+  --paper:#0B1620;--paper-2:#0F1D29;--surface:#102230;--line:#24394A;--line-2:#1B2E3D;--ink:#E8EDF1;--ink-2:#C7D2DB;--muted:#9FB0BE;
+  --success:#5CC490;--success-bg:#12301F;--warning:#E6B05A;--warning-bg:#2E230E;--danger:#F1867C;--danger-bg:#3A1714;
+  --primary:var(--navy-300);--primary-hover:var(--navy-200);--primary-soft:#14293A;--on-primary:#0A1E2A;
+  --accent:var(--brass-300);--accent-strong:var(--brass-300);--accent-soft:#2E2412;--on-accent:#1B1405;--focus:var(--brass-300);
+}
