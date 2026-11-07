@@ -54,6 +54,7 @@ async function ensureSchema(db) {
     db.prepare('CREATE TABLE IF NOT EXISTS purchases (order_id TEXT PRIMARY KEY, mode TEXT NOT NULL, recovery_hash TEXT NOT NULL UNIQUE, paid_at INTEGER NOT NULL)'),
     db.prepare('CREATE TABLE IF NOT EXISTS access_grants (session_id TEXT NOT NULL, mode TEXT NOT NULL, order_id TEXT NOT NULL, PRIMARY KEY(session_id, mode))'),
     db.prepare('CREATE TABLE IF NOT EXISTS catalog (id INTEGER PRIMARY KEY CHECK (id = 1), body TEXT NOT NULL)'),
+    db.prepare('CREATE TABLE IF NOT EXISTS kb_parts (part INTEGER PRIMARY KEY, body TEXT NOT NULL)'),
     db.prepare('CREATE TABLE IF NOT EXISTS rate_limits (key TEXT NOT NULL, window_start INTEGER NOT NULL, hits INTEGER NOT NULL, PRIMARY KEY(key, window_start))')
   ]).catch(error => { schemaReady = undefined; throw error; });
   await schemaReady;
@@ -177,6 +178,11 @@ async function readCatalog(db) {
   if (!row) return null;
   const catalog = JSON.parse(row.body);
   if (catalog.version !== 1 || !catalog.entities?.private_limited || !Array.isArray(catalog.registrations?.groups)) return null;
+  // Knowledge base v2 can be loaded in parts (wrangler d1 execute, worker/upload-kb-d1.cjs); it replaces any copy inside the catalog.
+  try {
+    const parts = await db.prepare('SELECT body FROM kb_parts ORDER BY part').all();
+    if (parts.results?.length) { const kb = JSON.parse(parts.results.map(r => r.body).join('')); if (kb.version === 2 && kb.checklist && kb.registrations) catalog.kb = kb; }
+  } catch { /* table missing on old databases: keep the catalog as stored */ }
   catalogCache = catalog;
   return catalog;
 }

@@ -1,4 +1,5 @@
 exclude:
+  - ad
   - .github
   - "Business Structure Decision & Registration Planning System.html"
   - README.md
