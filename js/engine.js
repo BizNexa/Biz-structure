@@ -215,7 +215,7 @@
     if (!why.length) why = ["It scored highest across the weighted factors for your answers."];
     // "why not" — prefer real rule exclusions, then template lines
     var whyNot = [];
-    Object.keys(r.excluded).forEach(function (k) { if (k === e) return; var rid = r.excluded[k][0]; whyNot.push(NAME[k] + " is excluded: " + RULES[rid].plain + " [" + rid + "]"); });
+    Object.keys(r.excluded).forEach(function (k) { if (k === e) return; var rid = r.excluded[k][0]; whyNot.push(NAME[k] + " is excluded: " + RULES[rid].plain); });
     if (r.runner_up) whyNot.unshift(NAME[r.runner_up] + " came second, " + r.margin + " points behind.");
     return { why: why, whyNot: whyNot.length ? whyNot : WHY[e].whyNot };
   }

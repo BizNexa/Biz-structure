@@ -55,7 +55,7 @@ function LockedPremiumSectionOld(remainingCount, label = 'items') {
 
 function analysisPreview(e) {
   const r = state.rec.engine || { eligible: [], excluded: {} };
-  const gate = 'Eligible after the legal hard rules: ' + (r.eligible || []).map(x => BizEngine.NAME[x]).join(', ') + '. ' + Object.entries(r.excluded || {}).map(([x, ids]) => BizEngine.NAME[x] + ' excluded by ' + ids.join(', ')).join('; ') + '.';
+  const gate = 'Eligible after the legal hard rules: ' + (r.eligible || []).map(x => BizEngine.NAME[x]).join(', ') + '. ' + Object.entries(r.excluded || {}).map(([x, ids]) => BizEngine.NAME[x] + ' excluded: ' + BizEngine.RULES[ids[0]].plain.replace(/.$/, '')).join('; ') + '.';
   return getPreviewItems([
     ['Eligibility gate (hard rules)', gate],
     ['Legal identity', e.legal], ['Liability', e.liability],
@@ -123,7 +123,7 @@ function renderDashboard() {
   const circumference = 2 * Math.PI * 78;
   document.getElementById('ringFg').style.strokeDashoffset = only ? 0 : circumference - state.rec.fit / 100 * circumference;
   const band = { clear: 'green', moderate: 'amber', 'near-tie': 'red' }[state.rec.confidence] || 'blue';
-  document.getElementById('recPills').innerHTML = `<span class="pill ${band}">${escapeHtml(confidenceLabel())}</span>${flags.length ? `<span class="pill red">${flags.length} review flag${flags.length > 1 ? 's' : ''}</span>` : ''}<span class="pill gray">Rulebook v${BizEngine.VERSION} · law verified ${BizEngine.VERIFIED}</span>`;
+  document.getElementById('recPills').innerHTML = `<span class="pill ${band}">${escapeHtml(confidenceLabel())}</span>${flags.length ? `<span class="pill red">${flags.length} review flag${flags.length > 1 ? 's' : ''}</span>` : ''}`;
   renderWhyResult();
   const driverPreview = getPreviewItems(drivers(state.answers, state.rec.key), 'drivers');
   document.getElementById('drivers').innerHTML = driverPreview.visibleItems.map((text, i) => `<div class="driver"><div class="driver-num">${i + 1}</div><div class="driver-text">${escapeHtml(text)}</div></div>`).join('') + (driverPreview.remainingCount ? `<p class="driver-text">${driverPreview.remainingCount} additional drivers in the full report.</p>` : '');
@@ -314,9 +314,9 @@ function renderWhyResult() {
   const ru = r.runner_up ? BizEngine.NAME[r.runner_up] : null;
   const talk = flags.length || state.rec.confidence === 'near-tie';
   host.innerHTML = (talk ? `<div class="card talk-pro" role="note"><div><b>Talk to a professional before acting.</b><p>${state.rec.confidence === 'near-tie' ? 'The top two structures are within 5 points. Compare both below. ' : ''}${flags.filter(f => f !== 'TIE').length ? 'Your answers raise points that depend on your specific facts:' : ''}</p>${flags.filter(f => f !== 'TIE').length ? '<ul>' + flags.filter(f => f !== 'TIE').map(id => `<li><b>${id}</b> ${escapeHtml(BizEngine.RULES[id].plain)} <span class="cite">${escapeHtml(BizEngine.RULES[id].cite)}</span></li>`).join('') + '</ul>' : ''}</div><a class="btn primary" href="../contact/">Talk to a professional</a></div>` : '')
-  + `<div class="card why-card"><div class="why-head"><h3>Why this result?</h3><span class="why-meta">Hard rules first, then 9 weighted factors · Rulebook v${BizEngine.VERSION}, law verified ${BizEngine.VERIFIED}</span></div>`
+  + `<div class="card why-card"><div class="why-head"><h3>Why this result?</h3></div>`
   + (rows.length ? `<div class="fx-legend"><span><i class="fx-a"></i>${escapeHtml(BizEngine.NAME[r.verdict])}</span>${ru ? `<span><i class="fx-b"></i>${escapeHtml(ru)}</span>` : ''}</div><div class="fx-list">${rows.map(f => `<div class="fx-row"><div class="fx-name">${escapeHtml(f.name)} <small>w${f.weight} · ${f.basis}</small></div><div class="fx-bars"><div class="fx-bar"><span class="fx-a" style="width:${f.top / f.weight * 100}%"></span></div>${f.ru !== null ? `<div class="fx-bar"><span class="fx-b" style="width:${f.ru / f.weight * 100}%"></span></div>` : ''}</div><div class="fx-val">${f.top.toFixed(1)}${f.ru !== null ? ' / ' + f.ru.toFixed(1) : ''}</div></div>`).join('')}</div>` : '<p class="why-only">Only one structure passed the legal hard rules, so no weighted score is shown: a score with no competitor measures nothing.</p>')
-  + (ex.length ? `<h4 class="why-sub">Ruled out by law or regulation</h4><ul class="why-ex">${ex.map(x => `<li><b>${escapeHtml(x.e)}</b> <span class="rid">${x.ids.join(', ')}</span><br>${escapeHtml(x.plain)} <span class="cite">${escapeHtml(x.cite)}</span></li>`).join('')}</ul>` : '')
+  + (ex.length ? `<h4 class="why-sub">Ruled out by law or regulation</h4><ul class="why-ex">${ex.map(x => `<li><b>${escapeHtml(x.e)}</b><br>${escapeHtml(x.plain)} <span class="cite">${escapeHtml(x.cite)}</span></li>`).join('')}</ul>` : '')
   + `<p class="why-disc">Structured decision support based on the law as verified on ${BizEngine.VERIFIED}. Not legal, tax or professional advice for your specific facts. <a href="../methodology/">How we decide</a></p></div>`;
 }
 function decisionPrintHtml() {
@@ -324,7 +324,7 @@ function decisionPrintHtml() {
   const ru = r.runner_up ? BizEngine.NAME[r.runner_up] : null;
   let h = `<div class="pcard"><h4>Result</h4><p>${escapeHtml(BizEngine.NAME[r.verdict])}: ${escapeHtml(confidenceLabel())}${r.margin != null ? ` (margin ${r.margin} points over ${escapeHtml(ru)})` : ''}. Engine v${BizEngine.VERSION}, law verified ${BizEngine.VERIFIED}.</p></div>`;
   if (rows.length) h += `<table class="print-table"><thead><tr><th>Factor</th><th>Weight</th><th>Basis</th><th>${escapeHtml(BizEngine.NAME[r.verdict])}</th>${ru ? `<th>${escapeHtml(ru)}</th>` : ''}</tr></thead><tbody>${rows.map(f => `<tr><td>${escapeHtml(f.name)}</td><td>${f.weight}</td><td>${f.basis}</td><td>${f.top.toFixed(1)}</td>${ru ? `<td>${f.ru.toFixed(1)}</td>` : ''}</tr>`).join('')}</tbody></table>`;
-  if (ex.length) h += `<table class="print-table"><thead><tr><th>Structure</th><th>Rule</th><th>Reason</th><th>Citation</th></tr></thead><tbody>${ex.map(x => `<tr><td>${escapeHtml(x.e)}</td><td>${x.ids.join(', ')}</td><td>${escapeHtml(x.plain)}</td><td>${escapeHtml(x.cite)}</td></tr>`).join('')}</tbody></table>`;
+  if (ex.length) h += `<table class="print-table"><thead><tr><th>Structure</th><th>Reason</th><th>Citation</th></tr></thead><tbody>${ex.map(x => `<tr><td>${escapeHtml(x.e)}</td><td>${escapeHtml(x.plain)}</td><td>${escapeHtml(x.cite)}</td></tr>`).join('')}</tbody></table>`;
   if (flags.length) h += `<div class="pcard"><h4>Talk to a professional</h4><ul>${flags.map(id => `<li>${id}: ${escapeHtml(BizEngine.RULES[id].plain)}</li>`).join('')}</ul></div>`;
   return h;
 }

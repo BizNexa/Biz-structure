@@ -160,7 +160,7 @@ tbody tr{transition:background .12s}tbody tr:hover{background:var(--paper)}
 [data-theme="dark"] .opinion .btn.op-next{background:var(--op-brass)!important;border-color:var(--op-brass)!important;color:#1B1405!important}
 [data-theme="dark"] .op-step.now i{background:var(--op-brass);border-color:var(--op-brass);color:#1B1405}
 .opinion .btn.op-next{background:var(--op-brass)!important;border-color:var(--op-brass)!important;color:#fff}
-.op-asm{padding:16px 34px;border-bottom:1px solid var(--op-rule);background:var(--op-brass-s)}
+.op-asm{padding:12px 34px;border-top:1px solid var(--op-rule);background:transparent}.op-asm summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:8px}.op-asm summary::-webkit-details-marker{display:none}.op-asm summary small{font-size:12px;color:var(--op-mut)}.op-asm[open] summary small{visibility:hidden}
 .op-asm ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
 .op-asm li{display:flex;justify-content:space-between;gap:14px;align-items:baseline;font-size:13.5px}
 @media(max-width:560px){.op-asm{padding:14px 16px}.op-asm li{flex-direction:column;gap:2px}}

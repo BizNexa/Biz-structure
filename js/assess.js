@@ -116,7 +116,7 @@
     // why-we-ask + rule references
     const descEl = qEl.querySelector(".q-desc");
     const { clean, refs } = splitRefs(q.desc);
-    const info = [refs.length ? "Rule basis: " + refs.join("; ") : "", q.info || ""].filter(Boolean).join(" · ");
+    const info = q.info || "";
     $("aqWhy").textContent = clean;
     if (descEl) descEl.outerHTML = `<details class="aq-why-m"><summary>Why we ask this</summary><p>${escapeHtml(clean)}</p></details>`;
     const title = qEl.querySelector(".q-title");

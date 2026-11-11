@@ -54,7 +54,7 @@
           <p class="op-fit">${e2(e.best)}</p>
           <div class="op-seal-row">
             <div class="op-seal" role="img" aria-label="${only ? "Only eligible structure" : `Fit score ${state.rec.fit} out of 100`}"><div>${only ? `<b class="op-only">Only</b><small>ELIGIBLE</small>` : `<b class="num" data-count="${state.rec.fit}">${state.rec.fit}</b><small>FIT / 100</small>`}</div></div>
-            <div class="op-seal-txt"><strong>${e2(conf)}</strong>${only ? "No other structure passes the legal hard rules for your answers." : `<span class="num">${state.rec.margin}</span> points ahead of the runner-up.`}<span class="op-ver">Rulebook v${BizEngine.VERSION} · law verified ${BizEngine.VERIFIED}</span></div>
+            <div class="op-seal-txt"><strong>${e2(conf)}</strong>${only ? "No other structure passes the legal hard rules for your answers." : `<span class="num">${state.rec.margin}</span> points ahead of the runner-up.`}</div>
           </div>
           <div class="op-cta">
             ${next ? `<button class="btn op-next" type="button" data-jump="action">Next: ${e2(next.title)} →</button>` : ""}
@@ -80,7 +80,6 @@
           <li><button type="button" class="op-step" data-jump="compliance"><i>5</i><b>First-year compliance</b><span class="op-fig num" data-count="${s.compInitial}">${s.compInitial}</span><small class="num">+ ${s.compAnnual} recurring</small></button></li>
         </ol>
       </nav>
-      ${asm.length ? `<section class="op-asm" aria-labelledby="opAsm"><p class="op-eyebrow" id="opAsm">Assumptions we made</p><ul>${asm.map(x => `<li><span>${e2(x.text)}</span><button type="button" class="op-link" data-change="${x.id}">Change</button></li>`).join("")}</ul></section>` : ""}
       <section class="op-spec" aria-labelledby="opSpec">
         <p class="op-eyebrow" id="opSpec">Entity profile</p>
         <dl>${visibleRows.map(r => r.f === "tax"
@@ -88,7 +87,8 @@
           : `<div class="op-row"><dt>${r.label}</dt><dd>${e2(r.val)}</dd></div>`).join("")}</dl>
         ${visibleRows.some(r => r.f === "tax") ? `<p class="op-fn" id="opTaxFn"><sup>1</sup> ${e2(e.tax)}</p>` : ""}
         ${lockedRows && !AccessProvider.isPremium() ? BlurredLock(`<dl>${rows.filter(r => !(r.vis && r.val)).map(r => `<div class="op-row"><dt>${r.label}</dt><dd><span class="bm-skel-inline"></span></dd></div>`).join("")}</dl>`, lockedRows, lockedRows > 1 ? "profile items" : "profile item") : ""}
-      </section>`;
+      </section>
+      ${asm.length ? `<details class="op-asm"><summary><span class="op-eyebrow">Assumptions we made</span> <small>(${asm.length}) · tap to review or change</small></summary><ul>${asm.map(x => `<li><span>${e2(x.text)}</span><button type="button" class="op-link" data-change="${x.id}">Change</button></li>`).join("")}</ul></details>` : ""}`;
     host.hidden = false;
     document.querySelector(".content").classList.add("adv");
     host.querySelectorAll("[data-change]").forEach(b => b.addEventListener("click", () => changeAssumption(b.dataset.change)));

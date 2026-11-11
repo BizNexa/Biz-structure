@@ -108,7 +108,7 @@ async function pdfBuild(meta) {
     // prepared using + disclaimer
     const fy = H - 120; stroke(C.line); doc.line(M, fy, W - M, fy);
     font("b", 9); ink(C.ink); doc.text(T("Prepared using Biz Matrix on " + dateStr), M, fy + 18);
-    font("r", 8.5); ink(C.muted); doc.text(T("Report ID " + rid + "  ·  Rulebook v" + BizEngine.VERSION + ", law verified " + BizEngine.VERIFIED), M, fy + 32);
+    font("r", 8.5); ink(C.muted); doc.text(T("Report ID " + rid + "  ·  Law verified " + BizEngine.VERIFIED), M, fy + 32);
     font("r", 8); ink(C.muted); doc.text(doc.splitTextToSize(T("Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules with a qualified professional before filing."), CW), M, fy + 50);
 
     /* ================= PAGE 2: EXECUTIVE SUMMARY (one page) ================= */
@@ -159,7 +159,7 @@ async function pdfBuild(meta) {
     const fr = factorRows();
     if (fr.length) table(["Factor", "Weight", "Basis", ENTITIES[key].name, R.runner_up ? BizEngine.NAME[R.runner_up] : ""], fr.map(f => [f.name, f.weight, f.basis, f.top.toFixed(1), f.ru != null ? f.ru.toFixed(1) : ""]), { opts: { columnStyles: { 1: { halign: "center", cellWidth: 46 }, 2: { cellWidth: 58 }, 3: { halign: "center", fontStyle: "bold", textColor: C.emerald, cellWidth: 80 }, 4: { halign: "center", cellWidth: 80 } } } });
     const ex = exclusionRows();
-    if (ex.length) { h3("Ruled out by law or regulation"); table(["Structure", "Rule", "Reason", "Citation"], ex.map(e => [e.e, e.ids.join(", "), e.plain, e.cite]), { opts: { columnStyles: { 0: { cellWidth: 92, fontStyle: "bold" }, 1: { cellWidth: 46 }, 3: { cellWidth: 120, textColor: C.muted } } } }); }
+    if (ex.length) { h3("Ruled out by law or regulation"); table(["Structure", "Reason", "Citation"], ex.map(e => [e.e, e.plain, e.cite]), { opts: { columnStyles: { 0: { cellWidth: 100, fontStyle: "bold" }, 2: { cellWidth: 130, textColor: C.muted } } } }); }
 
     /* ================= 3. REGISTRATION ROADMAP ================= */
     h2("Registration roadmap", "From preparation to a fully registered business. Built from the Registration Master Map FY 2026-27 and your answers; registration names link to the official portal.");
@@ -297,7 +297,7 @@ async function pdfBuild(meta) {
       font("b", 7.5); ink(C.muted); doc.text(T("BIZ MATRIX  ·  " + ent.name.toUpperCase() + (meta.biz ? "  ·  " + short(meta.biz, 36).toUpperCase() : "")), M, 26);
       if (i !== tocPage) { ink(C.emerald); doc.text("Contents", W - M, 26, { align: "right" }); doc.link(W - M - 44, 17, 44, 12, { pageNumber: tocPage }); }
       stroke(C.line); doc.setLineWidth(0.5); doc.line(M, H - 40, W - M, H - 40);
-      font("r", 7.2); ink(C.muted); doc.text(T("Decision support, law verified " + BizEngine.VERIFIED + ". Not legal, tax or professional advice.  ·  Rulebook v" + BizEngine.VERSION + "  ·  " + rid), M, H - 26);
+      font("r", 7.2); ink(C.muted); doc.text(T("Decision support, law verified " + BizEngine.VERIFIED + ". Not legal, tax or professional advice.  ·  " + rid), M, H - 26);
       fill(C.gold); doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, "F"); font("b", 7.5); ink(C.ink); doc.text(i + " / " + n, W - M - 24, H - 25, { align: "center" });
     }
     doc.setProperties({ title: "Biz Matrix Report - " + (meta.biz ? meta.biz + " - " : "") + ent.name, subject: "Business structure, registration and compliance plan", author: "Biz Matrix", creator: "Biz Matrix" });
