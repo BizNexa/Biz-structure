@@ -1,0 +1,442 @@
+# States and Union Territories, with the registration-threshold category taken from the handbook
+# threshold table (p. 7-8, PDF 13-14) and Notification 10/2019-CT exceptions (p. 3-4, PDF 9-10).
+# The list of States/UTs itself is general administrative fact; only the category is legal content.
+# States not named in the handbook table fall in its residual row "Other States/UTs".
+
+hb_table: &hb_table
+  - { doc: handbook, page: 7, pdf_page: 13, section: "1.3.1 Turnover threshold table" }
+  - { doc: handbook, page: 3, pdf_page: 9, section: "1.3.1 Special Category States; Notification 10/2019-CT" }
+
+states:
+  - id: STATE-AN
+    code: AN
+    name: "Andaman and Nicobar Islands"
+    kind: ut
+    threshold_category: OTHER
+    description: "Andaman and Nicobar Islands: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-AP
+    code: AP
+    name: "Andhra Pradesh"
+    kind: state
+    threshold_category: OTHER
+    description: "Andhra Pradesh: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-AR
+    code: AR
+    name: "Arunachal Pradesh"
+    kind: state
+    threshold_category: OTHER_SCS_A
+    description: "Arunachal Pradesh: threshold category OTHER_SCS_A for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-AS
+    code: AS
+    name: "Assam"
+    kind: state
+    threshold_category: OTHER_SCS_B
+    description: "Assam: threshold category OTHER_SCS_B for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-BR
+    code: BR
+    name: "Bihar"
+    kind: state
+    threshold_category: OTHER
+    description: "Bihar: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-CH
+    code: CH
+    name: "Chandigarh"
+    kind: ut
+    threshold_category: OTHER
+    description: "Chandigarh: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-CG
+    code: CG
+    name: "Chhattisgarh"
+    kind: state
+    threshold_category: OTHER
+    description: "Chhattisgarh: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-DH
+    code: DH
+    name: "Dadra and Nagar Haveli and Daman and Diu"
+    kind: ut
+    threshold_category: OTHER
+    description: "Dadra and Nagar Haveli and Daman and Diu: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-DL
+    code: DL
+    name: "Delhi"
+    kind: ut
+    threshold_category: OTHER
+    description: "Delhi: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-GA
+    code: GA
+    name: "Goa"
+    kind: state
+    threshold_category: OTHER
+    description: "Goa: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-GJ
+    code: GJ
+    name: "Gujarat"
+    kind: state
+    threshold_category: OTHER
+    description: "Gujarat: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-HR
+    code: HR
+    name: "Haryana"
+    kind: state
+    threshold_category: OTHER
+    description: "Haryana: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-HP
+    code: HP
+    name: "Himachal Pradesh"
+    kind: state
+    threshold_category: OTHER_SCS_B
+    description: "Himachal Pradesh: threshold category OTHER_SCS_B for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-JK
+    code: JK
+    name: "Jammu and Kashmir"
+    kind: ut
+    threshold_category: OTHER
+    description: "Jammu and Kashmir: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Named in Art. 279A(4)(g) but excluded by Explanation (iii) to s.22 and not among the Notification 10/2019-CT exception States; absent from the handbook table, so placed in the residual row. Before 1 Feb 2019 it was a special category State for registration (Rs 10 lakh); that period is not modelled. CA to confirm."
+  - id: STATE-JH
+    code: JH
+    name: "Jharkhand"
+    kind: state
+    threshold_category: OTHER
+    description: "Jharkhand: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-KA
+    code: KA
+    name: "Karnataka"
+    kind: state
+    threshold_category: OTHER
+    description: "Karnataka: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-KL
+    code: KL
+    name: "Kerala"
+    kind: state
+    threshold_category: OTHER
+    description: "Kerala: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-LA
+    code: LA
+    name: "Ladakh"
+    kind: ut
+    threshold_category: OTHER
+    description: "Ladakh: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "UT formed after the 2019 reorganisation; absent from the handbook table, so placed in the residual row. CA to confirm."
+  - id: STATE-LD
+    code: LD
+    name: "Lakshadweep"
+    kind: ut
+    threshold_category: OTHER
+    description: "Lakshadweep: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-MP
+    code: MP
+    name: "Madhya Pradesh"
+    kind: state
+    threshold_category: OTHER
+    description: "Madhya Pradesh: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-MH
+    code: MH
+    name: "Maharashtra"
+    kind: state
+    threshold_category: OTHER
+    description: "Maharashtra: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-MN
+    code: MN
+    name: "Manipur"
+    kind: state
+    threshold_category: SCS_EXPL
+    description: "Manipur: threshold category SCS_EXPL for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-ML
+    code: ML
+    name: "Meghalaya"
+    kind: state
+    threshold_category: OTHER_SCS_A
+    description: "Meghalaya: threshold category OTHER_SCS_A for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-MZ
+    code: MZ
+    name: "Mizoram"
+    kind: state
+    threshold_category: SCS_EXPL
+    description: "Mizoram: threshold category SCS_EXPL for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-NL
+    code: NL
+    name: "Nagaland"
+    kind: state
+    threshold_category: SCS_EXPL
+    description: "Nagaland: threshold category SCS_EXPL for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-OD
+    code: OD
+    name: "Odisha"
+    kind: state
+    threshold_category: OTHER
+    description: "Odisha: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-PY
+    code: PY
+    name: "Puducherry"
+    kind: ut
+    threshold_category: NON_SCS_EXCL
+    description: "Puducherry: threshold category NON_SCS_EXCL for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-PB
+    code: PB
+    name: "Punjab"
+    kind: state
+    threshold_category: OTHER
+    description: "Punjab: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-RJ
+    code: RJ
+    name: "Rajasthan"
+    kind: state
+    threshold_category: OTHER
+    description: "Rajasthan: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-SK
+    code: SK
+    name: "Sikkim"
+    kind: state
+    threshold_category: OTHER_SCS_A
+    description: "Sikkim: threshold category OTHER_SCS_A for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-TN
+    code: TN
+    name: "Tamil Nadu"
+    kind: state
+    threshold_category: OTHER
+    description: "Tamil Nadu: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-TS
+    code: TS
+    name: "Telangana"
+    kind: state
+    threshold_category: NON_SCS_EXCL
+    description: "Telangana: threshold category NON_SCS_EXCL for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-TR
+    code: TR
+    name: "Tripura"
+    kind: state
+    threshold_category: SCS_EXPL
+    description: "Tripura: threshold category SCS_EXPL for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-UP
+    code: UP
+    name: "Uttar Pradesh"
+    kind: state
+    threshold_category: OTHER
+    description: "Uttar Pradesh: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."
+  - id: STATE-UK
+    code: UK
+    name: "Uttarakhand"
+    kind: state
+    threshold_category: OTHER_SCS_A
+    description: "Uttarakhand: threshold category OTHER_SCS_A for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: STATE-WB
+    code: WB
+    name: "West Bengal"
+    kind: state
+    threshold_category: OTHER
+    description: "West Bengal: threshold category OTHER for s.22(1) and Notification 10/2019-CT."
+    source_ref: *hb_table
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Not named in the handbook table; placed in its residual row \"Other States/UTs\"."

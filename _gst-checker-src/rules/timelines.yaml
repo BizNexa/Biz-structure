@@ -1,0 +1,245 @@
+# Processing timelines shown per route.
+
+timelines:
+  - id: TL-TRN-15D
+    label: Complete Part B within 15 days of the TRN
+    plain_language: After Part A you get a Temporary Reference Number; finish and submit Part B within 15 days or the draft is deleted.
+    description: If the application is not submitted within 15 days, the TRN and all information against it are purged.
+    source_ref: [{ doc: handbook, page: 76, pdf_page: 82, section: "2.2 Part B step 17" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-AADHAAR-15D
+    label: Aadhaar authentication within 15 days of Part B
+    plain_language: The application counts as submitted on the earlier of Aadhaar authentication or 15 days after Part B, so authenticate quickly.
+    description: Rule 8(4A) - date of submission is the earlier of Aadhaar authentication or 15 days from submission of Part B.
+    source_ref: [{ doc: handbook, page: 47, pdf_page: 53, section: "2.1 Aadhaar Authentication (A)" }]
+    effective_from: 2020-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-RULE9A-3WD
+    label: "Rule 9A: low-risk applications approved electronically within 3 working days"
+    plain_language: If the portal's risk analysis rates your application low-risk, it is approved automatically within 3 working days.
+    description: Rule 9A (Notification 18/2025-CT, from 1 Nov 2025) - applications categorised as low-risk by data analytics are approved by the portal within three working days; others follow Rule 9.
+    source_ref: [{ doc: handbook, page: 59, pdf_page: 65, section: "Grant of Registration Electronically - Rule 9A" }]
+    effective_from: 2025-11-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: The applicant cannot choose this; the portal decides.
+
+  - id: TL-RULE9-7WD
+    label: "Rule 9: 7 working days for complete, non-risky applications"
+    plain_language: Otherwise, a complete application not flagged as risky should be approved within 7 working days.
+    description: Rule 9(1) and CBIC Instruction 03/2025-GST - officer approves within 7 working days of submission where not flagged risky and complete.
+    source_ref:
+      - { doc: handbook, page: 52, pdf_page: 58, section: "Verification Procedure (a)" }
+      - { doc: handbook, page: 57, pdf_page: 63, section: "Instruction 03/2025-GST, B" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-RULE9-30D-PV
+    label: Up to 30 days where physical verification is needed
+    plain_language: If Aadhaar is not authenticated, the application is flagged risky, or the officer orders it, the premises are physically verified and approval can take up to 30 days.
+    description: Rule 9(1) proviso and Rule 25 - physical verification of the principal place of business before grant, within 30 days of submission, report on REG-30 at least 5 working days before the period ends.
+    source_ref:
+      - { doc: handbook, page: 52, pdf_page: 58, section: "Verification Procedure (e)" }
+      - { doc: handbook, page: 60, pdf_page: 66, section: "Physical Verification" }
+    effective_from: 2020-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-RULE9-QUERY
+    label: "Query cycle: REG-03 within 7 working days, reply REG-04 within 7 working days"
+    plain_language: If something is missing, the officer can raise one query within 7 working days; you have 7 working days to reply, and approval should follow within 7 working days of a satisfactory reply.
+    description: Rule 9(2)-(4) - deficiency notice REG-03; clarification REG-04 within 7 working days; grant within 7 working days of satisfactory reply; rejection REG-05.
+    source_ref:
+      - { doc: handbook, page: 52, pdf_page: 58, section: "Verification Procedure (b)-(d)" }
+      - { doc: handbook, page: 106, pdf_page: 112, section: "2.6" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Where physical verification applies, the notice can be issued within 30 days.
+
+  - id: TL-RULE9-DEEMED
+    label: Deemed approval if the officer does not act in time
+    plain_language: If the officer does nothing within these time limits, the registration is treated as approved.
+    description: Rule 9(5) - deemed approval if no action within 7 working days (normal), 30 days (proviso cases) or 7 working days of the clarification.
+    source_ref: [{ doc: handbook, page: 53, pdf_page: 59, section: "Verification Procedure (f)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-BANK-RULE10A
+    label: Bank account details within 30 days of grant
+    plain_language: After registration, add your bank account details within 30 days, or before filing your first GSTR-1/IFF if that is earlier, or the registration can be suspended.
+    description: Rule 10A - bank details within 30 days of grant or before GSTR-1/IFF, whichever is earlier; not applicable to Rule 12 (TDS/TCS) and Rule 16 (suo moto) registrants; default is ground for suspension (REG-31) and cancellation under Rule 21.
+    source_ref:
+      - { doc: handbook, page: 61, pdf_page: 67, section: "Furnishing of Bank Account Details" }
+      - { doc: research, page: 2, section: "B. 20 Nov 2025 GSTN Advisory" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-BANK-REVISED-REG01
+    label: "Revised REG-01: up to 10 bank accounts; missing details within 30 days of REG-06"
+    plain_language: On the new form you can give up to 10 bank accounts; any you cannot give now are due within 30 days of the registration certificate.
+    description: Revised REG-01 (Advisory 681) - up to 10 bank accounts; unavailable details within 30 days of issue of REG-06.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: TL-RULE14A-3WD
+    label: "Rule 14A: electronic grant within 3 working days if low-risk"
+    plain_language: After Aadhaar authentication, a low-risk Rule 14A application is approved within 3 working days; otherwise it goes through the normal process.
+    description: Rule 14A - after authentication, data analysis and risk evaluation; low-risk applications granted electronically within three working days; others processed under Rule 9 or 9A.
+    source_ref: [{ doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Procedure and Timelines" }]
+    effective_from: 2025-11-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-RULE14A-WITHDRAWAL-PRE-2026-04
+    label: "Leaving Rule 14A (before 1 Apr 2026): REG-32 after three months of returns"
+    plain_language: To leave Rule 14A, file REG-32 after filing all returns due, with at least three months of returns filed and no cancellation proceedings pending.
+    description: REG-32 withdrawal - all returns due filed; at least three months of returns if applying before 1 Apr 2026; no pending s.29 proceedings; order REG-33 or rejection REG-05.
+    source_ref: [{ doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Withdrawal from Option" }]
+    effective_from: 2025-11-01
+    effective_to: 2026-03-31
+    verification_status: handbook
+    confidence: certain
+    notes: Contents of the GSTN advisory of 21 Feb 2026 on withdrawal not known (conflict C-003).
+
+  - id: TL-RULE14A-WITHDRAWAL
+    label: "Leaving Rule 14A (from 1 Apr 2026): REG-32 after one tax period's return"
+    plain_language: To leave Rule 14A, file REG-32 after filing all returns due (at least one tax period) with no cancellation proceedings pending. The higher liability applies from the month after the order.
+    description: REG-32 withdrawal - all returns due filed; at least one tax period's return if applying on or after 1 Apr 2026; no pending s.29 proceedings; liability above the cap only from the first day of the month after the REG-33 order.
+    source_ref: [{ doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Withdrawal; Post-Withdrawal Effect" }]
+    effective_from: 2026-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Contents of the GSTN advisory of 21 Feb 2026 on withdrawal not known (conflict C-003).
+
+  - id: TL-RULE14B-ECO-CONSENT
+    label: "Rule 14B: ECO consent within 7 working days"
+    plain_language: Each marketplace must give its consent within 7 working days.
+    description: Rule 14B - ECO consent within 7 working days.
+    source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: TL-RULE14B-AADHAAR-15D
+    label: "Rule 14B: Aadhaar and document verification within 15 days of Part B"
+    plain_language: Complete Aadhaar authentication and document verification within 15 days of submitting Part B.
+    description: Rule 14B - Aadhaar authentication and document verification within 15 days of submitting Part B of REG-01.
+    source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: TL-RULE14B-DEEMED
+    label: "Rule 14B: deemed approval on field visit or 30 days from ARN"
+    plain_language: Approval is treated as given when the field visit is completed or 30 days after the ARN, whichever is earlier.
+    description: Rule 14B - deemed approval on completion of the field visit or 30 days from ARN, whichever is earlier.
+    source_ref: [{ doc: research, page: 5, section: "C. Rule 14B (continued)" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: TL-RULE14B-NEGATIVE-VISIT
+    label: "Rule 14B: a negative field visit can reject linked applications"
+    plain_language: A bad field-visit report can reject all pending Rule 14B applications linked to the same home-State registration, so prepare premises evidence for each State.
+    description: Negative field-visit remarks may reject all pending Rule 14B applications linked to the same Home State GSTIN.
+    source_ref: [{ doc: research, page: 5, section: "C. Rule 14B (continued)" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: TL-REG07-3WD
+    label: "REG-07: certificate within 3 working days"
+    plain_language: TDS/TCS registrations are granted within 3 working days of the application.
+    description: Rule 12 - the proper officer may grant registration and issue REG-06 within 3 working days of submission.
+    source_ref: [{ doc: handbook, page: 68, pdf_page: 74, section: "2.1.3 Registration Certificate" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Rule 10A bank-details requirement does not apply to Rule 12 registrants.
+
+  - id: TL-CTP-ADVANCE-DEPOSIT
+    label: Acknowledgement only after the advance deposit
+    plain_language: You get the acknowledgement (REG-02) only after paying the advance deposit of estimated net tax.
+    description: Rule 8(6) - temporary reference number for advance deposit; REG-02 issued only after deposit; deposit is estimated net tax liability after eligible ITC (Circular 71/45/2018-GST).
+    source_ref:
+      - { doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(b)" }
+      - { doc: handbook, page: 66, pdf_page: 72, section: "Circular 71/45/2018-GST" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-NRTP-ARN-AFTER-DEPOSIT
+    label: ARN only after the advance tax is paid
+    plain_language: The application reference number is generated only after the advance tax deposit is paid.
+    description: For NRTP, the ARN is generated only when payment of advance tax is done; acknowledgement REG-02 after deposit in the electronic cash ledger.
+    source_ref:
+      - { doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(f)" }
+      - { doc: handbook, page: 103, pdf_page: 109, section: "2.5" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-CTP-NRTP-VALIDITY
+    label: Valid up to 90 days, extendable once by up to 90 days (REG-11)
+    plain_language: Your registration lasts up to 90 days; apply on REG-11 before expiry to extend it by up to 90 days, paying extra deposit.
+    description: s.27(1), Rule 15(1) - validity for the period applied or 90 days, whichever earlier; extension up to 90 days on REG-11 with additional deposit.
+    source_ref: [{ doc: handbook, page: 65, pdf_page: 71, section: "2.1.2(k)-(l)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: TL-REG10-NONE-STATED
+    label: No processing time stated
+    plain_language: The handbook does not state a processing time for REG-10; registration is granted subject to conditions notified by the Central Government.
+    description: Rule 14 - REG-06 granted subject to such conditions and restrictions and by such officer as notified; no time limit stated in the handbook.
+    source_ref: [{ doc: handbook, page: 69, pdf_page: 75, section: "2.1.4" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""

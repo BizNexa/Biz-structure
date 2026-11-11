@@ -1,0 +1,43 @@
+{
+  "name": "gst-registration-checker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Biz Matrix GST Registration Checker: is GST registration required, State-wise limit, route, documents and PDF report.",
+  "scripts": {
+    "rules:build": "tsx scripts/build-rules.ts",
+    "rules:lint": "tsx scripts/lint-rules.ts",
+    "report:verification": "tsx scripts/verification-report.ts",
+    "report:stale": "tsx scripts/stale-rule-report.ts",
+    "report:coverage": "tsx scripts/rule-coverage-report.ts",
+    "samples:pdf": "tsx scripts/sample-pdfs.ts",
+    "docs:review-pack": "tsx scripts/ca-review-pack.ts",
+    "predev": "npm run rules:build",
+    "dev": "vite",
+    "prebuild": "npm run rules:lint && npm run rules:build",
+    "build": "tsc --noEmit && vite build",
+    "pretest": "npm run rules:build",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "qa": "npm run rules:lint && npm run rules:build && npm run typecheck && vitest run && npm run report:coverage && npm run report:stale && npm run report:verification && npm run docs:review-pack && npm run samples:pdf",
+    "build:site": "npm run rules:lint && npm run rules:build && tsc --noEmit && vite build --outDir ../gst-registration-checker --emptyOutDir"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "yaml": "^2.5.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.4"
+  }
+}

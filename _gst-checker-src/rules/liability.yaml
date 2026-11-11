@@ -1,0 +1,812 @@
+# Liability rules: s.22 (threshold and transfers), s.24 (compulsory), s.23 (exemptions), s.25(3) (voluntary).
+#
+# Order of evaluation (engine/evaluate.ts), corrected against the handbook:
+#   1. Evaluate every trigger (s.22 and s.24) with three-valued logic.
+#   2. Evaluate exemptions. Since the substitution of s.23 by the Finance Act 2023 (w.e.f. 1 Oct 2023)
+#      the handbook (p. 18, PDF 24) says s.23 overrides s.22 and s.24. "blanket" exemptions remove the
+#      threshold trigger and every trigger marked s23_override: displaced; overlaps with triggers marked
+#      ca_review go to the CA. "displaces" exemptions remove only the listed triggers.
+#   3. Any remaining true trigger -> MANDATORY. Unknown trigger or unknown exemption -> NEEDS_CA_REVIEW.
+#   4. Voluntary option (s.25(3)). 5. Otherwise NOT_REQUIRED.
+#
+# The engine supports as-of dates on or after 2024-01-01.
+
+rules:
+  # =========================== s.22 ===========================
+  - id: S22-1-THRESHOLD
+    topic: liability_s22
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.22(1) CGST Act, with provisos and Notification 10/2019-CT"
+    description: >-
+      A supplier is liable to register in the State/UT from where it makes a taxable supply if its
+      aggregate turnover in a financial year exceeds the applicable limit (Rs 20 lakh; Rs 10 lakh in
+      Manipur, Mizoram, Nagaland, Tripura; Rs 40 lakh for exclusive supply of goods where
+      Notification 10/2019-CT applies).
+    plain_language: Your yearly turnover is above the GST registration limit for your State and type of business.
+    applies_if:
+      all:
+        - { not: { fact: supply_nature, equals: no_outward_supplies } }
+        - { fact: taxability, equals: some_taxable }
+        - { fact: turnover_within_applicable_threshold, equals: false }
+    ca_question: What is the aggregate turnover (s.2(6), all-India, PAN level) for the financial year, and from which States are taxable supplies made?
+    deadline_ids: [DL-S25-1-30-DAYS, DL-EFFECTIVE-DATE-RULE10]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref:
+      - { doc: handbook, page: 2, pdf_page: 8, section: "1.3.1" }
+      - { doc: handbook, page: 7, pdf_page: 13, section: "1.3.1 threshold table" }
+      - { doc: handbook, page: 9, pdf_page: 15, section: "1.3.1 aggregate turnover" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      "Taxable" here includes nil-rated supplies: the handbook (p. 18, PDF 24) says a person dealing in
+      nil-rated supplies is not covered by s.23(1) and is liable to register. Aggregate turnover includes
+      exempt supplies, exports and inter-State supplies to distinct persons, and excludes RCM inward
+      supplies and taxes (p. 9-13).
+
+  - id: S22-3-TRANSFER
+    topic: liability_s22
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.22(3) CGST Act"
+    description: >-
+      Where a business carried on by a registered person is transferred as a going concern (succession
+      or otherwise), the transferee or successor is liable to register from the date of transfer.
+    plain_language: You are taking over a GST-registered business as a going concern.
+    applies_if: { fact: business_transferee_going_concern, equals: true }
+    ca_question: Is the client the transferee or successor of a registered person's business taken over as a going concern?
+    deadline_ids: [DL-S22-3-TRANSFER]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref: [{ doc: handbook, page: 14, pdf_page: 20, section: "1.3.3" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: S22-4-AMALGAMATION
+    topic: liability_s22
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.22(4) CGST Act"
+    description: >-
+      On transfer under a scheme of amalgamation or demerger sanctioned by a High Court, Tribunal or
+      other authority, the transferee is liable to register from the date the Registrar of Companies
+      issues the certificate of incorporation giving effect to the order, irrespective of threshold.
+    plain_language: Your company receives a business under a sanctioned amalgamation or demerger.
+    applies_if: { fact: amalgamation_transferee, equals: true }
+    ca_question: Is the client the transferee in a sanctioned amalgamation or demerger?
+    deadline_ids: [DL-S22-4-AMALGAMATION]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref: [{ doc: handbook, page: 14, pdf_page: 20, section: "1.3.4" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  # =========================== s.24 ===========================
+  - id: S24-I-INTERSTATE
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(i) CGST Act"
+    description: >-
+      Persons making any inter-State taxable supply must register irrespective of turnover. Exports
+      are inter-State supplies under the IGST Act, so exporters must register even though exports are
+      zero-rated.
+    plain_language: You sell to customers in another State or export, which requires registration whatever your turnover.
+    applies_if:
+      all:
+        - { fact: interstate_taxable_supply, equals: true }
+        - { fact: taxability, equals: some_taxable }
+    ca_question: Does the client make any inter-State taxable supply, including exports?
+    deadline_ids: [DL-S25-1-30-DAYS, DL-EFFECTIVE-DATE-RULE10]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref:
+      - { doc: handbook, page: 20, pdf_page: 26, section: "1.5.1" }
+      - { doc: handbook, page: 16, pdf_page: 22, section: "Illustration 6 (exporter)" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: S24-II-CASUAL
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(ii), s.2(20), s.27 CGST Act"
+    description: >-
+      A casual taxable person (occasionally supplies in a State/UT where it has no fixed place of
+      business) must register in that State/UT irrespective of threshold, at least 5 days before
+      commencing business, with an advance deposit of estimated net tax liability.
+    plain_language: You will supply occasionally in a State where you have no fixed place of business (for example an event or exhibition).
+    applies_if:
+      all:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { not: { fact: casual_long_exhibition_over_180, equals: true } }
+        - { fact: taxability, equals: some_taxable }
+    ca_question: Will the client make occasional taxable supplies in a State/UT where it has no fixed place of business, and for how long?
+    deadline_ids: [DL-CTP-NRTP-5-DAYS, DL-CTP-NRTP-VALIDITY]
+    route_hint: ROUTE-REG01-CASUAL
+    source_ref:
+      - { doc: handbook, page: 21, pdf_page: 27, section: "1.5.2" }
+      - { doc: handbook, page: 63, pdf_page: 69, section: "2.1.2" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: S24-II-LONG-EXHIBITION
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "Circular 71/45/2018-GST dated 26.10.2018"
+    description: >-
+      Where the occasional activity (long-running exhibition) exceeds 180 days the person cannot be
+      treated as a casual taxable person and must obtain normal registration; the allotment or consent
+      letter for the exhibition premises is proof of place of business and no advance tax is needed.
+    plain_language: Your event or exhibition runs longer than 180 days, so you need a normal registration instead of a casual one.
+    applies_if:
+      all:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { fact: casual_long_exhibition_over_180, equals: true }
+        - { fact: taxability, equals: some_taxable }
+    ca_question: Does the exhibition or occasional activity run for more than 180 days?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref: [{ doc: handbook, page: 66, pdf_page: 72, section: "2.1.2 Circular 71/45/2018-GST" }]
+    effective_from: 2018-10-26
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: >-
+      The circular says such a person "would be required to obtain registration as a normal taxable
+      person". Whether this is a s.24 trigger or a s.22 liability in the exhibition State is not stated;
+      modelled as compulsory. CA to confirm.
+
+  - id: S24-III-RCM
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(iii) CGST Act; s.9(3), 9(4)"
+    description: >-
+      Persons required to pay tax under reverse charge must register irrespective of threshold.
+    plain_language: You must pay GST yourself on some purchases (reverse charge), which requires registration.
+    applies_if: { fact: rcm_liable_inward, equals: true }
+    ca_question: >-
+      Is the client actually liable under a s.9(3) notification as an unregistered recipient? Several
+      RCM entries apply only to registered recipients (handbook Illustration on renting by a local
+      authority, p. 13).
+    deadline_ids: [DL-S25-1-30-DAYS, DL-EFFECTIVE-DATE-RULE10]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref:
+      - { doc: handbook, page: 23, pdf_page: 29, section: "1.5.3" }
+      - { doc: handbook, page: 13, pdf_page: 19, section: "1.3.1(g) example" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: >-
+      s.9(4) applies to specified registered recipients only, so an unregistered person cannot be liable
+      under s.9(4). The questionnaire asks about s.9(3) liability; the CA should confirm the specific
+      notified entry.
+
+  - id: S24-IV-ECO-9-5
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(iv); s.9(5) CGST Act; s.5(5) IGST Act"
+    description: >-
+      An e-commerce operator required to pay tax under s.9(5) (notified services: passenger transport,
+      accommodation, housekeeping, restaurant services) must register irrespective of turnover.
+    plain_language: Your platform pays GST on behalf of service providers (rides, stays, housekeeping, food delivery).
+    applies_if:
+      all:
+        - { fact: is_eco_operator, equals: true }
+        - { fact: eco_liable_9_5, equals: true }
+    ca_question: Is the operator liable to pay tax under s.9(5) on any notified service?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref: [{ doc: handbook, page: 24, pdf_page: 30, section: "1.5.4" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      From 1 Nov 2026 the revised REG-01 has a separate section for ECOs liable under s.9(5)
+      (research, Advisory 681), so the route form detail changes on that date.
+
+  - id: S24-V-NRTP
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(v), s.2(77), s.27 CGST Act; Rule 13"
+    description: >-
+      A non-resident taxable person making taxable supply in India must register irrespective of
+      threshold, in FORM GST REG-09 at least 5 days before commencing business, with an advance deposit;
+      registration is valid for up to 90 days.
+    plain_language: You have no fixed place of business or residence in India but will supply here occasionally.
+    applies_if:
+      all:
+        - { fact: non_resident_occasional, equals: true }
+        - { fact: taxability, equals: some_taxable }
+    ca_question: Does the client have any fixed place of business or residence in India?
+    deadline_ids: [DL-CTP-NRTP-5-DAYS, DL-CTP-NRTP-VALIDITY]
+    route_hint: ROUTE-REG09-NRTP
+    source_ref:
+      - { doc: handbook, page: 26, pdf_page: 32, section: "1.5.5" }
+      - { doc: handbook, page: 64, pdf_page: 70, section: "2.1.2" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: "An NRTP cannot opt for composition (handbook p. 26)."
+
+  - id: S24-VI-TDS
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(vi), s.51 CGST Act; Notification 50/2018-CT as amended"
+    description: >-
+      Departments or establishments of the Central or a State Government, local authorities,
+      governmental agencies, and notified persons (authorities or boards with 51% or more Government
+      equity or control, societies established by Government, PSUs) required to deduct tax under s.51
+      must register as TDS deductors irrespective of turnover, using TAN.
+    plain_language: As a government body or PSU you must deduct GST TDS from supplier payments, which needs a TDS registration.
+    applies_if:
+      fact: tds_category
+      in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu]
+    ca_question: Is the client a person specified under s.51(1) or Notification 50/2018-CT? Note the Ministry of Defence carve-out.
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG07-TDS
+    source_ref:
+      - { doc: handbook, page: 27, pdf_page: 33, section: "1.5.6" }
+      - { doc: handbook, page: 67, pdf_page: 73, section: "2.1.3" }
+    effective_from: 2018-10-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      Deduction applies where the total value of supply under a contract exceeds Rs 2.5 lakh. Authorities
+      under the Ministry of Defence other than those in Annexure A to Notification 50/2018-CT are carved
+      out (handbook p. 28). Supplies between two s.51 persons are carved out.
+
+  - id: S24-VI-TDS-METAL-SCRAP
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(vi), s.51; Notification 50/2018-CT as amended by Notification 25/2024-CT dated 09.10.2024"
+    description: >-
+      A registered person receiving supplies of metal scrap (Chapters 72 to 81 of the Customs Tariff)
+      from another registered person is a notified TDS deductor and must register as such.
+    plain_language: You buy metal scrap from registered suppliers, so you must deduct GST TDS and register as a deductor.
+    applies_if: { fact: tds_category, equals: metal_scrap_recipient }
+    ca_question: Does the client, as a registered person, receive metal scrap of Chapters 72 to 81 from registered persons?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG07-TDS
+    source_ref: [{ doc: handbook, page: 28, pdf_page: 34, section: "1.5.6 clause (d)" }]
+    effective_from: 2024-10-09
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: >-
+      effective_from is the notification date (09.10.2024) given in the handbook; the handbook does not
+      state the commencement date. EFFECTIVE DATE NOT VERIFIED.
+
+  - id: S24-VI-TDS-NEW-SCRAP
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(vi), s.51; Notification 07/2026-CT dated 27.10.2026 (per research note)"
+    description: >-
+      From 1 Nov 2026, TDS registration under s.51 extends to recipients of used cooking oil, plastic
+      scrap, tyre scrap and e-waste. Metal scrap remains under Notification 25/2024-CT.
+    plain_language: You buy used cooking oil, plastic scrap, tyre scrap or e-waste from registered suppliers, so you must register as a TDS deductor.
+    applies_if: { fact: tds_category, equals: new_scrap_recipient }
+    ca_question: Which items does the client receive, and does Notification 07/2026-CT cover them (conditions not read)?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG07-TDS
+    source_ref: [{ doc: research, page: 2, section: "B. Chronological table, 27 Oct 2026" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: >-
+      Secondary source only (TaxGuru via research note). Notification text, conditions (whether the
+      recipient and supplier must be registered) and HSN scope NOT VERIFIED.
+
+  - id: S24-VII-AGENT
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(vii), s.2(5), Schedule I para 3; Circular 57/31/2018-GST"
+    description: >-
+      A person making taxable supplies on behalf of other taxable persons as an agent must register
+      irrespective of threshold. Per Circular 57/31/2018-GST, the test is whether the agent issues the
+      invoice for the further supply in its own name (can pass title); the principal must be a taxable
+      person and the supply must be taxable.
+    plain_language: You sell goods for someone else and bill the customer in your own name.
+    applies_if:
+      all:
+        - { fact: agent_on_behalf, equals: true }
+        - { fact: agent_invoices_in_own_name, equals: true }
+        - { fact: principal_is_taxable_person, equals: true }
+        - { fact: taxability, equals: some_taxable }
+    ca_question: Does the agent issue invoices in its own name for supplies on behalf of a principal who is a taxable person?
+    deadline_ids: [DL-S25-1-30-DAYS, DL-EFFECTIVE-DATE-RULE10]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref:
+      - { doc: handbook, page: 28, pdf_page: 34, section: "1.5.7" }
+      - { doc: handbook, page: 31, pdf_page: 37, section: "Circular 57/31/2018-GST para 7-9" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      A pure facilitator (scenarios 1 and 2 of the circular) is not liable under s.24(vii) but is liable
+      under s.22(1) if its own taxable services exceed the threshold.
+
+  - id: S24-VIII-ISD
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(viii), s.2(61), s.20 CGST Act"
+    description: >-
+      An Input Service Distributor must take a separate ISD registration, whether or not separately
+      registered; no threshold applies.
+    plain_language: Your head office receives common service bills to pass the credit on to branches, which needs a separate ISD registration.
+    applies_if: { fact: is_isd, equals: true }
+    ca_question: Does an office of the client receive input service invoices on behalf of distinct persons to distribute credit?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG01-ISD
+    source_ref: [{ doc: handbook, page: 33, pdf_page: 39, section: "1.5.8" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: "Research note: Circular 260 may cover ISD registrations (not read). See conflict C-004."
+
+  - id: S24-IX-ECO-SUPPLIER
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(ix) CGST Act"
+    description: >-
+      Persons supplying goods or services (other than s.9(5) services) through an e-commerce operator
+      required to collect TCS under s.52 must register irrespective of turnover, subject to the
+      exemptions in Notifications 65/2017-CT (services) and 34/2023-CT (goods).
+    plain_language: You sell through an online marketplace that collects TCS.
+    applies_if:
+      all:
+        - { fact: supplies_via_eco, equals: true }
+        - { not: { fact: eco_supplies_only_9_5_services, equals: true } }
+    ca_question: Does the client sell through an ECO that collects TCS, and are any of those supplies outside s.9(5)?
+    deadline_ids: [DL-S25-1-30-DAYS, DL-EFFECTIVE-DATE-RULE10]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref: [{ doc: handbook, page: 35, pdf_page: 41, section: "1.5.9" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: S24-X-TCS
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: ca_review
+    legal_basis: "s.24(x), s.52 CGST Act; Rule 12"
+    description: >-
+      Every electronic commerce operator required to collect tax at source under s.52 must register
+      (FORM GST REG-07), irrespective of turnover.
+    plain_language: Your marketplace collects payments for sellers and must collect TCS, which needs a TCS registration.
+    applies_if:
+      all:
+        - { fact: is_eco_operator, equals: true }
+        - { fact: eco_collects_tcs, equals: true }
+    ca_question: Does the operator collect consideration on behalf of suppliers so that s.52 TCS applies?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG07-TCS
+    source_ref:
+      - { doc: handbook, page: 37, pdf_page: 43, section: "1.5.10" }
+      - { doc: handbook, page: 68, pdf_page: 74, section: "2.1.3" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: "TCS rate 0.5% (0.25% + 0.25%, or 0.5% IGST) per Notification 15/2024-CT (handbook p. 37)."
+
+  - id: S24-XI-OIDAR
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(xi) CGST Act; s.14 IGST Act; Rule 14"
+    description: >-
+      Every person supplying OIDAR services from a place outside India to a person in India other than
+      a registered person must register (single registration in FORM GST REG-10).
+    plain_language: You sell digital services from outside India to consumers in India.
+    applies_if: { fact: oidar_from_outside_to_nonregistered, equals: true }
+    ca_question: Are OIDAR services supplied from outside India to non-taxable online recipients in India?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG10-OIDAR
+    source_ref:
+      - { doc: handbook, page: 37, pdf_page: 43, section: "1.5.11" }
+      - { doc: handbook, page: 69, pdf_page: 75, section: "2.1.4" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      The OIDAR definition was widened w.e.f. 01.10.2023 (the "essentially automated" condition
+      dropped). Where the recipient is registered, the recipient pays under reverse charge (no s.24(xi)
+      liability on that account).
+
+  - id: S24-XIA-OMG
+    topic: compulsory_s24
+    outcome: TRIGGER
+    s23_override: displaced
+    legal_basis: "s.24(xia) CGST Act (CGST (Amendment) Act, 2023)"
+    description: >-
+      Every person supplying online money gaming from a place outside India to a person in India must
+      register (FORM GST REG-10).
+    plain_language: You offer online money gaming from outside India to players in India.
+    applies_if: { fact: online_money_gaming_from_outside, equals: true }
+    ca_question: Does the client supply online money gaming (s.2(80B)) from outside India to persons in India?
+    deadline_ids: [DL-S25-1-30-DAYS]
+    route_hint: ROUTE-REG10-OIDAR
+    source_ref: [{ doc: handbook, page: 39, pdf_page: 45, section: "1.5.12" }]
+    effective_from: 2023-10-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  # =========================== s.23 exemptions ===========================
+  - id: EX-S23-1A-EXEMPT-ONLY
+    topic: exemption
+    outcome: EXEMPTION
+    scope: blanket
+    legal_basis: "s.23(1)(a) CGST Act"
+    description: >-
+      A person engaged exclusively in supplying goods or services that are not liable to tax or are
+      wholly exempt is not liable to register. Nil-rated supplies do NOT qualify.
+    plain_language: Everything you supply is fully exempt from GST or outside GST (not merely 0%-rated), so you need not register.
+    applies_if:
+      all:
+        - { not: { fact: supply_nature, equals: no_outward_supplies } }
+        - { fact: taxability, equals: exclusively_exempt_nontaxable }
+    ca_question: Are ALL of the client's supplies wholly exempt or non-taxable (and none nil-rated or taxable, including sale of business assets)?
+    source_ref:
+      - { doc: handbook, page: 17, pdf_page: 23, section: "1.4.1" }
+      - { doc: handbook, page: 18, pdf_page: 24, section: "1.4.2" }
+      - { doc: handbook, page: 16, pdf_page: 22, section: "Illustration 9 (sale of capital goods)" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      Since 1 Oct 2023 the handbook reads s.23 as overriding s.22 and s.24. A single taxable sale (e.g.
+      of a capital asset) ends the exemption (Illustration 9).
+
+  - id: EX-S23-1B-AGRICULTURIST
+    topic: exemption
+    outcome: EXEMPTION
+    scope: blanket
+    legal_basis: "s.23(1)(b), s.2(7) CGST Act"
+    description: >-
+      An agriculturist (individual or HUF cultivating land by own or family labour or hired labour
+      under personal supervision) is not liable to register to the extent of supply of produce out of
+      cultivation of land.
+    plain_language: You are a farmer (individual or HUF) selling only produce from your own cultivation.
+    applies_if:
+      all:
+        - { fact: agriculturist_own_produce_only, equals: true }
+        - { fact: constitution, in: [proprietorship, huf] }
+    ca_question: Is the client an individual/HUF agriculturist supplying only produce out of cultivation of land, with no other supplies?
+    source_ref: [{ doc: handbook, page: 18, pdf_page: 24, section: "1.4.3" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: "Any other supply brings the person back under s.22/s.24 (supplier-based and supply-based test)."
+
+  - id: EX-N5-2017-RCM-ONLY
+    topic: exemption
+    outcome: EXEMPTION
+    scope: blanket
+    legal_basis: "s.23(2); Notification 5/2017-CT dated 19.06.2017"
+    description: >-
+      Persons only engaged in making taxable supplies on which the whole tax is payable by the
+      recipient under s.9(3) are exempt from registration (e.g. an advocate).
+    plain_language: All your sales are ones where the buyer pays the GST under reverse charge (for example legal services), so you need not register.
+    applies_if: { fact: outward_all_rcm_by_recipient, equals: true }
+    ca_question: Is every outward supply one on which the recipient pays the entire tax under s.9(3)?
+    source_ref:
+      - { doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(1)" }
+      - { doc: handbook, page: 15, pdf_page: 21, section: "Illustration 3 (advocate)" }
+    effective_from: 2017-06-19
+    effective_to: 2024-10-08
+    verification_status: handbook
+    confidence: certain
+    notes: Superseded on 09.10.2024 by EX-N5-2017-RCM-ONLY-2024 (metal scrap carve-out).
+
+  - id: EX-N5-2017-RCM-ONLY-2024
+    topic: exemption
+    outcome: EXEMPTION
+    scope: blanket
+    legal_basis: "s.23(2); Notification 5/2017-CT as amended by Notification 24/2024-CT dated 09.10.2024"
+    description: >-
+      As EX-N5-2017-RCM-ONLY, except that the exemption does not extend to persons supplying metal scrap
+      of Chapters 72 to 81 of the Customs Tariff.
+    plain_language: All your sales are ones where the buyer pays the GST under reverse charge, and you do not sell metal scrap, so you need not register.
+    applies_if:
+      all:
+        - { fact: outward_all_rcm_by_recipient, equals: true }
+        - { not: { fact: supplies_metal_scrap, equals: true } }
+    ca_question: Is every outward supply under s.9(3) reverse charge, and does the client supply any metal scrap of Chapters 72 to 81?
+    source_ref: [{ doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(1)" }]
+    effective_from: 2024-10-09
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: Commencement date of Notification 24/2024-CT not stated in the handbook; notification date used. EFFECTIVE DATE NOT VERIFIED.
+
+  - id: EX-N10-2017-IT-INTERSTATE-SERVICES
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-I-INTERSTATE]
+    legal_basis: "s.23(2); Notification 10/2017-IT dated 13.10.2017 as amended by 3/2019-IT"
+    description: >-
+      Persons making inter-State taxable supplies of services only, with aggregate turnover (all-India)
+      not exceeding Rs 20 lakh (Rs 10 lakh in Manipur, Mizoram, Nagaland, Tripura), are exempt from
+      registration.
+    plain_language: You supply only services, and your turnover is under the limit, so selling services to other States does not by itself require registration.
+    applies_if:
+      all:
+        - { fact: supply_nature, equals: services_only }
+        - { fact: turnover_within_base_threshold, equals: true }
+        - { not: { fact: makes_exports, equals: true } }
+    ca_question: Does the client supply services only, and is aggregate turnover within Rs 20 lakh (Rs 10 lakh for the four States)?
+    source_ref:
+      - { doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(6)" }
+      - { doc: handbook, page: 20, pdf_page: 26, section: "1.5.1 Exceptions" }
+    effective_from: 2017-10-13
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: EX-N10-2017-IT-SERVICES-EXPORTER
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-I-INTERSTATE]
+    ca_confirmation_required: true
+    legal_basis: "s.23(2); Notification 10/2017-IT as amended by 3/2019-IT, read against handbook Illustration 6"
+    description: >-
+      A services-only supplier whose inter-State supplies include exports, with turnover within
+      Rs 20 lakh (Rs 10 lakh). Notification 10/2017-IT on its face exempts inter-State suppliers of
+      services; the handbook Illustration 6 says all exporters must register regardless of turnover.
+    plain_language: You export services and your turnover is under the limit; whether you must register depends on a point a CA should confirm.
+    applies_if:
+      all:
+        - { fact: supply_nature, equals: services_only }
+        - { fact: turnover_within_base_threshold, equals: true }
+        - { fact: makes_exports, equals: true }
+    ca_question: Does Notification 10/2017-IT exempt this small exporter of services, or does the handbook position (Illustration 6, all exporters must register) apply?
+    source_ref:
+      - { doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(6)" }
+      - { doc: handbook, page: 16, pdf_page: 22, section: "Illustration 6" }
+    effective_from: 2017-10-13
+    effective_to: null
+    verification_status: conflict
+    confidence: likely
+    notes: See conflict C-014. Always routed to the CA.
+
+  - id: EX-N3-2018-IT-HANDICRAFT
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-I-INTERSTATE]
+    legal_basis: "s.23(2); Notification 3/2018-IT dated 22.10.2018"
+    description: >-
+      Persons making inter-State taxable supplies of notified handicraft goods (or products made by
+      craftsmen predominantly by hand), with all-India aggregate turnover within the State threshold,
+      holding PAN and generating e-way bills, are exempt from registration.
+    plain_language: You make only hand-made / handicraft goods within the turnover limit, so inter-State sales do not by themselves require registration.
+    applies_if:
+      all:
+        - { fact: handicraft_only_with_conditions, equals: true }
+        - { fact: turnover_within_applicable_threshold, equals: true }
+    ca_question: Are the inter-State supplies only of handicraft goods as defined in Notification 21/2018-CT(Rate), with PAN and e-way bills, within the threshold?
+    source_ref: [{ doc: handbook, page: 20, pdf_page: 26, section: "1.5.1 Exceptions" }]
+    effective_from: 2018-10-22
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Product list is in Notification 21/2018-CT(Rate); not reproduced in the handbook beyond examples."
+
+  - id: EX-N56-2018-CT-HANDICRAFT-CASUAL
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-II-CASUAL]
+    legal_basis: "s.23(2); Notification 56/2018-CT dated 23.10.2018"
+    description: >-
+      Casual taxable persons making inter-State taxable supplies of notified handicraft goods (or
+      hand-made products), within the State threshold, holding PAN and generating e-way bills, are
+      exempt from registration.
+    plain_language: You sell handicrafts at fairs in other States within the turnover limit, so a casual registration is not needed.
+    applies_if:
+      all:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { fact: handicraft_only_with_conditions, equals: true }
+        - { fact: turnover_within_applicable_threshold, equals: true }
+    ca_question: Are the casual supplies only of notified handicraft goods, with PAN and e-way bills, within the threshold?
+    source_ref:
+      - { doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(2)" }
+      - { doc: handbook, page: 22, pdf_page: 28, section: "1.5.2 Exceptions" }
+    effective_from: 2018-10-23
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: ""
+
+  - id: EX-N7-2017-IT-JOB-WORKER
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-I-INTERSTATE]
+    ca_confirmation_required: true
+    legal_basis: "s.23(2); Notification 7/2017-IT dated 14.09.2017 as amended by 2/2019-IT"
+    description: >-
+      Job workers making inter-State supply of services to a registered person are exempt from
+      obtaining registration, subject to conditions in the notification.
+    plain_language: Your only inter-State supplies are job-work services for registered businesses.
+    applies_if: { fact: job_worker_interstate_to_registered, equals: true }
+    ca_question: >-
+      The handbook says this exemption is "subject to certain conditions" without listing them. Do the
+      notification's conditions (and any carve-outs) apply to this job worker?
+    source_ref: [{ doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(5)" }]
+    effective_from: 2017-09-14
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: "Conditions NOT VERIFIED; the engine routes any reliance on this exemption to the CA."
+
+  - id: EX-N65-2017-CT-ECO-SERVICES
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-IX-ECO-SUPPLIER]
+    legal_basis: "s.23(2); Notification 65/2017-CT dated 15.11.2017 as amended by 6/2019-CT"
+    description: >-
+      Persons supplying services (other than s.9(5) services) through a TCS-collecting ECO, with
+      aggregate turnover not exceeding Rs 20 lakh (Rs 10 lakh in special category States), are exempt.
+    plain_language: You provide services through an online platform and your turnover is under the limit, so the platform alone does not require you to register.
+    applies_if:
+      all:
+        - { fact: supply_nature, equals: services_only }
+        - { fact: supplies_via_eco, equals: true }
+        - { fact: turnover_within_base_threshold, equals: true }
+    ca_question: Is the client a services-only supplier through the ECO with aggregate turnover within Rs 20 lakh (Rs 10 lakh)?
+    source_ref:
+      - { doc: handbook, page: 19, pdf_page: 25, section: "1.4.4(3)" }
+      - { doc: handbook, page: 36, pdf_page: 42, section: "1.5.9 Supplier of Services" }
+    effective_from: 2017-11-15
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: EX-N34-2023-CT-ECO-GOODS
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-IX-ECO-SUPPLIER]
+    legal_basis: "s.23(2); Notification 34/2023-CT dated 31.07.2023 (with 37/2023-CT)"
+    description: >-
+      Persons supplying goods through an ECO are exempt if aggregate turnover in the preceding and the
+      current financial year does not exceed the s.22(1) limit for the State, supplies are intra-State
+      only, in one State/UT only, the person has PAN, has declared PAN, address and State on the portal
+      and obtained an enrolment number (one per State/UT).
+    plain_language: You sell goods online within one State only, below the turnover limit, and have an enrolment number, so you need not register.
+    applies_if:
+      all:
+        - { fact: supply_nature, equals: goods_only }
+        - { fact: supplies_via_eco, equals: true }
+        - { fact: eco_goods_conditions_34_2023, equals: true }
+        - { fact: turnover_within_applicable_threshold, equals: true }
+        - { fact: preceding_turnover_within_applicable_threshold, equals: true }
+    ca_question: Are all seven conditions of Notification 34/2023-CT met (turnover in both years, intra-State only, one State, PAN, portal declaration, enrolment number)?
+    source_ref: [{ doc: handbook, page: 35, pdf_page: 41, section: "1.5.9 Supplier of Goods, conditions table" }]
+    effective_from: 2023-07-31
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: Notification date used; commencement date not stated in the handbook. EFFECTIVE DATE NOT VERIFIED.
+
+  - id: EX-ECO-MIXED-GOODS-SERVICES
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: [S24-IX-ECO-SUPPLIER]
+    ca_confirmation_required: true
+    legal_basis: "s.23(2); Notifications 65/2017-CT and 34/2023-CT read together"
+    description: >-
+      A person supplying both goods and services through an ECO may fall under both exemptions. The
+      handbook does not address the combined case.
+    plain_language: You sell both goods and services online below the limits; whether both exemptions apply together needs a CA's view.
+    applies_if:
+      all:
+        - { fact: supply_nature, equals: goods_and_services }
+        - { fact: supplies_via_eco, equals: true }
+        - { fact: eco_goods_conditions_34_2023, equals: true }
+        - { fact: turnover_within_base_threshold, equals: true }
+        - { fact: preceding_turnover_within_applicable_threshold, equals: true }
+    ca_question: Can Notifications 65/2017-CT and 34/2023-CT be applied together to a supplier of both goods and services through ECOs?
+    source_ref: [{ doc: derived, section: "Combination of 1.5.9 goods and services exemptions; not addressed in handbook" }]
+    effective_from: 2023-07-31
+    effective_to: null
+    verification_status: unverified
+    confidence: guessing
+    notes: Interpretive gap; always routed to the CA.
+
+  - id: EX-N10-2019-CT-GOODS-40L
+    topic: exemption
+    outcome: EXEMPTION
+    scope: displaces
+    displaces: []
+    legal_basis: "s.23(2); Notification 10/2019-CT dated 07.03.2019 (w.e.f. 01.04.2019)"
+    description: >-
+      A person engaged exclusively in supply of goods with aggregate turnover not exceeding Rs 40 lakh is
+      exempt, except: s.24 persons; suppliers of ice cream and edible ice, pan masala, tobacco, fly-ash
+      bricks/aggregates/blocks, bricks of fossil meals, building bricks, earthen or roofing tiles;
+      intra-State suppliers in Arunachal Pradesh, Manipur, Meghalaya, Mizoram, Nagaland, Puducherry,
+      Sikkim, Telangana, Tripura, Uttarakhand; voluntary registrants.
+    plain_language: You supply only goods (none of the excluded items), so the higher Rs 40 lakh limit applies in your State.
+    applies_if:
+      all:
+        - { fact: supply_nature, equals: goods_only }
+        - { not: { fact: special_goods_10_2019, equals: true } }
+    ca_question: Does the client supply only goods, none of them among the excluded items in Notification 10/2019-CT?
+    source_ref:
+      - { doc: handbook, page: 3, pdf_page: 9, section: "1.3.1 Notification 10/2019-CT" }
+      - { doc: handbook, page: 4, pdf_page: 10, section: "1.3.1 exceptions (b)-(d)" }
+    effective_from: 2019-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: >-
+      Used by the engine to pick the goods-only column of the threshold table; the State exclusion is
+      already reflected in thresholds.yaml. The p. 9 summary lists only ice cream, pan masala and
+      tobacco; the fuller list (bricks, tiles) is on p. 4. The date the bricks and tiles were added is not
+      stated (NOT VERIFIED). Goods supplier with exempt interest income: see conflict C-006.
+
+  # =========================== Voluntary ===========================
+  - id: VOL-S25-3
+    topic: voluntary
+    outcome: VOLUNTARY
+    legal_basis: "s.25(3) CGST Act"
+    description: >-
+      A person not liable under s.22 or s.24 may register voluntarily, and is then treated like any
+      other registered person (invoicing, returns, ITC).
+    plain_language: You are not required to register, but you may choose to, for example to claim input tax credit or sell to GST-registered businesses.
+    applies_if: { fact: wants_voluntary, equals: true }
+    ca_question: Does the client want to register voluntarily (ITC, B2B customers), accepting full compliance obligations?
+    deadline_ids: [DL-EFFECTIVE-DATE-RULE10]
+    route_hint: ROUTE-REG01-NORMAL
+    source_ref: [{ doc: handbook, page: 45, pdf_page: 51, section: "2.1 Voluntary Registration" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      A voluntary registrant loses the Notification 10/2019-CT Rs 40 lakh exemption (clause (d)). The
+      engine does not treat "don't know" on this preference as a legal uncertainty; it adds an open
+      question instead (design decision for CA sign-off).

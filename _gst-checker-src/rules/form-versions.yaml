@@ -1,0 +1,60 @@
+# Versions of registration forms. Documents name the versions they apply to; the checklist shows
+# which version is in force on the as-of date.
+
+form_versions:
+  - id: FV-REG01-2017
+    form: REG-01
+    label: REG-01 (form described in the ICAI handbook and the GST portal user guide)
+    description: FORM GST REG-01 as prescribed before the substitution by Notification 05/2026-CT.
+    source_ref:
+      - { doc: handbook, page: 72, pdf_page: 78, section: "2.2" }
+      - { doc: research, page: 2, section: "B. 26 Oct 2026 Notification 05/2026-CT" }
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: handbook
+    confidence: likely
+    notes: End date comes from the research note (substitution from 1 Nov 2026), which is secondary.
+
+  - id: FV-REG01-2026
+    form: REG-01
+    label: Revised REG-01 (Notification 05/2026-CT, GSTN Advisory 681)
+    description: Substituted FORM GST REG-01 with OPC category, SEZ Entity ID, s.9(5) ECO section, existing registrations, standardised premises classification, up to 10 bank accounts, LLP DIN, online CIN/LLPIN/FCRN/FLLPIN validation.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01 (Advisory 681)" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Form text not read. Field-level detail NOT VERIFIED.
+
+  - id: FV-REG07
+    form: REG-07
+    label: REG-07 (TDS / TCS)
+    description: FORM GST REG-07 for persons required to deduct tax under s.51 or collect tax under s.52 (Rule 12).
+    source_ref: [{ doc: handbook, page: 68, pdf_page: 74, section: "2.1.3" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: FV-REG09
+    form: REG-09
+    label: REG-09 (non-resident taxable person)
+    description: FORM GST REG-09 for non-resident taxable persons (Rule 13).
+    source_ref: [{ doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(d)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: FV-REG10
+    form: REG-10
+    label: REG-10 (OIDAR / online money gaming from outside India)
+    description: FORM GST REG-10 for OIDAR suppliers to non-taxable online recipients and online money gaming suppliers outside India (Rule 14).
+    source_ref: [{ doc: handbook, page: 69, pdf_page: 75, section: "2.1.4" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""

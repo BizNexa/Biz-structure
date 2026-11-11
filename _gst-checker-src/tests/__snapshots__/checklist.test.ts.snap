@@ -1,0 +1,753 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > ISD 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "DIN of directors",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: owned: any ONE ownership document",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > OIDAR provider 1`] = `
+[
+  [
+    "special",
+    [
+      "REG-10 application (OIDAR / online money gaming)",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > SEZ unit 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "DIN of directors",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: SEZ: Government of India approval documents",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+  [
+    "special",
+    [
+      "SEZ approval details (LOA/LOP)",
+      "SEZ Entity ID",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > TCS collector 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "DIN of directors",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: owned: any ONE ownership document",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+  [
+    "special",
+    [
+      "REG-07: State of deduction (Part A) and State of principal place of business (Part B)",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > TDS deductor 1`] = `
+[
+  [
+    "identity",
+    [
+      "TAN (Tax Deduction and Collection Account Number)",
+    ],
+  ],
+  [
+    "special",
+    [
+      "REG-07: State of deduction (Part A) and State of principal place of business (Part B)",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > aop_boi 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Registration certificate / proof of constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > casual taxable person 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: owned: any ONE ownership document",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+  [
+    "special",
+    [
+      "Estimated supplies and estimated net tax liability; advance deposit challan",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > foreign_entity 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "Proof of incorporation abroad / foreign registration",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > government_local_authority 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Registration certificate / proof of constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > huf 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "HUF - Karta details and HUF declaration",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > llp 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "LLPIN validated online; DIN of designated partners",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > non-resident taxable person 1`] = `
+[
+  [
+    "identity",
+    [
+      "Self-attested copy of valid passport",
+      "Foreign tax identification number (business entity)",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorised signatory resident in India with PAN",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Proof of principal place of business in India (NRTP)",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Indian bank account",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > opc 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "Select "One Person Company" as constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > others 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Registration certificate / proof of constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > partnership 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Partnership deed",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > private_company 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "DIN of directors",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > proprietorship 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > public_company 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "CIN / FCRN validated online",
+      "DIN of directors",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > scrap dealer (others) 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Registration certificate / proof of constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: owned: any ONE ownership document",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+  [
+    "special",
+    [
+      "REG-07: State of deduction (Part A) and State of principal place of business (Part B)",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > society_club 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Registration certificate / proof of constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;
+
+exports[`report checklist snapshots per entity type (content used by page and PDF) > trust 1`] = `
+[
+  [
+    "identity",
+    [
+      "PAN of the business (or of the proprietor)",
+    ],
+  ],
+  [
+    "constitution",
+    [
+      "Registration certificate / proof of constitution",
+      "Photograph of each partner / director / Karta",
+    ],
+  ],
+  [
+    "signatory",
+    [
+      "Authorisation letter for the signatory",
+      "Photograph of authorised signatory",
+    ],
+  ],
+  [
+    "premises",
+    [
+      "Address proof: rented, registered agreement",
+    ],
+  ],
+  [
+    "bank",
+    [
+      "Bank account proof",
+    ],
+  ],
+]
+`;

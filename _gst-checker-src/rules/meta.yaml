@@ -1,0 +1,16 @@
+# Rule-set metadata. Bump ruleset_version on every change to any rules/*.yaml file.
+# MAJOR: a verdict can change for the same facts. MINOR: new rules/documents. PATCH: wording/notes.
+meta:
+  ruleset_version: 0.2.0
+  ruleset_date: 2026-11-07
+  title: GST registration eligibility, routes and documents (India)
+  cutover_dates:
+    - { date: 2025-11-01, label: "Rules 9A and 14A in force (Notification 18/2025-CT)" }
+    - { date: 2026-04-01, label: "Rule 14A withdrawal: one tax period of returns instead of three months" }
+    - { date: 2026-10-01, label: "Multistate Registration facility on portal (GSTN advisory, secondary)" }
+    - { date: 2026-11-01, label: "Revised REG-01, Rule 14B, new TDS scrap categories (Notification 05/2026-CT, 07/2026-CT, secondary)" }
+    - { date: 2027-04-01, label: "Rules 21A, 22 substituted and Rule 23A inserted (secondary; dates in conflict)" }
+  disclaimer: >-
+    Advisory only. This is decision support, not a legal opinion and not a filing. The law
+    changes often and several rules here are pending verification. Confirm every conclusion
+    with a Chartered Accountant before acting.

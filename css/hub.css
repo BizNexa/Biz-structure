@@ -1,0 +1,63 @@
+/* Multi-product home page (Biz Matrix hub). Uses tokens from css/tokens.css; loaded after whitegold.css. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.hub-hero{padding:64px 0 24px;text-align:center}
+.hub-hero .wrap{max-width:860px}
+.hub-kicker{display:inline-block;margin-bottom:18px;padding:6px 14px;border-radius:99px;background:var(--navy-100);border:1px solid var(--navy-200);color:var(--navy-700);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.hub-hero h1{margin-bottom:18px}
+.hub-hero .lead{margin:0 auto}
+.hub-proof{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;padding:0;margin:26px 0 0;color:var(--ink-2);font-size:.95rem;font-weight:600}
+.hub-proof li{display:flex;align-items:center;gap:8px}
+.hub-proof li::before{content:"";width:18px;height:18px;border-radius:50%;flex:none;background:var(--navy-100) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237D6013' stroke-width='3'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/11px no-repeat}
+
+.hub-tools{padding:32px 0 72px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.tool{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:18px;padding:28px;box-shadow:0 24px 50px -34px rgba(var(--navy-950-rgb),.45);transition:transform .2s ease,box-shadow .2s ease}
+.tool:hover{transform:translateY(-3px);box-shadow:0 30px 60px -34px rgba(var(--navy-950-rgb),.55)}
+.tool-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.tool-ico{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:var(--navy-50);border:1px solid var(--line);color:var(--navy-700)}
+.tool-tag{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right}
+.tool h3{font-size:1.6rem;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.tool-sub{color:var(--ink-2);margin-bottom:16px}
+.tool-list{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:8px}
+.tool-list li{position:relative;padding-left:24px;color:var(--ink-2);font-size:.97rem}
+.tool-list li::before{content:"";position:absolute;left:2px;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.tool-meta{display:flex;flex-wrap:wrap;gap:8px;margin:auto 0 20px;padding-top:4px}
+.tool-meta span{font-size:.8rem;font-weight:600;color:var(--navy-800);background:var(--navy-50);border:1px solid var(--line);border-radius:99px;padding:4px 10px}
+.tool-ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.tool-ctas .txt-link{font-weight:600;text-decoration:none}
+.tool-ctas .txt-link:hover{text-decoration:underline}
+.tool-more{margin-top:22px;text-align:center;color:var(--muted);font-size:.95rem}
+
+.hub-which{padding:64px 0}
+.hub-which h2{text-align:center;margin-bottom:28px}
+.which-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:960px;margin:0 auto}
+.which{position:relative;display:grid;gap:6px;padding:22px 56px 22px 22px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;background:var(--paper);color:var(--ink);text-decoration:none;transition:border-color .15s,transform .15s}
+.which:hover{transform:translateY(-2px);border-color:var(--navy-300)}
+.which-q{font:700 1.1rem/1.3 "Bricolage Grotesque","Public Sans",sans-serif}
+.which-a{color:var(--ink-2);font-size:.97rem}
+.which-go{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.4rem;color:var(--navy-700)}
+
+.hub #how .steps3 li a{color:var(--navy-700)}
+.hub .final .btns{justify-content:center}
+
+/* Footer with a Tools column (home page and inner pages) */
+.bm-footer-in:has(> :nth-child(3)){grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr) minmax(0,1fr)}
+
+@media(max-width:860px){
+  .tool-grid,.which-grid{grid-template-columns:1fr}
+  .hub-hero{padding:40px 0 16px}
+}
+@media(max-width:700px){
+  .bm-footer-in:has(> :nth-child(3)){grid-template-columns:1fr}
+  .tool{padding:22px}
+  .tool h3{font-size:1.4rem}
+  .tool-top{margin-bottom:14px}
+  .hub-hero{padding:24px 0 8px}
+  .hub-kicker{font-size:.66rem;letter-spacing:.06em;padding:5px 11px;margin-bottom:12px}
+  .hub-hero h1{font-size:1.9rem;margin-bottom:12px}
+  .hub-hero .lead{font-size:1rem}
+  .hub-proof{gap:6px 14px;margin-top:16px;font-size:.84rem}
+  .hub-tools{padding-top:20px}
+}
+[data-theme="dark"] .tool,[data-theme="dark"] .which{background:var(--surface)}

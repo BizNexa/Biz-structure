@@ -1,0 +1,114 @@
+# Amendment, cancellation, suspension and revocation. OUT OF SCOPE for v1: recorded here so that v2
+# can add these workflows. The engine does not evaluate these records; CA mode lists those in force
+# on the as-of date.
+
+lifecycle:
+  - id: LC-AMEND-RULE19-2017
+    topic: amendment
+    legal_basis: "s.28 CGST Act; Rule 19"
+    description: Changes in registration particulars are applied for on REG-14 within 15 days of the change. Core fields (legal name without PAN change, place of business address, partners/directors/Karta etc.) need officer approval within 15 working days (REG-15); non-core fields are auto-approved.
+    source_ref: [{ doc: handbook, page: 109, pdf_page: 115, section: "3.1" }]
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: handbook
+    confidence: certain
+    notes: End date from the research note (Rule 19 substituted from 1 Nov 2026).
+
+  - id: LC-AMEND-RULE19-2026
+    topic: amendment
+    legal_basis: "Rule 19 as substituted by Notification 05/2026-CT; GSTN Advisory 686"
+    description: Most amendments (legal name, partners/directors/Karta, additional place of business) are auto-approved after online validation; PPOB changes still need officer approval; OTP verification by the primary authorised signatory and one promoter within 3 days or no ARN; PAN/DIN/CIN validated electronically.
+    source_ref: [{ doc: research, page: 4, section: "C. Amendments, Rule 19 (Advisory 686)" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: LC-CANCEL-RULE20-2017
+    topic: cancellation
+    legal_basis: "s.29 CGST Act; Rule 20"
+    description: Application for cancellation by the registered person (or legal heirs) on REG-16 within 30 days of the event.
+    source_ref: [{ doc: handbook, page: 114, pdf_page: 120, section: "4.1" }]
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: LC-CANCEL-RULE20-2026
+    topic: cancellation
+    legal_basis: "Rule 20 as substituted by Notification 05/2026-CT"
+    description: Portal checks all returns due are filed before REG-16; composition, NRTP, OIDAR and ISD taxpayers cancelled electronically; regular, casual and SEZ taxpayers with output tax up to Rs 2.5 lakh per tax period cancelled electronically; otherwise GSTR-10 within 3 days or officer route.
+    source_ref: [{ doc: research, page: 4, section: "C. Cancellation, REG-16 and Rule 20" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: LC-CANCEL-RULE21-2026
+    topic: cancellation
+    legal_basis: "Rule 21 as substituted by Notification 05/2026-CT"
+    description: Rule 21 (grounds for cancellation) substituted.
+    source_ref: [{ doc: research, page: 2, section: "B. 26 Oct 2026 Notification 05/2026-CT" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: conflict
+    confidence: guessing
+    notes: Effective date disputed between sources (conflict C-002).
+
+  - id: LC-SUSPEND-RULE21A-2017
+    topic: suspension
+    legal_basis: "Rule 21A"
+    description: Suspension of registration pending cancellation proceedings; REG-31 intimation; no taxable supplies during suspension.
+    source_ref: [{ doc: handbook, page: 116, pdf_page: 122, section: "Suspension of Registration (Rule 21A)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: conflict
+    confidence: likely
+    notes: Substitution date of Rule 21A disputed (1 Nov 2026 or 1 Apr 2027), so effective_to is left null (conflict C-002).
+
+  - id: LC-SUSPEND-RULE21A-2027
+    topic: suspension
+    legal_basis: "Rule 21A as substituted by Notification 05/2026-CT"
+    description: Rule 21A substituted.
+    source_ref: [{ doc: research, page: 2, section: "B. 26 Oct 2026 Notification 05/2026-CT" }]
+    effective_from: 2027-04-01
+    effective_to: null
+    verification_status: conflict
+    confidence: guessing
+    notes: Conflict C-002.
+
+  - id: LC-CANCEL-RULE22-2027
+    topic: cancellation
+    legal_basis: "Rule 22 as substituted by Notification 05/2026-CT"
+    description: Rule 22 (cancellation by officer) substituted.
+    source_ref: [{ doc: research, page: 2, section: "B. 26 Oct 2026 Notification 05/2026-CT" }]
+    effective_from: 2027-04-01
+    effective_to: null
+    verification_status: conflict
+    confidence: guessing
+    notes: Conflict C-002.
+
+  - id: LC-RULE23A-2027
+    topic: cancellation
+    legal_basis: "Rule 23A inserted by Notification 05/2026-CT"
+    description: New Rule 23A inserted (content not known).
+    source_ref: [{ doc: research, page: 4, section: "D. Pending items" }]
+    effective_from: 2027-04-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: CONTENT NOT VERIFIED.
+
+  - id: LC-REVOKE-RULE23
+    topic: revocation
+    legal_basis: "s.30 CGST Act; Rule 23"
+    description: Revocation of cancellation on REG-21; Aadhaar authentication required (Rule 10B).
+    source_ref: [{ doc: handbook, page: 131, pdf_page: 137, section: "4.2" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""

@@ -1,0 +1,40 @@
+# Standard formats. Circular 257/03/2026-GST reportedly prescribes these formats, but its text was not
+# available. Content is deliberately null: the tool does not invent legal formats. Paste the official
+# text into `content` once read, and change verification_status to `official` with URL and fetch date.
+
+c257: &c257
+  - { doc: research, page: 2, section: "B. 26 Oct 2026 Circular 257/03/2026-GST: formats for consent letter, rent-free undertaking, legal heir's affidavit" }
+
+templates:
+  - id: TPL-C257-CONSENT
+    name: Consent letter (Circular 257/03/2026-GST format)
+    content: null
+    description: Standard consent letter from the owner of premises allowing the applicant to use them as a place of business.
+    source_ref: *c257
+    effective_from: 2026-10-26
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: FORMAT TEXT NOT VERIFIED. Before the circular, Instruction 03/2025-GST accepted a consent letter on plain paper with no prescribed format.
+
+  - id: TPL-C257-RENT-FREE
+    name: Rent-free undertaking (Circular 257/03/2026-GST format)
+    content: null
+    description: Undertaking that premises are provided free of rent.
+    source_ref: *c257
+    effective_from: 2026-10-26
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: FORMAT TEXT NOT VERIFIED.
+
+  - id: TPL-C257-LEGAL-HEIR
+    name: Legal heir's affidavit (Circular 257/03/2026-GST format)
+    content: null
+    description: Affidavit by a legal heir where the premises stand in the name of a deceased person.
+    source_ref: *c257
+    effective_from: 2026-10-26
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: FORMAT TEXT NOT VERIFIED.

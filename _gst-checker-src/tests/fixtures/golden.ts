@@ -1,0 +1,323 @@
+/**
+ * Golden scenarios. Expected outcomes are derived from the ICAI handbook (citation per scenario).
+ * Every scenario is `pending_CA_signoff` until the CA confirms it; change to `ca_signed_off` with
+ * initials and date once reviewed. docs/ca-review-pack.md lists them.
+ */
+import type { Facts } from '../../engine/facts';
+import type { Verdict } from '../../engine/evaluate';
+
+export interface GoldenScenario {
+  id: string;
+  title: string;
+  facts: Facts; // overrides on tests/helpers BASE
+  asOf?: string;
+  expect: {
+    verdict: Verdict;
+    requires?: string[]; // rule ids with effect requires_registration
+    exempts?: string[]; // rule ids with effect exempts
+    pending?: string[]; // rule ids with effect pending
+    routes?: string[]; // recommended route ids (subset, in order)
+    conflicts?: string[];
+  };
+  citation: string;
+  signoff: 'pending_CA_signoff' | 'ca_signed_off';
+}
+
+export const GOLDEN: GoldenScenario[] = [
+  {
+    id: 'G01',
+    title: 'Small local goods trader, Maharashtra, Rs 30 lakh',
+    facts: { supply_nature: 'goods_only', aggregate_turnover_lakh: 30 },
+    expect: { verdict: 'NOT_REQUIRED' },
+    citation: 'Threshold table p. 7-8 (PDF 13-14): Rs 40 lakh for exclusive goods in other States; Notification 10/2019-CT p. 3.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G01b',
+    title: 'Same trader at Rs 45 lakh',
+    facts: { supply_nature: 'goods_only', aggregate_turnover_lakh: 45 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'], routes: ['ROUTE-REG01-NORMAL'] },
+    citation: 's.22(1), threshold table p. 7-8.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G02',
+    title: 'Service provider below threshold (Rs 15 lakh, Karnataka)',
+    facts: { supply_nature: 'services_only', ppob_state: 'KA', aggregate_turnover_lakh: 15 },
+    expect: { verdict: 'NOT_REQUIRED' },
+    citation: 'Threshold for services Rs 20 lakh, p. 6 and table p. 7-8.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G03',
+    title: 'Service provider above threshold (Rs 25 lakh, Karnataka)',
+    facts: { supply_nature: 'services_only', ppob_state: 'KA', aggregate_turnover_lakh: 25 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'], routes: ['ROUTE-REG01-NORMAL'] },
+    citation: 's.22(1), p. 2 and table p. 7-8.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G04',
+    title: 'Inter-State supplier of goods, Rs 10 lakh',
+    facts: { supply_nature: 'goods_only', aggregate_turnover_lakh: 10, interstate_taxable_supply: true },
+    expect: { verdict: 'MANDATORY', requires: ['S24-I-INTERSTATE'] },
+    citation: 's.24(i), §1.5.1 p. 20 (PDF 26): no threshold for inter-State taxable supply.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G05',
+    title: 'Inter-State services provider, Rs 12 lakh',
+    facts: { supply_nature: 'services_only', aggregate_turnover_lakh: 12, interstate_taxable_supply: true },
+    expect: { verdict: 'NOT_REQUIRED', exempts: ['EX-N10-2017-IT-INTERSTATE-SERVICES'] },
+    citation: 'Notification 10/2017-IT, §1.5.1 Exceptions p. 20 (PDF 26).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G05b',
+    title: 'Inter-State services provider, Rs 22 lakh',
+    facts: { supply_nature: 'services_only', aggregate_turnover_lakh: 22, interstate_taxable_supply: true },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD', 'S24-I-INTERSTATE'] },
+    citation: 's.22(1) and s.24(i); 10/2017-IT limit exceeded.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G06a',
+    title: 'E-commerce goods seller via ECO, no 34/2023 enrolment, Rs 15 lakh',
+    facts: { supplies_via_eco: true, eco_supplies_only_9_5_services: false, eco_goods_conditions_34_2023: false, aggregate_turnover_lakh: 15, preceding_fy_turnover_lakh: 10 },
+    expect: { verdict: 'MANDATORY', requires: ['S24-IX-ECO-SUPPLIER'] },
+    citation: 's.24(ix), §1.5.9 p. 35 (PDF 41).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G06b',
+    title: 'E-commerce goods seller meeting all Notification 34/2023-CT conditions',
+    facts: { supplies_via_eco: true, eco_supplies_only_9_5_services: false, eco_goods_conditions_34_2023: true, aggregate_turnover_lakh: 15, preceding_fy_turnover_lakh: 10 },
+    expect: { verdict: 'NOT_REQUIRED', exempts: ['EX-N34-2023-CT-ECO-GOODS'] },
+    citation: 'Notification 34/2023-CT conditions table, p. 35-36 (PDF 41-42).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G06c',
+    title: 'E-commerce seller registered in another State, entering a new State via ECOs only (Rule 14B)',
+    facts: {
+      supplies_via_eco: true,
+      eco_supplies_only_9_5_services: false,
+      eco_goods_conditions_34_2023: false,
+      interstate_taxable_supply: true,
+      aggregate_turnover_lakh: 80,
+      existing_registrations_same_pan: 'other_states',
+      wants_rule_14b: true,
+      no_presence_in_target_state: true,
+      target_state_supplies_only_via_eco: true,
+      monthly_output_tax_to_registered_lakh: 1,
+      aadhaar_authentication_willing: true,
+    },
+    expect: { verdict: 'MANDATORY', requires: ['S24-IX-ECO-SUPPLIER'], routes: ['ROUTE-RULE-14B'] },
+    citation: 's.24(ix) handbook p. 35; Rule 14B from research note p. 4 (secondary).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G06d',
+    title: 'Same e-commerce seller with no registration in another State: Rule 14B not available',
+    facts: {
+      supplies_via_eco: true,
+      eco_supplies_only_9_5_services: false,
+      eco_goods_conditions_34_2023: false,
+      aggregate_turnover_lakh: 15,
+      preceding_fy_turnover_lakh: 10,
+      existing_registrations_same_pan: 'none',
+      wants_rule_14b: true,
+      no_presence_in_target_state: true,
+      target_state_supplies_only_via_eco: true,
+      monthly_output_tax_to_registered_lakh: 1,
+      aadhaar_authentication_willing: true,
+    },
+    expect: { verdict: 'MANDATORY', requires: ['S24-IX-ECO-SUPPLIER'], routes: ['ROUTE-REG01-NORMAL'] },
+    citation: 'Rule 14B condition "active regular registration in another State" (research note p. 4).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G07',
+    title: 'Reverse charge only: small service provider liable to pay RCM on an inward supply',
+    facts: { supply_nature: 'services_only', aggregate_turnover_lakh: 5, rcm_liable_inward: true },
+    expect: { verdict: 'MANDATORY', requires: ['S24-III-RCM'] },
+    citation: 's.24(iii), §1.5.3 p. 23-24 (PDF 29-30); CA to confirm the notified entry applies to an unregistered recipient.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G07b',
+    title: 'Advocate: professional fees Rs 16 lakh (all under RCM) plus FD interest Rs 5 lakh',
+    facts: { supply_nature: 'services_only', aggregate_turnover_lakh: 21, outward_all_rcm_by_recipient: true },
+    expect: { verdict: 'NOT_REQUIRED', exempts: ['EX-N5-2017-RCM-ONLY-2024'] },
+    citation: 'Illustration 3, p. 15 (PDF 21); Notification 5/2017-CT.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G08',
+    title: 'Non-resident supplier exhibiting in India',
+    facts: { constitution: 'foreign_entity', non_resident_occasional: true, ppob_state: 'DL', aggregate_turnover_lakh: 5 },
+    expect: { verdict: 'MANDATORY', requires: ['S24-V-NRTP'], routes: ['ROUTE-REG09-NRTP'] },
+    citation: 's.24(v), §1.5.5 p. 26 (PDF 32); REG-09 §2.1.2 p. 64.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G09',
+    title: 'Casual taxable person: Bangalore event company at a Goa event',
+    facts: { supply_nature: 'services_only', ppob_state: 'GA', aggregate_turnover_lakh: 8, casual_occasional_no_fixed_place: true, casual_long_exhibition_over_180: false },
+    expect: { verdict: 'MANDATORY', requires: ['S24-II-CASUAL'], routes: ['ROUTE-REG01-CASUAL'] },
+    citation: 's.24(ii), §1.5.2 example (a), p. 21 (PDF 27).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G10',
+    title: 'OIDAR provider outside India selling to consumers in India',
+    facts: { constitution: 'foreign_entity', supply_nature: 'services_only', oidar_from_outside_to_nonregistered: true, aggregate_turnover_lakh: 100 },
+    expect: { verdict: 'MANDATORY', requires: ['S24-XI-OIDAR'], routes: ['ROUTE-REG10-OIDAR'] },
+    citation: 's.24(xi), §1.5.11 p. 37-39 (PDF 43-45); REG-10.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G11',
+    title: 'Government department as TDS deductor, no outward supplies',
+    facts: { constitution: 'government_local_authority', supply_nature: 'no_outward_supplies', tds_category: 'govt_department', aadhaar_exempt_class: true },
+    expect: { verdict: 'MANDATORY', requires: ['S24-VI-TDS'], routes: ['ROUTE-REG07-TDS'] },
+    citation: 's.24(vi), §1.5.6 p. 27 (PDF 33); REG-07 §2.1.3 p. 68.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G12',
+    title: 'SEZ unit of a private company, goods Rs 50 lakh',
+    facts: { constitution: 'private_company', sez_unit_or_developer: true, premises_type: 'sez_premises', aggregate_turnover_lakh: 50 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'], routes: ['ROUTE-REG01-SEZ', 'ROUTE-REG01-NORMAL'] },
+    citation: 's.22(1); separate SEZ registration §2.1 p. 43 (PDF 49).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G13',
+    title: 'Religious trust: rent Rs 5 lakh + exempt rent Rs 2 lakh (offerings not a supply)',
+    facts: { constitution: 'trust', supply_nature: 'services_only', aggregate_turnover_lakh: 7 },
+    expect: { verdict: 'NOT_REQUIRED' },
+    citation: 'Illustration 5, p. 16 (PDF 22).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G13b',
+    title: 'Society making taxable supplies of Rs 25 lakh',
+    facts: { constitution: 'society_club', supply_nature: 'services_only', aggregate_turnover_lakh: 25, premises_type: 'rented_registered_agreement' },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'] },
+    citation: 's.22(1); constitution proof per Instruction 03/2025-GST p. 57.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G14',
+    title: 'HUF trading goods, Rs 45 lakh, Gujarat',
+    facts: { constitution: 'huf', ppob_state: 'GJ', aggregate_turnover_lakh: 45 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'] },
+    citation: 's.22(1); Rs 40 lakh goods limit exceeded (table p. 7-8).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G15',
+    title: 'Manipur service provider at Rs 11 lakh (special category State)',
+    facts: { ppob_state: 'MN', supply_nature: 'services_only', aggregate_turnover_lakh: 11 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'] },
+    citation: 'Special Category States Rs 10 lakh, p. 3 (PDF 9) and table p. 7.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G15b',
+    title: 'Manipur goods trader at Rs 9.5 lakh',
+    facts: { ppob_state: 'MN', supply_nature: 'goods_only', aggregate_turnover_lakh: 9.5 },
+    expect: { verdict: 'NOT_REQUIRED' },
+    citation: 'Table p. 7: Rs 10 lakh for goods in Manipur.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G15c',
+    title: 'Telangana goods trader at Rs 25 lakh (Rs 40 lakh limit not available)',
+    facts: { ppob_state: 'TS', supply_nature: 'goods_only', aggregate_turnover_lakh: 25 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'] },
+    citation: 'Notification 10/2019-CT clause (c); table p. 8 (PDF 14).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G15d',
+    title: 'Goa branch plus Manipur branch, all-India turnover Rs 15 lakh (services)',
+    facts: { ppob_state: 'GA', other_supply_states: ['MN'], supply_nature: 'services_only', aggregate_turnover_lakh: 15 },
+    expect: { verdict: 'MANDATORY', requires: ['S22-1-THRESHOLD'] },
+    citation: 'First proviso to s.22(1); Illustrations 10-11 p. 17 (PDF 23). Liable at least in Manipur.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G16',
+    title: 'Applicant answers "I don\'t know" to turnover',
+    facts: { aggregate_turnover_lakh: 'unknown' },
+    expect: { verdict: 'NEEDS_CA_REVIEW', pending: ['S22-1-THRESHOLD'] },
+    citation: 'Principle: uncertainty routes to the CA. s.22(1) cannot be applied without aggregate turnover.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G17',
+    title: 'Exclusively exempt supplier (healthcare) liable to RCM on legal services',
+    facts: { supply_nature: 'services_only', taxability: 'exclusively_exempt_nontaxable', aggregate_turnover_lakh: 60, rcm_liable_inward: true },
+    expect: { verdict: 'NEEDS_CA_REVIEW', pending: ['S24-III-RCM'], conflicts: ['C-005'] },
+    citation: 's.23 override (p. 18) vs Circular 57/31/2018 para 9 (p. 33): conflict C-005.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G18',
+    title: 'Goods trader with FD interest only, Rs 30 lakh total (Tamil Nadu)',
+    facts: { ppob_state: 'TN', supply_nature: 'goods_and_services', goods_plus_interest_only: true, aggregate_turnover_lakh: 30 },
+    expect: { verdict: 'NEEDS_CA_REVIEW', conflicts: ['C-006'] },
+    citation: 'Example of Mr. X, p. 6 (PDF 12); two schools of thought p. 5-6.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G19',
+    title: 'Small trader opting for voluntary registration under Rule 14A',
+    facts: {
+      aggregate_turnover_lakh: 12,
+      wants_voluntary: true,
+      wants_rule_14a: true,
+      aadhaar_authentication_willing: true,
+      aadhaar_exempt_class: false,
+      existing_14a_same_state: false,
+      monthly_output_tax_to_registered_lakh: 0.5,
+    },
+    expect: { verdict: 'VOLUNTARY_ELIGIBLE', routes: ['ROUTE-RULE-14A'] },
+    citation: 's.25(3) p. 45; Rule 14A §2.1.1 p. 61-62 (PDF 67-68).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G20',
+    title: 'Exporter of goods with Rs 25 lakh export turnover only',
+    facts: { supply_nature: 'goods_only', aggregate_turnover_lakh: 25, interstate_taxable_supply: true, makes_exports: true },
+    expect: { verdict: 'MANDATORY', requires: ['S24-I-INTERSTATE'] },
+    citation: 'Illustration 6, p. 16 (PDF 22).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G21',
+    title: 'Small exporter of services, Rs 12 lakh',
+    facts: { supply_nature: 'services_only', aggregate_turnover_lakh: 12, interstate_taxable_supply: true, makes_exports: true },
+    expect: { verdict: 'NEEDS_CA_REVIEW', conflicts: ['C-014'] },
+    citation: 'Illustration 6 vs Notification 10/2017-IT: conflict C-014.',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G22',
+    title: 'Commission agent invoicing in own name for a registered principal',
+    facts: { aggregate_turnover_lakh: 6, agent_on_behalf: true, agent_invoices_in_own_name: true, principal_is_taxable_person: true },
+    expect: { verdict: 'MANDATORY', requires: ['S24-VII-AGENT'] },
+    citation: 'Circular 57/31/2018-GST scenario 3, p. 32-33 (PDF 38-39).',
+    signoff: 'pending_CA_signoff',
+  },
+  {
+    id: 'G23',
+    title: 'Farmer (individual) selling own produce only',
+    facts: { constitution: 'proprietorship', agriculturist_own_produce_only: true, aggregate_turnover_lakh: 50 },
+    expect: { verdict: 'NOT_REQUIRED', exempts: ['EX-S23-1B-AGRICULTURIST'] },
+    citation: 's.23(1)(b), §1.4.3 p. 18 (PDF 24).',
+    signoff: 'pending_CA_signoff',
+  },
+];

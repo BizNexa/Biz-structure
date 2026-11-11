@@ -138,7 +138,7 @@ export function createApp({ store, gateway, mode, frontendUrl, allowedOrigins, c
     app.use('/assessment', express.static(path.join(siteRoot, 'assessment'), { dotfiles: 'deny' }));
     app.use('/css', express.static(path.join(siteRoot, 'css'), { dotfiles: 'deny', index: false }));
     app.use('/js', express.static(path.join(siteRoot, 'js'), { dotfiles: 'deny', index: false }));
-    for (const page of ['about', 'contact', 'privacy-policy', 'terms', 'refund-policy', 'shipping-delivery', 'cookie-policy', 'disclaimer', 'grievance-redressal', 'accessibility', 'corporate-information']) app.use('/' + page, express.static(path.join(siteRoot, page), { dotfiles: 'deny' }));
+    for (const page of ['about', 'contact', 'privacy-policy', 'terms', 'refund-policy', 'shipping-delivery', 'cookie-policy', 'disclaimer', 'grievance-redressal', 'accessibility', 'corporate-information', 'methodology', 'business-structure', 'gst-registration-checker']) app.use('/' + page, express.static(path.join(siteRoot, page), { dotfiles: 'deny' }));
   }
   app.use((req, res) => res.status(404).json({ error: 'Not found.' }));
   app.use((error, _req, res, _next) => {

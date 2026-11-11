@@ -1,0 +1,45 @@
+# Numeric parameters used by route conditions. Never hardcode these in code.
+
+config:
+  - id: RULE14A-MONTHLY-CAP-LAKH
+    description: Maximum self-declared monthly output tax liability (CGST + SGST/UTGST + IGST + cess) on supplies to registered persons for the Rule 14A simplified registration.
+    value: 2.5
+    unit: Rs lakh per month
+    alternatives:
+      - { value: 5, source: "One TaxGuru article cited in the research note, section F", verification_status: secondary }
+    source_ref:
+      - { doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Rule 14A" }
+      - { doc: gst_tutorial, url: "https://tutorial.gst.gov.in/userguide/registration/Apply_for_Registration_Normal_Taxpayer.htm", fetched: 2026-11-07, section: "Business Details tab (h)" }
+      - { doc: research, page: 5, section: "F. Items I could not verify" }
+    effective_from: 2025-11-01
+    effective_to: null
+    verification_status: conflict
+    confidence: likely
+    notes: >-
+      Kept as `conflict` as instructed until the text of Notification 18/2025-CT is read. Both the handbook
+      (Rs 2,50,000 per month) and the official GST portal user guide (Rs 2.5 lakh per month) give 2.5;
+      only one secondary article says 5. See conflict C-001.
+
+  - id: RULE14B-MONTHLY-CAP-LAKH
+    description: Cap on output tax liability on supplies to registered persons for a Rule 14B registration.
+    value: 2.5
+    unit: Rs lakh per month
+    alternatives: []
+    source_ref: [{ doc: research, page: 4, section: "C. Rule 14B, e-commerce sellers" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Single secondary source. NUMBER NOT VERIFIED against Notification 05/2026-CT. See conflict C-009.
+
+  - id: TDS-CONTRACT-VALUE-LAKH
+    description: Total value of supply under a contract above which s.51 TDS is deducted.
+    value: 2.5
+    unit: Rs lakh per contract
+    alternatives: []
+    source_ref: [{ doc: handbook, page: 27, pdf_page: 33, section: "1.5.6" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Informational; registration of the deductor does not depend on this value in the engine.

@@ -1,0 +1,795 @@
+# Document checklist. Each row applies when (a) one of its form versions is in force on the as-of
+# date and (b) applies_if holds. Rows say what to upload, not how to fill the form.
+# Main source for premises and constitution: CBIC Instruction 03/2025-GST as reproduced in the
+# handbook (p. 54-59, PDF 60-65). Circular 257/03/2026-GST was NOT read; rows that depend on it are
+# `secondary` and their formats appear only as named placeholders (templates.yaml).
+
+reg01_all: &reg01_all [FV-REG01-2017, FV-REG01-2026]
+reg01_old: &reg01_old [FV-REG01-2017]
+reg01_new: &reg01_new [FV-REG01-2026]
+instr: &instr
+  - { doc: handbook, page: 54, pdf_page: 60, section: "Instruction 03/2025-GST, A(a) premises table" }
+tut1: &tut1 { doc: gst_tutorial, url: "https://tutorial.gst.gov.in/userguide/registration/Apply_for_Registration_Normal_Taxpayer.htm", fetched: 2026-11-07 }
+tut: &tut
+  - *tut1
+not_nrtp: &not_nrtp { not: { fact: non_resident_occasional, equals: true } }
+r257: &r257
+  - { doc: research, page: 2, section: "B. 26 Oct 2026 Circular 257/03/2026-GST" }
+  - { doc: research, page: 4, section: "C. Revised REG-01 standardised premises classification" }
+
+documents:
+  # ---------------- Identity of the business ----------------
+  - id: DOC-PAN
+    category: identity
+    name: PAN of the business (or of the proprietor)
+    detail: Every applicant must have a PAN. Legal name in the application must be exactly as in the PAN database; the constitution is validated against CBDT records.
+    applies_if: *not_nrtp
+    form_version_ids: *reg01_all
+    description: s.25(6) requires PAN for registration (except NRTP, s.25(7), and TDS deductors who use TAN).
+    source_ref:
+      - { doc: handbook, page: 46, pdf_page: 52, section: "Requirement to obtain PAN" }
+      - { doc: handbook, page: 73, pdf_page: 79, section: "2.2 Part A step 6" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-TAN
+    category: identity
+    name: TAN (Tax Deduction and Collection Account Number)
+    detail: A person required to deduct tax under s.51 obtains registration using TAN instead of PAN.
+    applies_if:
+      fact: tds_category
+      in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu]
+    form_version_ids: [FV-REG07]
+    description: Proviso to s.25(6) - TDS deductor may obtain registration using TAN.
+    source_ref: [{ doc: handbook, page: 46, pdf_page: 52, section: "Requirement to obtain TAN" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  # ---------------- Constitution ----------------
+  - id: DOC-PARTNERSHIP-DEED
+    category: constitution
+    name: Partnership deed
+    detail: Upload the partnership deed as proof of constitution. Officers should not ask for Udyam/MSME, shop-establishment certificates or trade licences in addition.
+    applies_if: { fact: constitution, equals: partnership }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, A(b) - partnership deed is the proof of constitution for partnership firms.
+    source_ref: [{ doc: handbook, page: 57, pdf_page: 63, section: "Instruction 03/2025-GST, A(b)" }]
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Instruction 03/2025-GST is dated 17.04.2025.
+
+  - id: DOC-REGISTRATION-CERTIFICATE
+    category: constitution
+    name: Registration certificate / proof of constitution
+    detail: Society, trust, club, government department, AOP/BOI, local authority, statutory body and others upload their registration certificate or other proof of constitution.
+    applies_if: { fact: constitution, in: [trust, society_club, aop_boi, government_local_authority, others] }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, A(b) - registration certificate / proof of constitution.
+    source_ref: [{ doc: handbook, page: 57, pdf_page: 63, section: "Instruction 03/2025-GST, A(b)" }]
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-COMPANY-INCORPORATION
+    category: constitution
+    name: Certificate of incorporation (MCA) / CIN
+    detail: Company (private, public, OPC) - certificate of incorporation issued by the Ministry of Corporate Affairs. Legal name must match PAN and MCA records.
+    applies_if: { fact: constitution, in: [private_company, public_company, opc] }
+    form_version_ids: *reg01_old
+    description: Proof of constitution for companies.
+    source_ref: [{ doc: derived, section: "REG-01 document annexure not reproduced in the handbook" }]
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: unverified
+    confidence: likely
+    notes: UNVERIFIED - the handbook does not list company constitution documents. Confirm from the REG-01 annexure.
+
+  - id: DOC-COMPANY-CIN-2026
+    category: constitution
+    name: CIN / FCRN validated online (revised REG-01)
+    detail: The revised REG-01 validates CIN (and FCRN for foreign companies) online; the ARN is generated only after successful validation. Check the legal name matches PAN and the MCA certificate before filing.
+    applies_if: { fact: constitution, in: [private_company, public_company, opc, foreign_entity] }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - online validation of CIN, FCRN, LLPIN, FLLPIN.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Whether an incorporation certificate upload is still required is NOT VERIFIED.
+
+  - id: DOC-OPC-CATEGORY-2026
+    category: constitution
+    name: Select "One Person Company" as constitution
+    detail: The revised REG-01 adds OPC as a separate constitution category.
+    applies_if: { fact: constitution, equals: opc }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - OPC added as a constitution category.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: DOC-LLP-INCORPORATION
+    category: constitution
+    name: LLP incorporation certificate / LLPIN
+    detail: LLP - certificate of incorporation and LLP agreement.
+    applies_if: { fact: constitution, equals: llp }
+    form_version_ids: *reg01_old
+    description: Proof of constitution for LLPs.
+    source_ref: [{ doc: derived, section: "REG-01 document annexure not reproduced in the handbook" }]
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: unverified
+    confidence: likely
+    notes: UNVERIFIED - confirm from the REG-01 annexure.
+
+  - id: DOC-LLP-2026
+    category: constitution
+    name: LLPIN validated online; DIN of designated partners
+    detail: The revised REG-01 validates LLPIN (FLLPIN for foreign LLPs) online and requires the DIN of designated partners.
+    applies_if: { fact: constitution, equals: llp }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - LLP applicants must give DIN of designated partners; LLPIN validated online.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Before 1 Nov 2026 the GST user guide says DIN is not mandatory for LLPs.
+
+  - id: DOC-HUF
+    category: constitution
+    name: HUF - Karta details and HUF declaration
+    detail: HUF - details of the Karta as promoter; HUF declaration/deed if required.
+    applies_if: { fact: constitution, equals: huf }
+    form_version_ids: *reg01_all
+    description: Proof of constitution for HUF.
+    source_ref: [{ doc: derived, section: "REG-01 document annexure not reproduced in the handbook" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: unverified
+    confidence: guessing
+    notes: UNVERIFIED - the handbook mentions only Karta Aadhaar authentication (p. 49). Confirm required documents.
+
+  - id: DOC-FOREIGN-ENTITY
+    category: constitution
+    name: Proof of incorporation abroad / foreign registration
+    detail: Foreign company or entity - proof of incorporation and, where registered in India, FCRN.
+    applies_if: { fact: constitution, equals: foreign_entity }
+    form_version_ids: *reg01_all
+    description: Proof of constitution for foreign entities.
+    source_ref: [{ doc: derived, section: "Not covered in the handbook" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: unverified
+    confidence: guessing
+    notes: UNVERIFIED.
+
+  - id: DOC-DIN-COMPANY
+    category: constitution
+    name: DIN of directors
+    detail: DIN is mandatory for each director entered as promoter in the case of private, public and unlimited companies and foreign companies registered in India.
+    applies_if: { fact: constitution, in: [private_company, public_company] }
+    form_version_ids: *reg01_all
+    description: Promoter/Partners tab - DIN mandatory for listed company types.
+    source_ref:
+      - { doc: handbook, page: 79, pdf_page: 85, section: "2.2 Promoter/Partners tab" }
+      - *tut1
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: The handbook lists PSU as DIN-mandatory; the GST user guide says not mandatory for PSU (conflict C-007). OPC not listed before the revised form.
+
+  - id: DOC-PROMOTER-PHOTO
+    category: constitution
+    name: Photograph of each promoter / partner / director / Karta / trustee
+    detail: Upload a photograph for each stakeholder entered in the Promoter/Partners tab (up to 10). Residential address and photograph are always entered manually.
+    applies_if: *not_nrtp
+    form_version_ids: *reg01_all
+    description: Promoter/Partners tab - photograph upload per stakeholder.
+    source_ref: *tut
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: official
+    confidence: certain
+    notes: ""
+
+  # ---------------- Authorised signatory ----------------
+  - id: DOC-AUTH-SIGNATORY-PROOF
+    category: signatory
+    name: Proof of appointment of authorised signatory
+    detail: Letter of authorisation, or copy of the resolution of the Board of Directors / Managing Committee with an acceptance letter. PDF/JPEG up to 1 MB.
+    applies_if: { not: { fact: constitution, equals: proprietorship } }
+    form_version_ids: *reg01_all
+    description: Authorised Signatory tab - proof of appointment.
+    source_ref:
+      - { doc: handbook, page: 80, pdf_page: 86, section: "2.2 Authorized Signatory tab" }
+      - { doc: handbook, page: 99, pdf_page: 105, section: "2.5 Authorized Signatory tab (list of documents)" }
+      - *tut1
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: The explicit list (letter or resolution with acceptance) appears in the NRTP section; applied generally. A proprietor signing personally needs no appointment proof (CA to confirm).
+
+  - id: DOC-AUTH-SIGNATORY-PHOTO
+    category: signatory
+    name: Photograph of authorised signatory
+    detail: Photograph of each authorised signatory, JPEG up to 100 KB.
+    applies_if: { fact: constitution, in: [proprietorship, partnership, llp, private_company, public_company, opc, huf, trust, society_club, aop_boi, government_local_authority, foreign_entity, others] }
+    form_version_ids: *reg01_all
+    description: Authorised Signatory tab - photograph (100 KB).
+    source_ref: [{ doc: handbook, page: 80, pdf_page: 86, section: "2.2 Authorized Signatory tab" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: STEP-AADHAAR
+    category: step
+    name: Aadhaar authentication (OTP or biometric)
+    detail: >-
+      Proprietor / one partner / one director / Karta / a managing committee member, and the primary
+      authorised signatory, authenticate Aadhaar through the link sent after submission. Opting out
+      (or failing) means physical verification and up to 30 days. Biometric authentication at a GST
+      Suvidha Kendra may be required if flagged, carrying originals of uploaded documents.
+    applies_if:
+      all:
+        - *not_nrtp
+        - { not: { fact: aadhaar_exempt_class, equals: true } }
+    form_version_ids: *reg01_all
+    description: s.25(6B)/(6C), Rule 8(4A), Rule 9(1) proviso.
+    source_ref:
+      - { doc: handbook, page: 47, pdf_page: 53, section: "Aadhaar Authentication (A), (B)" }
+      - { doc: handbook, page: 81, pdf_page: 87, section: "2.2 Aadhaar Authentication tab" }
+    effective_from: 2020-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Exempt classes (Notification 3/2021-CT) - non-citizens, government departments, local authorities, statutory bodies, PSUs.
+
+  # ---------------- Principal place of business ----------------
+  - id: DOC-PPOB-OWNED
+    category: premises
+    name: "Premises proof - owned: any ONE ownership document"
+    detail: Any one of - property tax receipt, municipal khata copy, electricity bill, or any other document under State or local law that clearly establishes the applicant's ownership. No additional ownership documents or originals should be sought.
+    applies_if: { fact: premises_type, equals: owned }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, row (i) Owned.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-PPOB-RENTED-REGISTERED
+    category: premises
+    name: "Premises proof - rented, registered agreement"
+    detail: Valid rent/lease agreement plus any one ownership document of the lessor (as for owned premises). Identity proof of the lessor should NOT be sought. If the electricity or water connection is in the tenant's name, that document with the rent agreement is sufficient.
+    applies_if: { fact: premises_type, equals: rented_registered_agreement }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, row (ii) Rented.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Rent/lease agreement upload up to 2 MB (handbook p. 99).
+
+  - id: DOC-PPOB-RENTED-UNREGISTERED
+    category: premises
+    name: "Premises proof - rented, unregistered agreement"
+    detail: Rent/lease agreement plus any one ownership document of the lessor, plus a copy of the lessor's identity proof. If the electricity or water connection is in the tenant's name, that document with the rent agreement is sufficient.
+    applies_if: { fact: premises_type, equals: rented_unregistered_agreement }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, row (ii) Rented - unregistered agreement.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-PPOB-RENTED-NO-AGREEMENT
+    category: premises
+    name: "Premises proof - rented, no agreement: affidavit"
+    detail: An affidavit to that effect on non-judicial stamp paper of the minimum value, executed before a First-Class Judicial Magistrate, Executive Magistrate or Notary Public, plus a document supporting possession, such as an electricity bill in the applicant's name.
+    applies_if: { fact: premises_type, equals: rented_no_agreement }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, row (vi) Rented/leased premises where agreement is not available.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: No prescribed affidavit format in the handbook.
+
+  - id: DOC-PPOB-CONSENT
+    category: premises
+    name: "Premises proof - owned by spouse/relative etc.: consent letter"
+    detail: Consent letter on plain paper from the owner, a copy of the identity proof of the person giving consent, and any one ownership document of the owner.
+    applies_if: { fact: premises_type, equals: consent_relative }
+    form_version_ids: *reg01_all
+    template_id: TPL-C257-CONSENT
+    description: Instruction 03/2025-GST, row (iii) not owned or rented (spouse, relative etc.).
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: From 26 Oct 2026 Circular 257 reportedly prescribes a consent-letter format (format not read).
+
+  - id: DOC-PPOB-SHARED-AGREEMENT
+    category: premises
+    name: "Premises proof - shared premises with agreement"
+    detail: Copy of the agreement plus any one ownership document. If the agreement is unregistered, add a copy of the lessor's identity proof; if registered, no identity proof of the lessor should be sought.
+    applies_if: { fact: premises_type, equals: shared_with_agreement }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, row (iv) Shared premises, agreement available.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-PPOB-SHARED-NO-AGREEMENT
+    category: premises
+    name: "Premises proof - shared premises without agreement: consent letter"
+    detail: Consent letter on plain paper from the consenter, with the consenter's identity proof and any one document supporting the consenter's ownership (or other State/local-law document establishing ownership).
+    applies_if: { fact: premises_type, equals: shared_without_agreement }
+    form_version_ids: *reg01_all
+    template_id: TPL-C257-CONSENT
+    description: Instruction 03/2025-GST, row (v) Shared premises, agreement not available.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-PPOB-SEZ
+    category: premises
+    name: "Premises proof - SEZ: Government of India approval documents"
+    detail: Necessary documents/certificates issued by the Government of India for the SEZ premises, uploaded as proof of SEZ unit/developer approval for the premises.
+    applies_if:
+      any:
+        - { fact: premises_type, equals: sez_premises }
+        - { fact: sez_unit_or_developer, equals: true }
+    form_version_ids: *reg01_all
+    description: Instruction 03/2025-GST, row (vii) PPOB in SEZ or applicant is SEZ developer.
+    source_ref:
+      - { doc: handbook, page: 56, pdf_page: 62, section: "Instruction 03/2025-GST, row (vii)" }
+      - *tut1
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-PPOB-OTHER
+    category: premises
+    name: "Premises proof - other: legal ownership document (combined file)"
+    detail: Where several documents are needed, append them into a single file, choose "Others" as nature of possession and upload as the legal ownership document.
+    applies_if: { fact: premises_type, equals: other }
+    form_version_ids: *reg01_old
+    description: Principal Place of Business tab - multiple documents uploaded as one file under "Others".
+    source_ref:
+      - { doc: handbook, page: 80, pdf_page: 86, section: "2.2 Principal Place of Business tab" }
+      - *tut1
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: handbook
+    confidence: certain
+    notes: Revised REG-01 has standardised premises categories; treatment of "other" after 1 Nov 2026 NOT VERIFIED.
+
+  - id: DOC-PPOB-OTHER-2026
+    category: premises
+    name: "Premises proof - other (revised REG-01)"
+    detail: The revised REG-01 uses a standardised premises classification with matching documents. Pick the closest category; confirm the document set against Circular 257/03/2026-GST.
+    applies_if: { fact: premises_type, equals: other }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 standardised premises classification.
+    source_ref: *r257
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: guessing
+    notes: NOT VERIFIED.
+
+  - id: DOC-PPOB-CO-WORKING
+    category: premises
+    name: "Premises proof - co-working space"
+    detail: Co-working is a standard premises category in the revised REG-01, with its own document set under Circular 257/03/2026-GST. Typically the agreement with the co-working operator and the operator's ownership/lease proof.
+    applies_if: { fact: premises_type, equals: co_working }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 / Circular 257 - co-working premises.
+    source_ref: *r257
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: guessing
+    notes: DOCUMENT LIST NOT VERIFIED - Circular 257 not read. "Typically" text is a working assumption for CA review.
+
+  - id: DOC-PPOB-CO-WORKING-PRE
+    category: premises
+    name: "Premises proof - co-working space (before revised REG-01)"
+    detail: Instruction 03/2025-GST has no co-working category. In practice this is documented as shared premises (agreement with the operator plus ownership proof). CA to confirm.
+    applies_if: { fact: premises_type, equals: co_working }
+    form_version_ids: *reg01_old
+    description: No specific category before 1 Nov 2026.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: 2026-10-31
+    verification_status: unverified
+    confidence: likely
+    notes: Mapping to the shared-premises row is an assumption.
+
+  - id: DOC-PPOB-DECEASED
+    category: premises
+    name: "Premises proof - property of a deceased owner: legal heir's affidavit"
+    detail: Where the premises belonged to a deceased ancestor and title has not been transferred, Circular 257/03/2026-GST provides a legal heir's affidavit format, with the matching documents.
+    applies_if: { fact: premises_type, equals: deceased_ancestor }
+    form_version_ids: *reg01_new
+    template_id: TPL-C257-LEGAL-HEIR
+    description: Circular 257 / revised REG-01 - deceased ancestor's premises.
+    source_ref: *r257
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Accompanying documents NOT VERIFIED.
+
+  - id: DOC-PPOB-DECEASED-PRE
+    category: premises
+    name: "Premises proof - property of a deceased owner (before revised REG-01)"
+    detail: Instruction 03/2025-GST has no row for this case. CA to decide the evidence (for example consent of the other legal heirs plus ownership proof).
+    applies_if: { fact: premises_type, equals: deceased_ancestor }
+    form_version_ids: *reg01_old
+    description: No specific category before 1 Nov 2026.
+    source_ref: *instr
+    effective_from: 2025-04-17
+    effective_to: 2026-10-31
+    verification_status: unverified
+    confidence: guessing
+    notes: ""
+
+  - id: DOC-RENT-FREE-UNDERTAKING
+    category: premises
+    name: Rent-free undertaking (where premises are used without rent)
+    detail: Circular 257/03/2026-GST provides a rent-free undertaking format. Check whether it is required in addition to the consent letter.
+    applies_if: { fact: premises_type, in: [consent_relative, shared_without_agreement] }
+    form_version_ids: *reg01_new
+    template_id: TPL-C257-RENT-FREE
+    description: Circular 257 - rent-free undertaking format.
+    source_ref: *r257
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: guessing
+    notes: When the undertaking is required is NOT VERIFIED.
+
+  - id: DOC-PPOB-EXHIBITION
+    category: premises
+    name: Allotment / consent letter for exhibition premises
+    detail: For a long-running exhibition (over 180 days) registered normally, the allotment letter or consent letter granting use of the premises is the proof of place of business.
+    applies_if:
+      all:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { fact: casual_long_exhibition_over_180, equals: true }
+    form_version_ids: *reg01_all
+    description: Circular 71/45/2018-GST.
+    source_ref: [{ doc: handbook, page: 66, pdf_page: 72, section: "Circular 71/45/2018-GST, issue 2" }]
+    effective_from: 2018-10-26
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-STATE-ELECTRICITY-CA
+    category: state_specific
+    name: Electricity consumer (CA) number for the principal place of business
+    detail: In this State the electricity board name and CA/consumer number are mandatory for normal and casual taxpayers (State Specific Information tab).
+    applies_if:
+      all:
+        - { fact: ppob_state, in: [AP, AS, GJ, OD, RJ, MH, MP] }
+        - *not_nrtp
+    form_version_ids: *reg01_old
+    description: State Specific Information tab - CA number mandatory in listed States.
+    source_ref: *tut
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: official
+    confidence: likely
+    notes: The user guide says "currently"; the list may change. Position under the revised REG-01 not yet checked.
+
+  # ---------------- Bank ----------------
+  - id: DOC-BANK
+    category: bank
+    name: Bank account proof
+    detail: First page of the bank passbook, a bank statement, or a cancelled cheque (PDF/JPEG). Bank details may be added after grant but must be furnished within 30 days or before the first GSTR-1/IFF.
+    applies_if:
+      not:
+        fact: tds_category
+        in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu]
+    form_version_ids: *reg01_old
+    description: Bank Accounts tab; Rule 10A.
+    source_ref:
+      - { doc: handbook, page: 102, pdf_page: 108, section: "2.5 Bank Accounts tab" }
+      - { doc: handbook, page: 80, pdf_page: 86, section: "2.2 Bank Accounts tab" }
+      - { doc: handbook, page: 61, pdf_page: 67, section: "Rule 10A" }
+    effective_from: 2017-07-01
+    effective_to: 2026-10-31
+    verification_status: handbook
+    confidence: certain
+    notes: The list of three proofs is in the NRTP section; the general section mentions passbook or statement.
+
+  - id: DOC-BANK-2026
+    category: bank
+    name: Bank account proof (revised REG-01, up to 10 accounts)
+    detail: Give up to 10 bank accounts with proof (passbook first page, statement or cancelled cheque); details not available now are due within 30 days of REG-06.
+    applies_if:
+      not:
+        fact: tds_category
+        in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu]
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - up to 10 bank accounts.
+    source_ref:
+      - { doc: research, page: 4, section: "C. Revised REG-01" }
+      - { doc: handbook, page: 102, pdf_page: 108, section: "2.5 Bank Accounts tab (types of proof)" }
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Accepted proof types after 1 Nov 2026 NOT VERIFIED.
+
+  # ---------------- Special conditions ----------------
+  - id: DOC-SEZ-APPROVAL
+    category: special
+    name: SEZ approval details (LOA/LOP)
+    detail: Name of SEZ, approval order number and date, designation of approving authority, and period of validity of the LOA/LOP (up to 10 years from today).
+    applies_if: { fact: sez_unit_or_developer, equals: true }
+    form_version_ids: *reg01_all
+    description: Business Details tab - SEZ unit / developer fields.
+    source_ref: *tut
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: official
+    confidence: certain
+    notes: ""
+
+  - id: DOC-SEZ-ENTITY-ID-2026
+    category: special
+    name: SEZ Entity ID
+    detail: The revised REG-01 asks for the SEZ Entity ID of the unit or developer.
+    applies_if: { fact: sez_unit_or_developer, equals: true }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - SEZ Entity ID field.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: DOC-CASUAL-ESTIMATE
+    category: special
+    name: Estimated supplies and estimated net tax liability; advance deposit challan
+    detail: Give estimated turnover and net tax liability (after eligible ITC) for the registration period and pay the advance deposit through the challan generated against the provisional GSTIN.
+    applies_if:
+      all:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { not: { fact: casual_long_exhibition_over_180, equals: true } }
+    form_version_ids: *reg01_all
+    description: Rule 8(6); Circular 71/45/2018-GST.
+    source_ref:
+      - { doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(b)" }
+      - { doc: handbook, page: 77, pdf_page: 83, section: "2.2 Business Details (d)" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-NRTP-PASSPORT
+    category: identity
+    name: Self-attested copy of valid passport
+    detail: The non-resident taxable person submits REG-09 with a self-attested copy of a valid passport.
+    applies_if: { fact: non_resident_occasional, equals: true }
+    form_version_ids: [FV-REG09]
+    description: Rule 13(1).
+    source_ref: [{ doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(d)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-NRTP-TAX-ID
+    category: identity
+    name: Foreign tax identification number (business entity)
+    detail: A business entity incorporated or established outside India submits its tax identification number or the unique number by which its Government identifies it, or its PAN if available.
+    applies_if:
+      all:
+        - { fact: non_resident_occasional, equals: true }
+        - { not: { fact: constitution, equals: proprietorship } }
+    form_version_ids: [FV-REG09]
+    description: Proviso to Rule 13(1).
+    source_ref: [{ doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(e)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-NRTP-SIGNATORY
+    category: signatory
+    name: Authorised signatory resident in India with PAN
+    detail: The authorised signatory must be resident in India with a valid PAN; proof of appointment is a letter of authorisation or a board/managing committee resolution with acceptance letter.
+    applies_if: { fact: non_resident_occasional, equals: true }
+    form_version_ids: [FV-REG09]
+    description: Rule 13(3); NRTP Authorized Signatory tab.
+    source_ref:
+      - { doc: handbook, page: 65, pdf_page: 71, section: "2.1.2(j)" }
+      - { doc: handbook, page: 98, pdf_page: 104, section: "2.5 Authorized Signatory tab" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-NRTP-BANK
+    category: bank
+    name: Indian bank account
+    detail: Only Indian bank accounts are accepted, so the NRTP must open a bank account in India; proof by passbook first page, statement or cancelled cheque (100 KB).
+    applies_if: { fact: non_resident_occasional, equals: true }
+    form_version_ids: [FV-REG09]
+    description: NRTP Bank Accounts tab.
+    source_ref: [{ doc: handbook, page: 101, pdf_page: 107, section: "2.5 Bank Accounts tab" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-NRTP-PPOB
+    category: premises
+    name: Proof of principal place of business in India (NRTP)
+    detail: "By possession type - own: property tax receipt / municipal khata / electricity bill / legal ownership document; leased or rented: rent/lease agreement (or rent receipt with NOC) plus one ownership document; consent or shared: consent letter plus one ownership document."
+    applies_if: { fact: non_resident_occasional, equals: true }
+    form_version_ids: [FV-REG09]
+    description: NRTP Principal Place of Business tab - table of proofs.
+    source_ref: [{ doc: handbook, page: 99, pdf_page: 105, section: "2.5 Principal Place of Business tab" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-TDS-PARTS
+    category: special
+    name: "REG-07: State of deduction (Part A) and State of principal place of business (Part B)"
+    detail: Where the deductor/collector has no physical presence in the State, give the State where it acts as deductor/collector in Part A, and the State of its principal place of business in Part B.
+    applies_if:
+      any:
+        - fact: tds_category
+          in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu, metal_scrap_recipient, new_scrap_recipient]
+        - all:
+            - { fact: is_eco_operator, equals: true }
+            - { fact: eco_collects_tcs, equals: true }
+    form_version_ids: [FV-REG07]
+    description: Rule 12 - REG-07 Part A / Part B.
+    source_ref: [{ doc: handbook, page: 68, pdf_page: 74, section: "2.1.3" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: DOC-OIDAR-REG10
+    category: special
+    name: REG-10 application (OIDAR / online money gaming)
+    detail: Single all-India application on REG-10, by the supplier or its appointed agent in India. The handbook does not list supporting documents.
+    applies_if:
+      any:
+        - { fact: oidar_from_outside_to_nonregistered, equals: true }
+        - { fact: online_money_gaming_from_outside, equals: true }
+    form_version_ids: [FV-REG10]
+    description: Rule 14 - REG-10 single registration for OIDAR and online money gaming suppliers.
+    source_ref: [{ doc: handbook, page: 69, pdf_page: 75, section: "2.1.4" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Supporting documents for REG-10 UNVERIFIED.
+
+  - id: STEP-ISD-REASON
+    category: step
+    name: Select "Input Service Distributor only" as reason for registration
+    detail: The ISD registration is separate from the normal registration of the same office.
+    applies_if: { fact: is_isd, equals: true }
+    form_version_ids: *reg01_all
+    description: Business Details - reason to obtain registration.
+    source_ref: [{ doc: handbook, page: 78, pdf_page: 84, section: "2.2 Business Details (e)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: STEP-ECO-9-5-SECTION
+    category: step
+    name: Complete the section for e-commerce operators liable under s.9(5)
+    detail: The revised REG-01 has a dedicated section for ECOs liable under s.9(5).
+    applies_if:
+      all:
+        - { fact: is_eco_operator, equals: true }
+        - { fact: eco_liable_9_5, equals: true }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - s.9(5) ECO section.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: STEP-EXISTING-REGISTRATIONS-2026
+    category: step
+    name: Particulars of existing registrations
+    detail: Give existing registrations - GSTIN(s) on the same PAN, Professional Tax number, and any GST enrolment number (e.g. for unregistered ECO suppliers).
+    applies_if: { not: { fact: existing_registrations_same_pan, equals: none } }
+    form_version_ids: *reg01_new
+    description: Revised REG-01 - existing registrations particulars.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: STEP-RULE14A-OPTION
+    category: step
+    name: "Rule 14A: select Yes for the option and for Aadhaar, and self-declare the monthly liability"
+    detail: Select "Option for registration under Rule 14A = Yes" (Aadhaar must then be Yes) and self-declare that monthly output tax on supplies to registered persons will not exceed the cap.
+    applies_if: { fact: wants_rule_14a, equals: true }
+    form_version_ids: *reg01_all
+    description: Rule 14A - option and self-declaration.
+    source_ref:
+      - { doc: handbook, page: 62, pdf_page: 68, section: "2.1.1" }
+      - *tut1
+    effective_from: 2025-11-01
+    effective_to: null
+    verification_status: official
+    confidence: certain
+    notes: The cap value is configuration RULE14A-MONTHLY-CAP-LAKH (status conflict).
+
+  - id: STEP-RULE14B-ECO-CONSENT
+    category: step
+    name: "Rule 14B: ECO consent and ECO warehouse declaration"
+    detail: Obtain consent from each ECO (within 7 working days). ECO warehouses may be declared as principal or additional place of business with the ECO's consent.
+    applies_if: { fact: wants_rule_14b, equals: true }
+    form_version_ids: *reg01_new
+    description: Rule 14B - ECO consent; ECO warehouses as PPOB/APOB.
+    source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""

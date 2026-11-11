@@ -1,0 +1,193 @@
+# Notes for the applicant shown under the checklist.
+
+applicant_notes:
+  - id: NOTE-LEGAL-NAME-PAN
+    text: The legal name must be exactly as it appears in the PAN database. The constitution of business you select is checked against CBDT records.
+    description: Part A legal name as in PAN; constitution validated with CBDT.
+    source_ref:
+      - { doc: handbook, page: 73, pdf_page: 79, section: "2.2 Part A step 6" }
+      - { doc: gst_tutorial, url: "https://tutorial.gst.gov.in/userguide/registration/Apply_for_Registration_Normal_Taxpayer.htm", fetched: 2026-11-07, section: "Business Details (b)" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: official
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-MCA-MATCH
+    text: For companies and LLPs, check that the legal name on PAN matches the MCA certificate before applying. From 1 Nov 2026 the CIN/LLPIN/FCRN/FLLPIN is validated online and a mismatch blocks the ARN.
+    applies_if: { fact: constitution, in: [private_company, public_company, opc, llp, foreign_entity] }
+    description: Name match with MCA; online validation in revised REG-01.
+    source_ref:
+      - { doc: research, page: 4, section: "C. Revised REG-01 - what to do differently" }
+      - { doc: research, page: 5, section: "E. Client advisory checklist item 1" }
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: NOTE-FILE-SIZES
+    text: Upload PDF or JPEG files. Most documents up to 1 MB; photographs up to 100 KB. If several documents prove one item, combine them into one file.
+    description: Upload limits and combined files.
+    source_ref:
+      - { doc: handbook, page: 80, pdf_page: 86, section: "2.2 tabs" }
+      - { doc: handbook, page: 99, pdf_page: 105, section: "2.5 PPOB tab (rent agreement 2 MB)" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-NO-EXTRA-DOCUMENTS
+    text: Officers are instructed to stick to the listed documents. They should not ask for originals, extra ownership proofs, or Udyam/MSME, shop-establishment or trade licences for partnerships. Any extra document needs Deputy/Assistant Commissioner approval.
+    description: CBIC Instruction 03/2025-GST.
+    source_ref: [{ doc: handbook, page: 54, pdf_page: 60, section: "Instruction 03/2025-GST A and B" }]
+    effective_from: 2025-04-17
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-REG03-CIRCULAR-257
+    text: If a REG-03 query asks for documents outside the prescribed list, reply citing Circular 257/03/2026-GST and keep a copy.
+    description: Research note advisory checklist item 7.
+    source_ref: [{ doc: research, page: 5, section: "E. Client advisory checklist item 7" }]
+    effective_from: 2026-10-26
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: NOTE-AADHAAR-SPEED
+    text: Aadhaar authentication decides whether you get the fast track. Without it, expect physical verification and up to 30 days.
+    applies_if:
+      all:
+        - { not: { fact: non_resident_occasional, equals: true } }
+        - { not: { fact: aadhaar_exempt_class, equals: true } }
+    description: Rule 9(1) proviso.
+    source_ref: [{ doc: handbook, page: 52, pdf_page: 58, section: "Verification Procedure (e)" }]
+    effective_from: 2020-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-APOB
+    text: Each additional place of business (branch, warehouse, godown) needs the same kind of premises proof as the principal place. Every warehouse from which you supply is a place of business.
+    description: Place of business definition s.2(85); Illustration 7.
+    source_ref:
+      - { doc: handbook, page: 44, pdf_page: 50, section: "Location of Registration" }
+      - { doc: handbook, page: 16, pdf_page: 22, section: "Illustration 7" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: likely
+    notes: ""
+
+  - id: NOTE-PPOB-MEANING
+    text: The principal place of business is usually where the books of account are kept and senior management sits.
+    description: Principal Place of Business tab.
+    source_ref: [{ doc: handbook, page: 80, pdf_page: 86, section: "2.2 Principal Place of Business tab" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-SEZ-SEPARATE
+    text: The SEZ unit or developer needs its own registration even if you are already registered in the same State outside the SEZ.
+    applies_if: { fact: sez_unit_or_developer, equals: true }
+    description: Separate SEZ registration.
+    source_ref: [{ doc: handbook, page: 43, pdf_page: 49, section: "2.1" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-PREMISES-BANK-2026
+    text: Under the revised REG-01, complete the premises-possession and bank sections fully at the start. A validation failure now blocks the ARN instead of raising a query later.
+    description: Research note, revised REG-01 practical impact.
+    source_ref: [{ doc: research, page: 4, section: "C. Revised REG-01 - what to do differently" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  - id: NOTE-RULE14A-EXIT
+    text: If your monthly liability on sales to registered businesses may cross the Rule 14A cap, plan the exit (REG-32) before you need it. Higher liability is allowed only from the month after the withdrawal order.
+    applies_if: { fact: wants_rule_14a, equals: true }
+    description: Rule 14A withdrawal and post-withdrawal effect.
+    source_ref: [{ doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Withdrawal; Post-Withdrawal Effect" }]
+    effective_from: 2025-11-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: NOTE-RULE14B-BATCH
+    text: Do not file Rule 14B applications for several States in one batch without checking the premises evidence for each. A negative field visit can reject all linked applications.
+    applies_if: { fact: wants_rule_14b, equals: true }
+    description: Research note, Rule 14B practical point.
+    source_ref: [{ doc: research, page: 5, section: "C. Rule 14B - what to do differently" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: ""
+
+  # ---------------- After registration ----------------
+  - id: NOTE-AFTER-BANK-30D
+    stage: after
+    text: Add your bank account details on the GST portal within 30 days of getting your GSTIN, or before filing your first GSTR-1 / IFF if that is earlier. Otherwise the registration can be suspended.
+    description: Rule 10A - bank details after grant; suspension on default.
+    source_ref: [{ doc: handbook, page: 61, pdf_page: 67, section: "Furnishing of Bank Account Details" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Not applicable to TDS/TCS (Rule 12) registrants.
+    applies_if:
+      not:
+        fact: tds_category
+        in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu]
+
+  - id: NOTE-AFTER-CHARGE-GST
+    stage: after
+    text: Once registered, voluntarily or compulsorily, you must charge GST on all your taxable sales and follow every rule that applies to a registered person.
+    description: Illustration 1 - a registered person complies with all provisions.
+    source_ref: [{ doc: handbook, page: 15, pdf_page: 21, section: "Illustration 1" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+    applies_if: { not: { fact: supply_nature, equals: no_outward_supplies } }
+
+  - id: NOTE-AFTER-OLD-INVOICES
+    stage: after
+    text: GST applies only from the effective date of registration. Do not collect GST on invoices issued before it; invoices issued after the effective date but before you received the certificate are revised under section 31.
+    description: Illustration 2 - invoices before and after the effective date.
+    source_ref: [{ doc: handbook, page: 15, pdf_page: 21, section: "Illustration 2" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+    applies_if: { not: { fact: supply_nature, equals: no_outward_supplies } }
+
+  - id: NOTE-AFTER-CTP-EXTEND
+    stage: after
+    text: A casual or non-resident registration lasts up to 90 days. To continue, apply on REG-11 before it expires to extend it by up to 90 more days, with an extra advance deposit.
+    description: s.27, Rule 15 - validity and extension.
+    source_ref: [{ doc: handbook, page: 65, pdf_page: 71, section: "2.1.2(k)-(l)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+    applies_if:
+      any:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { fact: non_resident_occasional, equals: true }

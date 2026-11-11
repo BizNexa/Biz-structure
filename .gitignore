@@ -20,3 +20,6 @@ saas-backend/data/
 *.sqlite-wal
 _design/
 .claude/
+_gst-checker-src/node_modules/
+_gst-checker-src/dist/
+_gst-checker-src/docs/

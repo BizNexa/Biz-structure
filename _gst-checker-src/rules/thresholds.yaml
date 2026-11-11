@@ -1,0 +1,143 @@
+# Aggregate turnover thresholds (Rs lakh) by State category and period.
+# Source: handbook threshold table, p. 7-8 (PDF 13-14), read with s.22(1) provisos (p. 2-3)
+# and Notification 10/2019-CT (p. 3-4, 9).
+# goods_only_lakh applies only to a supplier engaged EXCLUSIVELY in supply of goods who does not
+# supply the goods excluded by Notification 10/2019-CT and is not a s.24 person. The engine applies
+# those conditions (see engine/thresholds.ts); otherwise services_or_mixed_lakh applies.
+# Liability arises when aggregate turnover EXCEEDS the limit.
+
+hb_thr: &hb_thr
+  - { doc: handbook, page: 7, pdf_page: 13, section: "1.3.1 Turnover threshold table" }
+  - { doc: handbook, page: 2, pdf_page: 8, section: "1.3.1 s.22(1) and provisos" }
+
+thresholds:
+  - id: THR-SCS-EXPL-2017
+    threshold_category: SCS_EXPL
+    description: Manipur, Mizoram, Nagaland, Tripura up to 31 Jan 2019 - Rs 10 lakh for all supplies.
+    services_or_mixed_lakh: 10
+    goods_only_lakh: 10
+    goods_only_basis: none
+    legal_basis: s.22(1) first proviso
+    source_ref: *hb_thr
+    effective_from: 2017-07-01
+    effective_to: 2019-01-31
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-SCS-EXPL-2019
+    threshold_category: SCS_EXPL
+    description: Manipur, Mizoram, Nagaland, Tripura from 1 Feb 2019 - Rs 10 lakh for goods and services; the Rs 40 lakh goods limit is not available.
+    services_or_mixed_lakh: 10
+    goods_only_lakh: 10
+    goods_only_basis: "Not available: these States are excluded from Notification 10/2019-CT"
+    legal_basis: s.22(1) first proviso read with Explanation (iii)
+    source_ref: *hb_thr
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-OTHER-SCS-A-2017
+    threshold_category: OTHER_SCS_A
+    description: Arunachal Pradesh, Meghalaya, Sikkim, Uttarakhand up to 31 Jan 2019 - Rs 10 lakh.
+    services_or_mixed_lakh: 10
+    goods_only_lakh: 10
+    goods_only_basis: none
+    legal_basis: s.22(1) first proviso (pre-amendment Explanation (iii))
+    source_ref: *hb_thr
+    effective_from: 2017-07-01
+    effective_to: 2019-01-31
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-OTHER-SCS-A-2019
+    threshold_category: OTHER_SCS_A
+    description: Arunachal Pradesh, Meghalaya, Sikkim, Uttarakhand from 1 Feb 2019 - Rs 20 lakh for goods and services; Rs 40 lakh goods limit not available (excluded from Notification 10/2019-CT).
+    services_or_mixed_lakh: 20
+    goods_only_lakh: 20
+    goods_only_basis: "Not available: these States are excluded from Notification 10/2019-CT"
+    legal_basis: s.22(1) read with Explanation (iii); Notification 10/2019-CT clause (c)
+    source_ref: *hb_thr
+    effective_from: 2019-02-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-OTHER-SCS-B-2017
+    threshold_category: OTHER_SCS_B
+    description: Himachal Pradesh and Assam up to 31 Jan 2019 - Rs 10 lakh.
+    services_or_mixed_lakh: 10
+    goods_only_lakh: 10
+    goods_only_basis: none
+    legal_basis: s.22(1) first proviso (pre-amendment Explanation (iii))
+    source_ref: *hb_thr
+    effective_from: 2017-07-01
+    effective_to: 2019-01-31
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-OTHER-SCS-B-2019-FEB
+    threshold_category: OTHER_SCS_B
+    description: Himachal Pradesh and Assam, 1 Feb 2019 to 31 Mar 2019 - Rs 20 lakh.
+    services_or_mixed_lakh: 20
+    goods_only_lakh: 20
+    goods_only_basis: none
+    legal_basis: s.22(1) read with Explanation (iii)
+    source_ref: *hb_thr
+    effective_from: 2019-02-01
+    effective_to: 2019-03-31
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-OTHER-SCS-B-2019-APR
+    threshold_category: OTHER_SCS_B
+    description: Himachal Pradesh and Assam from 1 Apr 2019 - Rs 20 lakh for services or mixed; Rs 40 lakh for exclusive supply of goods.
+    services_or_mixed_lakh: 20
+    goods_only_lakh: 40
+    goods_only_basis: Notification 10/2019-CT dated 07.03.2019 (s.23(2))
+    legal_basis: s.22(1); Notification 10/2019-CT
+    source_ref: *hb_thr
+    effective_from: 2019-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-NON-SCS-EXCL-2017
+    threshold_category: NON_SCS_EXCL
+    description: Puducherry and Telangana - Rs 20 lakh for goods and services; Rs 40 lakh goods limit not available (excluded from Notification 10/2019-CT).
+    services_or_mixed_lakh: 20
+    goods_only_lakh: 20
+    goods_only_basis: "Not available: excluded from Notification 10/2019-CT"
+    legal_basis: s.22(1); Notification 10/2019-CT clause (c)
+    source_ref: *hb_thr
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+  - id: THR-OTHER-2017
+    threshold_category: OTHER
+    description: Other States/UTs up to 31 Mar 2019 - Rs 20 lakh.
+    services_or_mixed_lakh: 20
+    goods_only_lakh: 20
+    goods_only_basis: none
+    legal_basis: s.22(1)
+    source_ref: *hb_thr
+    effective_from: 2017-07-01
+    effective_to: 2019-03-31
+    verification_status: handbook
+    confidence: certain
+    notes: "Jammu and Kashmir was a special category State (Rs 10 lakh) before 1 Feb 2019; not modelled."
+  - id: THR-OTHER-2019
+    threshold_category: OTHER
+    description: Other States/UTs from 1 Apr 2019 - Rs 20 lakh for services or mixed; Rs 40 lakh for exclusive supply of goods.
+    services_or_mixed_lakh: 20
+    goods_only_lakh: 40
+    goods_only_basis: Notification 10/2019-CT dated 07.03.2019 (s.23(2)); also third proviso to s.22(1) from 01.01.2020
+    legal_basis: s.22(1); Notification 10/2019-CT
+    source_ref: *hb_thr
+    effective_from: 2019-04-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""

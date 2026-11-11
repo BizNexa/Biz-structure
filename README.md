@@ -88,3 +88,20 @@ $env:WORKER_URL="https://biz-structure.nexifydigital03.workers.dev"; $env:SETUP_
 Until the new catalog is uploaded, paid users still unlock their report but see detail only for the public 35% core.
 
 The PDF report uses Inter (SIL Open Font License, `assets/fonts/OFL.txt`).
+
+## Site structure (multi-product, from 10 Nov 2026)
+
+| URL | What it is | Source |
+|---|---|---|
+| `/` | Biz Matrix home: lists all tools (`index.html`, `css/hub.css`) | this folder |
+| `/business-structure/` | Business Structure Matrix landing page (the former home page) | this folder |
+| `/assessment/` | Business Structure assessment app (unchanged) | this folder |
+| `/gst-registration-checker/` | GST Registration Checker | **built output**; source is `_gst-checker-src/` in this folder (never published) |
+
+- **Updating the GST checker:** do not edit `gst-registration-checker/` by hand. Change the source in `_gst-checker-src/`, then run `npm run build:site` inside `_gst-checker-src/`, which rebuilds `gst-registration-checker/`. Then run `node tools/bust-cache.cjs` here as usual. The `_` prefix keeps the source off the live site.
+- **Adding a new tool:**
+  1. Put it in its own folder.
+  2. Add a card to the tool grid in `index.html` (plus its ItemList entry in the JSON-LD).
+  3. Add it to the "Tools" footer column on the pages and to `sitemap.xml`.
+  4. If the Node backend serves the site, add the folder to the page list in `saas-backend/app.js`.
+- **Backup:** a copy of this folder from before the change is in `..\Biz-structure-main-backup-2026-11-10` (the `ad` folder was not copied).

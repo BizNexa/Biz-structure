@@ -1,0 +1,169 @@
+# Open conflicts and gaps. Not resolved by the developer. docs/conflicts-register.md is generated
+# from this file. To resolve one: set status: resolved, write the resolution, update the related
+# records' verification_status, bump the rule-set version.
+
+conflicts:
+  - id: C-001
+    title: Rule 14A monthly output tax cap
+    description: The cap on self-declared monthly output tax liability on supplies to registered persons under Rule 14A.
+    positions:
+      - { source: "ICAI handbook p. 62 (PDF 68)", says: "Rs 2,50,000 per month", verification_status: handbook }
+      - { source: "GST portal user guide (tutorial.gst.gov.in), fetched 7 Nov 2026", says: "Select Yes if output tax liability is less than or equal to Rs 2.5 lakhs per month", verification_status: official }
+      - { source: "Research note section F (most secondary sources)", says: "Rs 2.5 lakh", verification_status: secondary }
+      - { source: "Research note section F (one TaxGuru article)", says: "Rs 5 lakh", verification_status: secondary }
+    related_ids: [RULE14A-MONTHLY-CAP-LAKH, R14A-CAP]
+    how_modelled: Config value 2.5 with status conflict; the alternative 5 is recorded. Rule 14A eligibility shows a "pending CA verification" marker. Not hardcoded.
+    status: open
+    resolution: null
+
+  - id: C-002
+    title: Effective dates of substituted Rules 21, 21A and 22
+    description: Notification 05/2026-CT substitutes Rules 21, 21A and 22. Sources disagree on when.
+    positions:
+      - { source: "Taxo (via research note)", says: "Rules 21, 21A and 22 from 1 Nov 2026", verification_status: secondary }
+      - { source: "TaxGuru (via research note)", says: "Rules 21A and 22 (and new 23A) from 1 Apr 2027; Rule 21 from 1 Nov 2026", verification_status: secondary }
+    related_ids: [LC-CANCEL-RULE21-2026, LC-SUSPEND-RULE21A-2017, LC-SUSPEND-RULE21A-2027, LC-CANCEL-RULE22-2027]
+    how_modelled: Out of scope for v1 (lifecycle records only). Rule 21A old version left open-ended; new versions dated per TaxGuru and marked conflict.
+    status: open
+    resolution: null
+
+  - id: C-003
+    title: GSTN advisories of 4 Jan 2026 and 21 Feb 2026 (titles only)
+    description: '"Opt-in declaration for Specified Premises, 2025" (4 Jan 2026) and "Withdrawal from Rule 14A" (21 Feb 2026). Only titles are known.'
+    positions:
+      - { source: "MahaGST advisory list (via research note)", says: "Titles only; contents not checked", verification_status: secondary }
+    related_ids: [TL-RULE14A-WITHDRAWAL-PRE-2026-04, TL-RULE14A-WITHDRAWAL]
+    how_modelled: Not modelled. Rule 14A withdrawal follows the handbook. Specified premises relate to restaurant services in hotels (rate), not registration eligibility; not used.
+    status: open
+    resolution: null
+
+  - id: C-004
+    title: Circulars 258 to 264 not read
+    description: One source says Circular 258 covers show-cause notice structure and Circular 260 covers ISD registrations.
+    positions:
+      - { source: "Research note section F", says: "260 covers ISD registrations; not read", verification_status: secondary }
+    related_ids: [S24-VIII-ISD, ROUTE-REG01-ISD]
+    how_modelled: ISD rules follow the handbook. CA to check Circular 260 for any change to ISD registration.
+    status: open
+    resolution: null
+
+  - id: C-005
+    title: Does a blanket s.23 exemption override non-supplier s.24 triggers?
+    description: >-
+      The handbook (p. 18) says that after the Finance Act 2023 substitution, s.23 overrides s.22 and s.24.
+      But Circular 57/31/2018-GST (handbook p. 33) says a commission agent exempt under s.23(1)(a) must
+      still register under s.24(iii) if liable to reverse charge. Registrations as RCM recipient, TDS
+      deductor, ISD, TCS collector or s.9(5) operator are not registrations as a supplier of exempt goods.
+    positions:
+      - { source: "Handbook p. 18 (PDF 24)", says: "s.23 overrides s.22 and s.24", verification_status: handbook }
+      - { source: "Circular 57/31/2018-GST para 9, handbook p. 33 (PDF 39)", says: "RCM-liable commission agent must register under s.24(iii) despite s.23(1)(a)", verification_status: handbook }
+    related_ids: [S24-III-RCM, S24-IV-ECO-9-5, S24-VI-TDS, S24-VI-TDS-METAL-SCRAP, S24-VI-TDS-NEW-SCRAP, S24-VIII-ISD, S24-X-TCS, S22-3-TRANSFER, S22-4-AMALGAMATION, EX-S23-1A-EXEMPT-ONLY, EX-S23-1B-AGRICULTURIST, EX-N5-2017-RCM-ONLY, EX-N5-2017-RCM-ONLY-2024]
+    how_modelled: Triggers carry s23_override. "displaced" = removed by a blanket exemption; "ca_review" = overlap returns NEEDS_CA_REVIEW with this conflict cited.
+    status: open
+    resolution: null
+
+  - id: C-006
+    title: Goods supplier with exempt interest income - Rs 40 lakh limit
+    description: >-
+      Explanation to s.22(1) treats a supplier of goods with exempt interest/discount income as engaged
+      exclusively in goods. Notification 10/2019-CT has no such explanation. The handbook (p. 4-6)
+      reports two schools of thought and advises caution or an advance ruling.
+    positions:
+      - { source: "Handbook p. 5 (PDF 11) prevailing view", says: "Any supply of services, even exempt, may disqualify from the Rs 40 lakh exemption", verification_status: handbook }
+      - { source: "Handbook p. 5-6 (PDF 11-12) alternative view", says: "Interest income does not disqualify (from 01.01.2020)", verification_status: handbook }
+    related_ids: [EX-N10-2019-CT-GOODS-40L, S22-1-THRESHOLD]
+    how_modelled: If the only services are exempt interest/discount and turnover falls between the Rs 20 lakh and Rs 40 lakh limits, the verdict is NEEDS_CA_REVIEW.
+    status: open
+    resolution: null
+
+  - id: C-007
+    title: Is DIN mandatory for a PSU?
+    description: The handbook lists PSU among constitutions for which DIN is mandatory; the GST portal user guide says DIN is not mandatory for PSU.
+    positions:
+      - { source: "Handbook p. 79 (PDF 85)", says: "DIN mandatory for Private Ltd, Public Ltd, PSU, Unlimited, Foreign company in India", verification_status: handbook }
+      - { source: "GST portal user guide, fetched 7 Nov 2026", says: "DIN not mandatory for proprietorship, PSU and LLP", verification_status: official }
+    related_ids: [DOC-DIN-COMPANY]
+    how_modelled: DIN row applies to private and public companies only; PSU not modelled as a constitution. Note shown in CA mode.
+    status: open
+    resolution: null
+
+  - id: C-008
+    title: "Rule 14A: who is a \"person covered under s.25(6D)\"?"
+    description: >-
+      The handbook says the applicant must not be "a person covered under Section 25(6D) (i.e., notified
+      mandatory registrants)". s.25(6D) is the power to exempt persons from Aadhaar authentication
+      (Notification 3/2021-CT, handbook p. 51). The gloss does not match the provision.
+    positions:
+      - { source: "Handbook p. 62 (PDF 68)", says: "not a person covered under s.25(6D) (i.e., notified mandatory registrants)", verification_status: handbook }
+      - { source: "Handbook p. 50-51 (PDF 56-57)", says: "s.25(6D) persons = non-citizens, government departments, local authorities, statutory bodies, PSUs, UIN applicants", verification_status: handbook }
+    related_ids: [R14A-NOT-25-6D]
+    how_modelled: Condition uses the Aadhaar-exempt classes; marked conflict.
+    status: open
+    resolution: null
+
+  - id: C-009
+    title: Rule 14B output tax cap (single source)
+    description: Only one secondary source states the Rule 14B cap of Rs 2.5 lakh per month on supplies to registered persons.
+    positions:
+      - { source: "Research note section C", says: "Rs 2.5 lakh per month", verification_status: secondary }
+    related_ids: [RULE14B-MONTHLY-CAP-LAKH, R14B-CAP]
+    how_modelled: Config value 2.5, status secondary.
+    status: open
+    resolution: null
+
+  - id: C-010
+    title: Circular 257/03/2026-GST not read
+    description: The document checklist, 51-question FAQ and standard formats (consent letter, rent-free undertaking, legal heir's affidavit) are known only from secondary sources.
+    positions:
+      - { source: "Research note sections B and E", says: "Circular issued 26 Oct 2026 with checklist and formats", verification_status: secondary }
+    related_ids: [TPL-C257-CONSENT, TPL-C257-RENT-FREE, TPL-C257-LEGAL-HEIR, DOC-PPOB-CO-WORKING, DOC-PPOB-DECEASED, DOC-RENT-FREE-UNDERTAKING, DOC-PPOB-OTHER-2026, NOTE-REG03-CIRCULAR-257]
+    how_modelled: Templates have null content; rows from 1 Nov 2026 that depend on the circular are secondary or unverified. Instruction 03/2025-GST rows stay in force (the research note says Circular 257 does not change the rules).
+    status: open
+    resolution: null
+
+  - id: C-011
+    title: GST portal user guide not yet updated for the revised REG-01
+    description: The official user guide (fetched 7 Nov 2026) still describes the pre-November 2026 form (bank tab optional, no OPC or SEZ Entity ID).
+    positions:
+      - { source: "GST portal user guide, fetched 7 Nov 2026", says: "Pre-revision form", verification_status: official }
+      - { source: "Research note (Advisory 681)", says: "Revised REG-01 from 1 Nov 2026", verification_status: secondary }
+    related_ids: [FV-REG01-2017, FV-REG01-2026, DOC-STATE-ELECTRICITY-CA]
+    how_modelled: Official tutorial facts limited to FV-REG01-2017 unless confirmed for the new form.
+    status: open
+    resolution: null
+
+  - id: C-012
+    title: Excluded goods list for Notification 10/2019-CT
+    description: The handbook's p. 9 summary lists ice cream, pan masala and tobacco; p. 4 also lists fly-ash bricks/aggregates/blocks, bricks of fossil meals, building bricks and earthen/roofing tiles. The date of addition of bricks and tiles is not stated.
+    positions:
+      - { source: "Handbook p. 4 (PDF 10)", says: "Full list including bricks and tiles", verification_status: handbook }
+      - { source: "Handbook p. 9 (PDF 15)", says: "Ice cream, pan masala, tobacco only", verification_status: handbook }
+    related_ids: [EX-N10-2019-CT-GOODS-40L]
+    how_modelled: The fuller p. 4 list is used for all as-of dates the engine supports (from 1 Jan 2024).
+    status: open
+    resolution: null
+
+  - id: C-013
+    title: Jammu and Kashmir and Ladakh threshold category
+    description: Neither appears in the handbook threshold table. Both placed in "Other States/UTs" (Rs 20 lakh / Rs 40 lakh goods).
+    positions:
+      - { source: "Handbook p. 3 and p. 7-8", says: "J&K excluded from Explanation (iii) and from the 10/2019 exception list; residual row applies", verification_status: handbook }
+    related_ids: [STATE-JK, STATE-LA]
+    how_modelled: Category OTHER, confidence likely.
+    status: open
+    resolution: null
+
+  - id: C-014
+    title: Small exporter of services - must it register?
+    description: >-
+      Handbook Illustration 6 says exports are inter-State supplies and all exporters must register
+      regardless of turnover. Notification 10/2017-IT (handbook p. 19-20) exempts persons making
+      inter-State supplies of taxable services with turnover within Rs 20 lakh (Rs 10 lakh). The
+      illustration concerns a dealer in goods.
+    positions:
+      - { source: "Handbook p. 16 (PDF 22) Illustration 6", says: "All exporters, regardless of turnover limit, must obtain registration", verification_status: handbook }
+      - { source: "Handbook p. 19-20 (PDF 25-26) Notification 10/2017-IT", says: "Inter-State suppliers of services within the threshold are exempt", verification_status: handbook }
+    related_ids: [EX-N10-2017-IT-SERVICES-EXPORTER, EX-N10-2017-IT-INTERSTATE-SERVICES, S24-I-INTERSTATE]
+    how_modelled: Goods exporters are mandatory under s.24(i). Services-only exporters within the threshold go to NEEDS_CA_REVIEW.
+    status: open
+    resolution: null

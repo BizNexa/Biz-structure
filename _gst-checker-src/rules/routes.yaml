@@ -1,0 +1,318 @@
+# Registration routes. A route is "relevant" when relevant_if holds; it is "eligible" when every
+# condition holds, "not eligible" when any condition is false (the failing conditions are shown),
+# and "unknown" when a condition cannot be decided from the answers.
+
+tut1: &tut1 { doc: gst_tutorial, url: "https://tutorial.gst.gov.in/userguide/registration/Apply_for_Registration_Normal_Taxpayer.htm", fetched: 2026-11-07, section: "Business Details tab" }
+tut: &tut
+  - *tut1
+
+routes:
+  - id: ROUTE-REG09-NRTP
+    form: REG-09
+    name: Non-resident taxable person registration
+    kind: special_category
+    priority: 10
+    optional_route: false
+    plain_language: Apply on REG-09 with a self-attested passport copy, at least 5 days before starting, after paying an advance deposit of the estimated tax.
+    description: Rule 13 - REG-09, valid passport (and foreign tax ID for entities), advance deposit of estimated tax, authorised signatory resident in India with PAN.
+    relevant_if: { fact: non_resident_occasional, equals: true }
+    conditions: []
+    timeline_ids: [TL-NRTP-ARN-AFTER-DEPOSIT, TL-RULE9-7WD, TL-RULE9-30D-PV, TL-RULE9-QUERY, TL-CTP-NRTP-VALIDITY]
+    source_ref: [{ doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(d)-(j)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Rule 9 applies mutatis mutandis to NRTP (Rule 13(3)).
+
+  - id: ROUTE-REG10-OIDAR
+    form: REG-10
+    name: OIDAR / online money gaming supplier outside India
+    kind: special_category
+    priority: 11
+    optional_route: false
+    plain_language: Apply once for all of India on REG-10, yourself or through an appointed agent in India.
+    description: Rule 14 - single REG-10 registration, administered by the Principal Commissioner of Central Tax, Bengaluru West.
+    relevant_if:
+      any:
+        - { fact: oidar_from_outside_to_nonregistered, equals: true }
+        - { fact: online_money_gaming_from_outside, equals: true }
+    conditions: []
+    timeline_ids: [TL-REG10-NONE-STATED]
+    source_ref:
+      - { doc: handbook, page: 39, pdf_page: 45, section: "1.5.11" }
+      - { doc: handbook, page: 69, pdf_page: 75, section: "2.1.4" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: ROUTE-REG07-TDS
+    form: REG-07
+    name: TDS deductor registration (s.51)
+    kind: special_category
+    priority: 12
+    optional_route: false
+    plain_language: Apply on REG-07 using TAN. Registration is usually granted within 3 working days.
+    description: Rule 12 - REG-07 with TAN; Part A State of deduction, Part B State of principal place of business.
+    relevant_if:
+      fact: tds_category
+      in: [govt_department, local_authority, governmental_agency, notified_authority_or_board, govt_society, psu, metal_scrap_recipient, new_scrap_recipient]
+    conditions: []
+    timeline_ids: [TL-REG07-3WD]
+    source_ref: [{ doc: handbook, page: 68, pdf_page: 74, section: "2.1.3" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Scrap recipients are already registered persons; the REG-07 registration is in addition to their normal registration.
+
+  - id: ROUTE-REG07-TCS
+    form: REG-07
+    name: TCS collector registration (s.52, e-commerce operator)
+    kind: special_category
+    priority: 13
+    optional_route: false
+    plain_language: Apply on REG-07 in each State where you collect TCS. Registration is usually granted within 3 working days.
+    description: Rule 12 - REG-07 for ECOs required to collect tax under s.52.
+    relevant_if:
+      all:
+        - { fact: is_eco_operator, equals: true }
+        - { fact: eco_collects_tcs, equals: true }
+    conditions: []
+    timeline_ids: [TL-REG07-3WD]
+    source_ref: [{ doc: handbook, page: 68, pdf_page: 74, section: "2.1.3" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: ROUTE-REG01-CASUAL
+    form: REG-01 (casual taxable person)
+    name: Casual taxable person registration
+    kind: special_category
+    priority: 20
+    optional_route: false
+    plain_language: Apply on REG-01 as a casual taxable person, giving estimated supplies and net tax, and pay the advance deposit; the acknowledgement issues only after the deposit.
+    description: Rule 8(1), 8(6) - REG-01 with "casual taxable person = Yes", temporary reference number, advance deposit of estimated net tax liability (Circular 71/45/2018-GST).
+    relevant_if:
+      all:
+        - { fact: casual_occasional_no_fixed_place, equals: true }
+        - { not: { fact: casual_long_exhibition_over_180, equals: true } }
+    conditions: []
+    timeline_ids: [TL-CTP-ADVANCE-DEPOSIT, TL-RULE9-7WD, TL-RULE9-30D-PV, TL-RULE9-QUERY, TL-CTP-NRTP-VALIDITY]
+    source_ref: [{ doc: handbook, page: 64, pdf_page: 70, section: "2.1.2(a)-(c)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
+
+  - id: ROUTE-REG01-ISD
+    form: REG-01 (Input Service Distributor)
+    name: Input Service Distributor registration
+    kind: special_category
+    priority: 21
+    optional_route: false
+    plain_language: Apply on REG-01 choosing "Input Service Distributor only" as the reason. This is in addition to any normal registration.
+    description: REG-01 Part B, reason to obtain registration = Input Service Distributor only.
+    relevant_if: { fact: is_isd, equals: true }
+    conditions: []
+    timeline_ids: [TL-RULE9A-3WD, TL-RULE9-7WD, TL-RULE9-30D-PV, TL-RULE9-QUERY]
+    source_ref: [{ doc: handbook, page: 78, pdf_page: 84, section: "2.2 Business Details (e)" }]
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Rule 14A cannot be combined with "Input Service Distributor only" (GST portal user guide).
+
+  - id: ROUTE-REG01-SEZ
+    form: REG-01 (SEZ unit / developer)
+    name: Separate registration for SEZ unit or developer
+    kind: special_category
+    priority: 22
+    optional_route: false
+    plain_language: Your SEZ unit or developer activity needs its own registration, separate from your other places in the same State.
+    description: Separate registration for the SEZ unit/developer even if registered elsewhere in the same State; reason SEZ Unit / SEZ Developer with SEZ name, approval order, approving authority and validity period.
+    relevant_if: { fact: sez_unit_or_developer, equals: true }
+    conditions: []
+    timeline_ids: [TL-RULE9A-3WD, TL-RULE9-7WD, TL-RULE9-30D-PV, TL-RULE9-QUERY]
+    source_ref:
+      - { doc: handbook, page: 43, pdf_page: 49, section: "2.1" }
+      - { doc: gst_tutorial, url: "https://tutorial.gst.gov.in/userguide/registration/Apply_for_Registration_Normal_Taxpayer.htm", fetched: 2026-11-07, section: "Business Details Note 4 and 6" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: Whether an SEZ unit is liable at all is decided by s.22/s.24 like any other person.
+
+  - id: ROUTE-RULE-14B
+    form: REG-01 (Rule 14B option)
+    name: Rule 14B - registration for e-commerce sellers in another State
+    kind: simplified
+    priority: 30
+    optional_route: true
+    plain_language: If you are already registered in another State and only sell into this State through marketplaces, Rule 14B offers a lighter registration.
+    description: >-
+      Rule 14B (Notification 05/2026-CT): for a person with an active regular registration in another
+      State under the same PAN, with no physical presence or regular registration in the target State,
+      supplying there only through ECOs, within the output-tax cap; ECO consent and Aadhaar plus
+      document verification required.
+    relevant_if: { fact: supplies_via_eco, equals: true }
+    conditions:
+      - id: R14B-OPTED
+        description: Applicant chooses the Rule 14B option.
+        test: { fact: wants_rule_14b, equals: true }
+        fail_message: Applicant has not opted for Rule 14B.
+        source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+        verification_status: secondary
+      - id: R14B-HOME-REG
+        description: Active regular registration in another State/UT under the same PAN.
+        test: { fact: has_regular_registration_other_state, equals: true }
+        fail_message: No active regular registration in another State under the same PAN.
+        source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+        verification_status: secondary
+      - id: R14B-NO-PRESENCE
+        description: No physical presence and no active regular registration in the target State.
+        test: { fact: no_presence_in_target_state, equals: true }
+        fail_message: Applicant has a physical presence or regular registration in the target State.
+        source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+        verification_status: secondary
+      - id: R14B-ECO-ONLY
+        description: Registration usable only for supplies through ECOs.
+        test: { fact: target_state_supplies_only_via_eco, equals: true }
+        fail_message: Supplies in the target State are not limited to ECO supplies.
+        source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+        verification_status: secondary
+      - id: R14B-CAP
+        description: Output tax liability on supplies to registered persons within the monthly cap (config RULE14B-MONTHLY-CAP-LAKH).
+        test: { fact: monthly_output_tax_to_registered_lakh, lte_param: RULE14B-MONTHLY-CAP-LAKH }
+        fail_message: Expected monthly output tax on supplies to registered persons exceeds the Rule 14B cap.
+        source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+        verification_status: secondary
+      - id: R14B-AADHAAR
+        description: Aadhaar authentication and document verification within 15 days of submitting Part B.
+        test: { fact: aadhaar_authentication_willing, equals: true }
+        fail_message: Aadhaar authentication will not be completed.
+        source_ref: [{ doc: research, page: 4, section: "C. Rule 14B" }]
+        verification_status: secondary
+    timeline_ids: [TL-RULE14B-ECO-CONSENT, TL-RULE14B-AADHAAR-15D, TL-RULE14B-DEEMED, TL-RULE14B-NEGATIVE-VISIT]
+    source_ref: [{ doc: research, page: 4, section: "C. Rule 14B, e-commerce sellers" }]
+    effective_from: 2026-11-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: All conditions come from secondary sources; rule text not read.
+
+  - id: ROUTE-RULE-14A
+    form: REG-01 (Rule 14A option)
+    name: Rule 14A - simplified registration for small-liability taxpayers
+    kind: simplified
+    priority: 40
+    optional_route: true
+    plain_language: If your monthly GST on sales to registered businesses stays within the cap and you complete Aadhaar authentication, a low-risk application can be approved electronically within 3 working days.
+    description: >-
+      Rule 14A (Notification 18/2025-CT, from 1 Nov 2025): optional; REG-01 with "Option under Rule 14A =
+      Yes"; Aadhaar authentication of authorised signatory and at least one promoter/partner; not a
+      s.25(6D) person; no other Rule 14A registration on the PAN in the State; self-declared monthly
+      output tax on supplies to registered persons within the cap.
+    relevant_if: { fact: normal_taxpayer_category, equals: true }
+    conditions:
+      - id: R14A-OPTED
+        description: Applicant selects "Option for registration under Rule 14A = Yes".
+        test: { fact: wants_rule_14a, equals: true }
+        fail_message: Applicant has not opted for Rule 14A.
+        source_ref: [{ doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Eligibility" }]
+        verification_status: handbook
+      - id: R14A-AADHAAR
+        description: Aadhaar authentication (OTP or biometric) of the authorised signatory and at least one promoter/partner; on the portal Rule 14A = Yes forces Aadhaar = Yes.
+        test: { fact: aadhaar_authentication_willing, equals: true }
+        fail_message: Aadhaar authentication will not be completed, so Rule 14A is not available.
+        source_ref:
+          - { doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Eligibility" }
+          - *tut1
+        verification_status: official
+      - id: R14A-NOT-25-6D
+        description: Applicant is not a person covered under s.25(6D) (Aadhaar-exempt classes under Notification 3/2021-CT).
+        test: { not: { fact: aadhaar_exempt_class, equals: true } }
+        fail_message: Applicant is in a class exempt from Aadhaar authentication under s.25(6D), so Rule 14A is not available.
+        source_ref:
+          - { doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Eligibility" }
+          - { doc: handbook, page: 51, pdf_page: 57, section: "Notification 3/2021-CT" }
+        verification_status: conflict
+      - id: R14A-ONE-PER-STATE
+        description: No other Rule 14A registration on the same PAN in the same State/UT.
+        test: { not: { fact: existing_14a_same_state, equals: true } }
+        fail_message: A Rule 14A registration already exists (or is filed) on this PAN in this State.
+        source_ref:
+          - { doc: handbook, page: 62, pdf_page: 68, section: "2.1.1 Eligibility" }
+          - *tut1
+        verification_status: official
+      - id: R14A-CAP
+        description: Self-declared monthly output tax liability on supplies to registered persons within the cap (config RULE14A-MONTHLY-CAP-LAKH).
+        test: { fact: monthly_output_tax_to_registered_lakh, lte_param: RULE14A-MONTHLY-CAP-LAKH }
+        fail_message: Expected monthly output tax on supplies to registered persons exceeds the Rule 14A cap.
+        source_ref:
+          - { doc: handbook, page: 62, pdf_page: 68, section: "2.1.1" }
+          - *tut1
+        verification_status: conflict
+      - id: R14A-NOT-ISD
+        description: The "Input Service Distributor only" reason is disabled when Rule 14A = Yes.
+        test: { not: { fact: is_isd, equals: true } }
+        fail_message: Rule 14A cannot be used for an Input Service Distributor registration.
+        source_ref: *tut
+        verification_status: official
+    timeline_ids: [TL-RULE14A-3WD, TL-RULE14A-WITHDRAWAL-PRE-2026-04, TL-RULE14A-WITHDRAWAL]
+    source_ref:
+      - { doc: handbook, page: 61, pdf_page: 67, section: "2.1.1" }
+      - *tut1
+    effective_from: 2025-11-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: >-
+      R14A-NOT-25-6D is marked conflict because the handbook glosses s.25(6D) persons as "notified
+      mandatory registrants", which does not match s.25(6D) (see conflict C-008). Whether a casual taxable
+      person may opt for Rule 14A is not stated (UNVERIFIED).
+
+  - id: ROUTE-MULTISTATE
+    form: REG-01 (Multistate Registration facility)
+    name: Multistate Registration facility on the portal
+    kind: normal
+    priority: 50
+    optional_route: true
+    plain_language: When applying in two or more States under one PAN, the portal can pre-fill common details for each State.
+    description: GSTN advisory of 1 Oct 2026 - normal taxpayers applying in two or more States/UTs under one PAN; common information auto-populated and editable per State.
+    relevant_if:
+      any:
+        - { fact: other_supply_states, includes_any: [AN, AP, AR, AS, BR, CH, CG, DH, DL, GA, GJ, HR, HP, JK, JH, KA, KL, LA, LD, MP, MH, MN, ML, MZ, NL, OD, PY, PB, RJ, SK, TN, TS, TR, UP, UK, WB] }
+    conditions: []
+    timeline_ids: []
+    source_ref: [{ doc: research, page: 2, section: "B. 1 Oct 2026 GSTN Advisory: Multistate Registration" }]
+    effective_from: 2026-10-01
+    effective_to: null
+    verification_status: secondary
+    confidence: likely
+    notes: Portal convenience, not a legal route. The GST tutorial also describes auto-population from an existing GSTIN on the same PAN.
+
+  - id: ROUTE-REG01-NORMAL
+    form: REG-01
+    name: Normal registration
+    kind: normal
+    priority: 60
+    optional_route: false
+    plain_language: Apply on REG-01 on the GST portal. With Aadhaar authentication, a complete low-risk application is approved within 3 to 7 working days; otherwise allow up to 30 days for physical verification.
+    description: Rules 8, 9 and 9A - REG-01 Part A (PAN, mobile, e-mail) then Part B; Aadhaar authentication or physical verification; Rule 9A electronic grant for low-risk cases.
+    relevant_if: { fact: normal_taxpayer_category, equals: true }
+    conditions: []
+    timeline_ids: [TL-TRN-15D, TL-AADHAAR-15D, TL-RULE9A-3WD, TL-RULE9-7WD, TL-RULE9-30D-PV, TL-RULE9-QUERY, TL-RULE9-DEEMED, TL-BANK-RULE10A, TL-BANK-REVISED-REG01]
+    source_ref:
+      - { doc: handbook, page: 52, pdf_page: 58, section: "2.1 Verification Procedure" }
+      - { doc: handbook, page: 59, pdf_page: 65, section: "Rule 9A" }
+    effective_from: 2017-07-01
+    effective_to: null
+    verification_status: handbook
+    confidence: certain
+    notes: ""
