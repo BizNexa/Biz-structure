@@ -61,3 +61,12 @@
   .hub-tools{padding-top:20px}
 }
 [data-theme="dark"] .tool,[data-theme="dark"] .which{background:var(--surface)}
+
+/* Three tools */
+.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.which-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1120px}
+.tool-beta{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;border:1px solid var(--accent,#C9A227);color:var(--navy-700,#7D6013);font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;vertical-align:middle}
+.hub .final .btns{flex-wrap:wrap}
+@media(max-width:1080px){.tool-grid{grid-template-columns:1fr 1fr}.tool-grid>.tool:last-child{grid-column:1/-1}}
+@media(max-width:860px){.tool-grid,.which-grid{grid-template-columns:1fr}.tool-grid>.tool:last-child{grid-column:auto}}
+[data-theme="dark"] .tool-beta{color:var(--accent,#C9A227)}

@@ -2,7 +2,7 @@
 // fresh files after each deploy. Run before every push: node tools/bust-cache.cjs
 const fs = require("fs"), path = require("path"), crypto = require("crypto");
 const ROOT = path.join(__dirname, "..");
-const skip = new Set(["_gst-checker-src", "gst-registration-checker", "github-pages-deployment", "saas-frontend", "_design", "node_modules", "worker", "tools", "tests", "saas-backend", ".claude", ".git"]);
+const skip = new Set(["_gst-checker-src", "gst-registration-checker", "_income-tax-calculator-src", "income-tax-calculator", "github-pages-deployment", "saas-frontend", "_design", "node_modules", "worker", "tools", "tests", "saas-backend", ".claude", ".git"]);
 const pages = ["index.html", ...fs.readdirSync(ROOT, { withFileTypes: true }).filter(d => d.isDirectory() && !skip.has(d.name) && fs.existsSync(path.join(ROOT, d.name, "index.html"))).map(d => d.name + "/index.html")];
 let changed = 0;
 for (const f of pages) {
