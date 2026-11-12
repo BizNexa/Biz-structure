@@ -1,0 +1,2406 @@
+{
+ "meta": {
+  "title": "Rule set — Tax Year 2026-27 (1 Apr 2026 – 31 Mar 2027), Income-tax Act, 2025 as amended by Finance Act, 2026",
+  "status": "DRAFT — PHASE 0 — NOT VERIFIED. Pending line-by-line sign-off by the reviewing Chartered Accountant.",
+  "extracted_on": "2026-11-11",
+  "money_unit": "INR (whole rupees) in this file; the engine converts to integer paise",
+  "sources": {
+   "ACT": {
+    "file": "reference/Income_Tax_Act_2025_as_amended_by_FA_Act_2026.pdf",
+    "note": "686 PDF pages. 'page' = PDF page index of this file (not a printed folio)."
+   },
+   "RULES": {
+    "file": "reference/Income-tax-Rules-2026_2026-10-23_11-50-47_59f727_en.pdf",
+    "note": "424 PDF pages. 'page' = PDF page index."
+   },
+   "FAQ": {
+    "file": "reference/FAQs-on-Interplay-and-Transition.pdf",
+    "note": "99 PDF pages. Contains no rates, surcharge or cess; not relied on for any value below."
+   },
+   "FA26-S3": {
+    "url": "https://www.incometaxindia.gov.in/finance-acts",
+    "note": "Finance Act, 2026, section 3 'Income-tax under Act 30 of 2025' (Chapter II — Rates of income-tax). Read on 2026-11-11 from the CBDT site's Finance Acts viewer (site content id 17326849, last modified 2026-08-19). Not a file in ./reference; accepted by the CA as a source on 2026-11-11."
+   },
+   "FA26-SCH1": {
+    "url": "https://www.incometaxindia.gov.in/finance-acts",
+    "note": "Finance Act, 2026, First Schedule, Part I-B 'Income-tax under the Income-tax Act, 2025', Paragraphs A–F. Read on 2026-11-11 (site content id 17328918, last modified 2026-07-04). Not a file in ./reference; accepted by the CA as a source on 2026-11-11."
+   }
+  },
+  "caveats": [
+   "The rupee glyph extracts from the PDFs as a backtick; extracts below show it as Rs.",
+   "sec1961 values are INDICATIVE cross-references supplied from the assistant's general knowledge, except s.194 where the Act itself prints them. They are not sourced from ./reference and must be checked against the CBDT navigator utility (OPEN_QUESTIONS Q21).",
+   "Stray digits appear after some section numbers in the Act PDF text (e.g. '20071', '14722', 'tax year15'). They look like typesetting artefacts and are ignored.",
+   "Tables in ss.194, 201, 202 extract with misaligned columns in layout mode; row-to-rate mapping was re-checked in reading-order extraction and against later cross-references."
+  ]
+ },
+ "rules": [
+  {
+   "id": "E-00",
+   "group": "0. Preliminary",
+   "desc": "Tax year definition",
+   "value": {
+    "months": 12,
+    "starts": "1 April"
+   },
+   "display": "12-month financial year commencing 1 April",
+   "sec2025": "3(1)",
+   "sec1961": "3 (previous year)",
+   "src": "ACT",
+   "page": "26",
+   "extract": "\"tax year\" means the twelve months period of the financial year commencing on the 1st April."
+  },
+  {
+   "id": "A-01",
+   "group": "A1. Individual/HUF — New regime slabs",
+   "desc": "Persons covered by new regime (default)",
+   "value": [
+    "individual",
+    "HUF",
+    "AOP (other than co-operative society)",
+    "BOI",
+    "artificial juridical person"
+   ],
+   "sec2025": "202(1)",
+   "sec1961": "115BAC(1A)",
+   "src": "ACT",
+   "page": "264",
+   "extract": "shall, unless the person exercises the option in the manner provided under sub-section (4), be computed at the rate of tax given in the following Table"
+  },
+  {
+   "id": "A-02",
+   "group": "A1. Individual/HUF — New regime slabs",
+   "desc": "New regime slab rates (no age bands)",
+   "value": [
+    {
+     "upto": 400000,
+     "rate_pct": 0
+    },
+    {
+     "upto": 800000,
+     "rate_pct": 5
+    },
+    {
+     "upto": 1200000,
+     "rate_pct": 10
+    },
+    {
+     "upto": 1600000,
+     "rate_pct": 15
+    },
+    {
+     "upto": 2000000,
+     "rate_pct": 20
+    },
+    {
+     "upto": 2400000,
+     "rate_pct": 25
+    },
+    {
+     "upto": null,
+     "rate_pct": 30
+    }
+   ],
+   "display": "0–4L Nil; 4–8L 5%; 8–12L 10%; 12–16L 15%; 16–20L 20%; 20–24L 25%; above 24L 30%",
+   "sec2025": "202(1) Table",
+   "sec1961": "115BAC(1A)(iii)",
+   "src": "ACT",
+   "page": "265",
+   "extract": "1. Upto Rs. 400000 Nil … 4. From Rs. 1200001 to Rs. 1600000 15% … 7. Above Rs. 2400000 30%"
+  },
+  {
+   "id": "A-03",
+   "group": "A1. Individual/HUF — New regime slabs",
+   "desc": "Maximum amount not chargeable — new regime (used for CG shortfall adjustment)",
+   "value": 400000,
+   "sec2025": "FA 2026 s.3(2)(a) Table Sl.4",
+   "sec1961": "—",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "4. Assessee whose income is chargeable to tax under section 202 of the said Act. Rs. 400000"
+  },
+  {
+   "id": "A-04",
+   "group": "A2. Individual/HUF — Old regime slabs",
+   "desc": "Old regime: individual below 60, every HUF, AOP/BOI/AJP",
+   "value": [
+    {
+     "upto": 250000,
+     "rate_pct": 0
+    },
+    {
+     "upto": 500000,
+     "rate_pct": 5
+    },
+    {
+     "upto": 1000000,
+     "rate_pct": 20
+    },
+    {
+     "upto": null,
+     "rate_pct": 30
+    }
+   ],
+   "display": "0–2.5L Nil; 2.5–5L 5%; 5–10L 20% (+12,500); above 10L 30% (+1,12,500)",
+   "sec2025": "FA 2026 First Sch. Part I-B Para A(I)",
+   "sec1961": "Finance Act First Sch. Part I Para A(I)",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "(4) where the total income exceeds Rs. 1000000 | Rs. 112500 plus 30% of the amount by which the total income exceeds Rs. 1000000."
+  },
+  {
+   "id": "A-05",
+   "group": "A2. Individual/HUF — Old regime slabs",
+   "desc": "Old regime: resident individual aged 60 or more but less than 80 at any time in the tax year",
+   "value": [
+    {
+     "upto": 300000,
+     "rate_pct": 0
+    },
+    {
+     "upto": 500000,
+     "rate_pct": 5
+    },
+    {
+     "upto": 1000000,
+     "rate_pct": 20
+    },
+    {
+     "upto": null,
+     "rate_pct": 30
+    }
+   ],
+   "display": "0–3L Nil; 3–5L 5%; 5–10L 20% (+10,000); above 10L 30% (+1,10,000)",
+   "sec2025": "FA 2026 First Sch. Part I-B Para A(II)",
+   "sec1961": "Finance Act First Sch. Part I Para A(II)",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "every individual, being a resident in India, who is of the age of sixty years or more but less than eighty years at any time during the tax year … does not exceed Rs. 300000 | Nil"
+  },
+  {
+   "id": "A-06",
+   "group": "A2. Individual/HUF — Old regime slabs",
+   "desc": "Old regime: resident individual aged 80 or more at any time in the tax year",
+   "value": [
+    {
+     "upto": 500000,
+     "rate_pct": 0
+    },
+    {
+     "upto": 1000000,
+     "rate_pct": 20
+    },
+    {
+     "upto": null,
+     "rate_pct": 30
+    }
+   ],
+   "display": "0–5L Nil; 5–10L 20%; above 10L 30% (+1,00,000)",
+   "sec2025": "FA 2026 First Sch. Part I-B Para A(III)",
+   "sec1961": "Finance Act First Sch. Part I Para A(III)",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "every individual, being a resident in India, who is of the age of eighty years or more at any time during the tax year … does not exceed Rs. 500000 | Nil"
+  },
+  {
+   "id": "A-07",
+   "group": "A2. Individual/HUF — Old regime slabs",
+   "desc": "Age bands apply to resident individuals only; HUF always falls in Para A(I)",
+   "value": {
+    "age_bands_for": "resident individual",
+    "huf_slab": "A-04",
+    "senior_age": 60,
+    "super_senior_age": 80
+   },
+   "display": "HUF = Para A(I) slab irrespective of karta's age",
+   "sec2025": "FA 2026 First Sch. Part I-B Para A(I)",
+   "sec1961": "Finance Act First Sch. Part I Para A",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "every individual other than the individual referred to in items (II) and (III) of this Paragraph or Hindu undivided family or association of persons"
+  },
+  {
+   "id": "A-08",
+   "group": "A2. Individual/HUF — Old regime slabs",
+   "desc": "Maximum amount not chargeable — old regime",
+   "value": {
+    "general_and_huf": 250000,
+    "resident_60_to_79": 300000,
+    "resident_80_plus": 500000
+   },
+   "display": "2,50,000 / 3,00,000 / 5,00,000",
+   "sec2025": "FA 2026 s.3(2)(a) Table Sl.1–3",
+   "sec1961": "—",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "Rs. 250000 … sixty or more but less than eighty years … Rs. 300000 … eighty years or more … Rs. 500000"
+  },
+  {
+   "id": "A-09",
+   "group": "A3. Regime option",
+   "desc": "Opt-out of new regime — person WITH business/profession income",
+   "value": {
+    "deadline": "due date u/s 263(1) for the return of that tax year",
+    "sticky": true,
+    "withdrawals_allowed": 1,
+    "re_entry_after_withdrawal": "never, unless business/profession income ceases"
+   },
+   "display": "Option on or before s.263(1) due date; applies to later years; may be withdrawn only once (for a later year); thereafter never eligible again unless business income ceases",
+   "sec2025": "202(4)(a)",
+   "sec1961": "115BAC(6)",
+   "src": "ACT",
+   "page": "266",
+   "extract": "such option, once exercised, may be withdrawn only once for a tax year other than the tax year for which it was exercised"
+  },
+  {
+   "id": "A-10",
+   "group": "A3. Regime option",
+   "desc": "Opt-out of new regime — person WITHOUT business/profession income",
+   "value": {
+    "deadline": "along with the return u/s 263(1)",
+    "sticky": false
+   },
+   "display": "Exercisable year by year, along with the return furnished u/s 263(1)",
+   "sec2025": "202(4)(b)",
+   "sec1961": "115BAC(6)",
+   "src": "ACT",
+   "page": "266",
+   "extract": "in case of a person not having income from business or profession, along with the return of income to be furnished under section 263(1) for the tax year."
+  },
+  {
+   "id": "A-11",
+   "group": "A4. Rebate",
+   "desc": "Rebate — old regime",
+   "value": {
+    "eligible": "individual resident in India",
+    "ti_limit": 500000,
+    "max_rebate": 12500
+   },
+   "display": "Resident individual; total income ≤ 5,00,000; lower of tax or 12,500",
+   "sec2025": "156(1)",
+   "sec1961": "87A",
+   "src": "ACT",
+   "page": "216",
+   "extract": "100% of income-tax payable or Rs. 12500, whichever is less … if such total income does not exceed Rs. 500000."
+  },
+  {
+   "id": "A-12",
+   "group": "A4. Rebate",
+   "desc": "Rebate — new regime",
+   "value": {
+    "eligible": "resident individual chargeable u/s 202(1)",
+    "ti_limit": 1200000,
+    "max_rebate": 60000
+   },
+   "display": "Resident individual; income ≤ 12,00,000; lower of tax or 60,000",
+   "sec2025": "156(2)(a)",
+   "sec1961": "87A first proviso",
+   "src": "ACT",
+   "page": "216–217",
+   "extract": "the income does not exceed twelve lakh rupees, 100% of the income-tax payable or Rs. 60000, whichever is less"
+  },
+  {
+   "id": "A-13",
+   "group": "A4. Rebate",
+   "desc": "Rebate — new regime marginal relief above 12,00,000",
+   "value": {
+    "formula": "rebate = max(0, tax − (total_income − 1200000))"
+   },
+   "display": "If TI > 12L and tax > (TI − 12L): rebate = tax − (TI − 12L), i.e. tax payable capped at the excess over 12L",
+   "sec2025": "156(2)(b)",
+   "sec1961": "87A first proviso (b)",
+   "src": "ACT",
+   "page": "217",
+   "extract": "an amount equal to the amount by which the income-tax payable on such total income is in excess of the amount by which the total income exceeds twelve lakh rupees."
+  },
+  {
+   "id": "A-14",
+   "group": "A4. Rebate",
+   "desc": "New-regime rebate limited to tax at s.202(1) slab rates (not against special-rate tax)",
+   "value": {
+    "cap": "income-tax payable at s.202(1) rates"
+   },
+   "sec2025": "156(3)",
+   "sec1961": "87A second proviso",
+   "src": "ACT",
+   "page": "217",
+   "extract": "The deduction under sub-section (2), shall not exceed income-tax payable as per the rates provided in section 202(1)."
+  },
+  {
+   "id": "A-15",
+   "group": "A4. Rebate",
+   "desc": "No rebate against tax on s.198 LTCG (both regimes)",
+   "value": true,
+   "sec2025": "198(7)",
+   "sec1961": "112A(6)",
+   "src": "ACT",
+   "page": "260",
+   "extract": "the rebate under section 156 shall be allowed from the income-tax on the total income as reduced by tax payable on such capital gains."
+  },
+  {
+   "id": "A-16",
+   "group": "A4. Rebate",
+   "desc": "FINDING: old-regime rebate is NOT barred against other special-rate tax (s.196 STCG, s.197 LTCG, s.194 incomes) — only s.198 is carved out",
+   "value": {
+    "old_regime_rebate_excluded_only_for": [
+     "198"
+    ]
+   },
+   "display": "Brief asked to confirm 'no rebate against special-rate income'. Text supports that fully for the new regime (A-14) but, for the old regime, only for s.198 (A-15). See OPEN_QUESTIONS Q4.",
+   "sec2025": "156(1) read with 198(7)",
+   "sec1961": "87A / 112A(6)",
+   "src": "ACT",
+   "page": "216, 260",
+   "extract": "from the income-tax (computed before allowing the deduction under this section) chargeable on the total income for any tax year"
+  },
+  {
+   "id": "A-17",
+   "group": "A4. Rebate",
+   "desc": "HUF and non-residents get no rebate",
+   "value": {
+    "huf": false,
+    "non_resident": false
+   },
+   "sec2025": "156(1), 156(2)",
+   "sec1961": "87A",
+   "src": "ACT",
+   "page": "216",
+   "extract": "An assessee, being an individual resident in India, shall be entitled to a deduction"
+  },
+  {
+   "id": "A-18",
+   "group": "A4. Rebate",
+   "desc": "Rebate cannot exceed the income-tax on total income",
+   "value": true,
+   "sec2025": "155(2)",
+   "sec1961": "87(2)",
+   "src": "ACT",
+   "page": "216",
+   "extract": "The deduction under section 156, shall not, in any case, exceed income-tax"
+  },
+  {
+   "id": "A-19",
+   "group": "A5. Standard deductions",
+   "desc": "Standard deduction from salary",
+   "value": {
+    "new_regime": 75000,
+    "old_regime": 50000,
+    "cap": "salary"
+   },
+   "display": "New: lower of 75,000 or salary. Old: lower of 50,000 or salary",
+   "sec2025": "19(1) Table Sl.2",
+   "sec1961": "16(ia)",
+   "src": "ACT",
+   "page": "46",
+   "extract": "(a) Rs. 75000 or the salary, whichever is less, where income-tax is computed under section 202(1); (b) Rs. 50000 or the salary, whichever is less, in any other case."
+  },
+  {
+   "id": "A-20",
+   "group": "A5. Standard deductions",
+   "desc": "Deduction from family pension (income from other sources)",
+   "value": {
+    "fraction": "1/3",
+    "new_regime_cap": 25000,
+    "old_regime_cap": 15000
+   },
+   "display": "Lower of one-third of family pension or 25,000 (new) / 15,000 (old)",
+   "sec2025": "93(1)(d)",
+   "sec1961": "57(iia)",
+   "src": "ACT",
+   "page": "163",
+   "extract": "an amount equal to one-third of such income or Rs. 25000, whichever is less, where income-tax is computed under section 202(1); and … Rs. 15000, whichever is less, in any other case"
+  },
+  {
+   "id": "A-21",
+   "group": "A5. Standard deductions",
+   "desc": "Tax on employment (professional tax) — allowed in old regime only",
+   "value": {
+    "old_regime": "entire amount",
+    "new_regime": "not allowed"
+   },
+   "sec2025": "19(1) Table Sl.1; 202(2)(a)(iv)",
+   "sec1961": "16(iii); 115BAC(2)",
+   "src": "ACT",
+   "page": "46, 265",
+   "extract": "without any exemption or deduction under … (iv) section 19(1) (Table: Sl. No. 1);"
+  },
+  {
+   "id": "A-22",
+   "group": "A6. New regime — what is denied / allowed",
+   "desc": "Chapter VIII deductions under new regime: all denied EXCEPT ss.124(1), 124(2), 125(2), 146",
+   "value": {
+    "allowed": [
+     "124(1)",
+     "124(2)",
+     "125(2)",
+     "146"
+    ]
+   },
+   "display": "Allowed: employer's pension-scheme contribution (124(1)/(2)); Central Govt contribution to Agniveer Corpus Fund (125(2)); additional-employee-cost deduction (146). Everything else in Chapter VIII denied.",
+   "sec2025": "202(2)(a)(xii)",
+   "sec1961": "115BAC(2)(i) — 80CCD(2), 80CCH(2), 80JJAA",
+   "src": "ACT",
+   "page": "265",
+   "extract": "(xii) Chapter VIII other than the provisions of section 124(1) and 124(2), or 125(2) or 146"
+  },
+  {
+   "id": "A-23",
+   "group": "A6. New regime — what is denied / allowed",
+   "desc": "Other exemptions/deductions denied under new regime",
+   "value": [
+    "Schedule III Table Sl. 5, 6, 7, 8, 11, 17",
+    "Schedule III Table Sl. 12, 13 (except as prescribed)",
+    "19(1) Table Sl.1 (tax on employment)",
+    "22(1)(b) interest on self-occupied property (s.21(6))",
+    "33(8)",
+    "48",
+    "49",
+    "45(3)(a)/(b)/(c)",
+    "46",
+    "47(1)(a)",
+    "allowances/perquisites exempt under any other law"
+   ],
+   "display": "Sch. III Sl. 5/6/7/8/11/17; Sch. III Sl. 12/13 unless prescribed; professional tax; interest on self-occupied house; ss.33(8), 45(3)(a)-(c), 46, 47(1)(a), 48, 49; allowances under other laws. (Sch. III row contents not individually extracted — v1 takes exempt allowances as an old-regime-only input.)",
+   "sec2025": "202(2)(a), 202(2)(c)",
+   "sec1961": "115BAC(2)(i)",
+   "src": "ACT",
+   "page": "265–266",
+   "extract": "(v) section 22(1)(b), in respect of properties referred to in section 21(6)"
+  },
+  {
+   "id": "A-24",
+   "group": "A6. New regime — what is denied / allowed",
+   "desc": "New regime: house-property loss cannot be set off against any other head; no set-off of b/f loss or depreciation attributable to denied deductions",
+   "value": {
+    "hp_loss_interhead_setoff": false
+   },
+   "sec2025": "202(2)(b)",
+   "sec1961": "115BAC(2)(ii),(iii)",
+   "src": "ACT",
+   "page": "265",
+   "extract": "(ii) any loss under the head \"Income from house property\" with any other head of income"
+  },
+  {
+   "id": "A-25",
+   "group": "A6. New regime — what is denied / allowed",
+   "desc": "Employer contribution to notified pension scheme — cap as % of salary",
+   "value": {
+    "central_or_state_govt_employer_pct": 14,
+    "other_employer_old_regime_pct": 10,
+    "other_employer_new_regime_pct": 14,
+    "salary_definition": "includes dearness allowance if terms of employment so provide; excludes all other allowances and perquisites"
+   },
+   "display": "Govt employer 14%; other employer 10% (old regime) / 14% (new regime) of salary (basic + DA where terms so provide)",
+   "sec2025": "124(1), 124(2), 124(13)(b)",
+   "sec1961": "80CCD(2)",
+   "src": "ACT",
+   "page": "185, 187",
+   "extract": "the provisions of sub-section (1) shall have effect as if for \"10%\" referred to in clause (b) of that sub-section, \"14%\" had been substituted."
+  },
+  {
+   "id": "A-26",
+   "group": "A6. New regime — what is denied / allowed",
+   "desc": "Agnipath: own subscription (old regime only) and Central Govt contribution (both regimes) to Agniveer Corpus Fund — whole amount",
+   "value": {
+    "own_125_1": "whole amount; old regime only",
+    "govt_125_2": "whole amount; both regimes"
+   },
+   "sec2025": "125(1), 125(2)",
+   "sec1961": "80CCH",
+   "src": "ACT",
+   "page": "187",
+   "extract": "the assessee shall be allowed a deduction in the computation of his total income of the whole of the amount so contributed."
+  },
+  {
+   "id": "A-27",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Life insurance, PF, etc. (Schedule XV sums) — individual or HUF",
+   "value": {
+    "cap": 150000
+   },
+   "display": "Aggregate cap 1,50,000 (Schedule XV item list not extracted — v1 takes one aggregate input)",
+   "sec2025": "123",
+   "sec1961": "80C (with 80CCC, 80CCD(1) within the list)",
+   "src": "ACT",
+   "page": "185",
+   "extract": "the aggregate of the sums enumerated in Schedule XV, as does not exceed Rs. 150000"
+  },
+  {
+   "id": "A-28",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Own contribution to notified pension scheme — additional deduction (individual; includes deposit in minor's account)",
+   "value": {
+    "cap": 50000,
+    "no_double_claim_with": "123"
+   },
+   "sec2025": "124(3), 124(4), 124(5)",
+   "sec1961": "80CCD(1B)",
+   "src": "ACT",
+   "page": "185–186",
+   "extract": "shall be allowed a deduction not exceeding Rs. 50000 … the aggregate amount of deduction under sub-section (3) and this sub-section shall not exceed Rs. 50000."
+  },
+  {
+   "id": "A-29",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Health insurance / medical — individual",
+   "value": {
+    "self_family_insurance_cghs_checkup": 25000,
+    "parents_insurance_checkup": 25000,
+    "senior_substitute_for_25000": 50000,
+    "preventive_checkup_sublimit_aggregate": 5000,
+    "medical_expenditure_self_family_senior_no_insurance": 50000,
+    "medical_expenditure_parent_senior_no_insurance": 50000,
+    "aggregate_cap_each_of_self_and_parent_bucket": 50000,
+    "non_cash_payment_required_except_checkup": true
+   },
+   "display": "Self/family 25,000 (50,000 if insured person is senior citizen); parents 25,000 (50,000 if senior); preventive check-up 5,000 in aggregate within those limits; medical expenditure on senior citizen with no insurance up to 50,000; each bucket (self/family, parents) capped at 50,000",
+   "sec2025": "126(2), (3), (4), (7), (8), (9)",
+   "sec1961": "80D",
+   "src": "ACT",
+   "page": "187–188",
+   "extract": "such person is a senior citizen, the amount of sum as provided in such clauses, shall be substituted with Rs. 50000 for Rs. 25000"
+  },
+  {
+   "id": "A-30",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Health insurance / medical — HUF",
+   "value": {
+    "insurance_any_member": 25000,
+    "senior_substitute": 50000,
+    "medical_expenditure_senior_member_no_insurance": 50000,
+    "aggregate_cap": 50000
+   },
+   "sec2025": "126(5), (6), (7), (8)",
+   "sec1961": "80D",
+   "src": "ACT",
+   "page": "188",
+   "extract": "The amount of sum under sub-section (5) shall not exceed Rs. 50000 in the aggregate"
+  },
+  {
+   "id": "A-31",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Dependant with disability — resident individual/HUF",
+   "value": {
+    "disability": 75000,
+    "severe_disability": 125000
+   },
+   "sec2025": "127(1), 127(3)",
+   "sec1961": "80DD",
+   "src": "ACT",
+   "page": "189",
+   "extract": "shall be substituted with \"Rs. 125000\" for \"Rs. 75000\"."
+  },
+  {
+   "id": "A-32",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Medical treatment of prescribed diseases — resident",
+   "value": {
+    "cap": 40000,
+    "cap_if_patient_senior_citizen": 100000,
+    "basis": "lower of amount paid or cap, reduced by insurance/employer reimbursement"
+   },
+   "sec2025": "128(1), (3), (4)",
+   "sec1961": "80DDB",
+   "src": "ACT",
+   "page": "191",
+   "extract": "the amount actually paid during the tax year or a sum of Rs. 40000, whichever is less … shall be substituted with \"Rs. 100000\" for \"Rs. 40000\"."
+  },
+  {
+   "id": "A-33",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Interest on higher-education loan — individual",
+   "value": {
+    "cap": null,
+    "years": "initial tax year + 7 succeeding, or until interest fully paid"
+   },
+   "display": "No monetary cap; initial year + 7 years",
+   "sec2025": "129",
+   "sec1961": "80E",
+   "src": "ACT",
+   "page": "191–192",
+   "extract": "in respect of the initial tax year and seven tax years immediately succeeding the initial tax year"
+  },
+  {
+   "id": "A-34",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Interest on housing loan sanctioned 1-4-2016 to 31-3-2017 (loan ≤ 35L, value ≤ 50L, no house owned)",
+   "value": {
+    "cap": 50000
+   },
+   "sec2025": "130",
+   "sec1961": "80EE",
+   "src": "ACT",
+   "page": "192",
+   "extract": "The deduction under sub-section (1) shall not exceed Rs. 50000"
+  },
+  {
+   "id": "A-35",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Interest on housing loan sanctioned 1-4-2019 to 31-3-2022 (stamp value ≤ 45L, no house owned, not eligible u/s 130)",
+   "value": {
+    "cap": 150000
+   },
+   "sec2025": "131",
+   "sec1961": "80EEA",
+   "src": "ACT",
+   "page": "193",
+   "extract": "subject to a maximum limit of Rs. 150000 in a tax year"
+  },
+  {
+   "id": "A-36",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Interest on electric-vehicle loan sanctioned 1-4-2019 to 31-3-2023 — individual",
+   "value": {
+    "cap": 150000
+   },
+   "sec2025": "132",
+   "sec1961": "80EEB",
+   "src": "ACT",
+   "page": "193",
+   "extract": "The deduction under sub-section (1) shall not exceed Rs. 150000"
+  },
+  {
+   "id": "A-37",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Donations",
+   "value": {
+    "pct_100_list": "133(1)(a)(i)–(xxiv)",
+    "pct_50_list": "133(1)(b)(i)–(vi)",
+    "qualifying_limit": "10% of adjusted gross total income for 133(1)(a)(xxiii),(xxiv) and 133(1)(b)(ii)–(vi)",
+    "cash_limit": 2000,
+    "adjusted_gti": "GTI less income on which tax not payable less other Chapter VIII deductions",
+    "pct_full": 100,
+    "pct_half": 50,
+    "qualifying_limit_pct_of_adjusted_gti": 10
+   },
+   "display": "100% for funds in 133(1)(a); 50% for 133(1)(b); 10%-of-adjusted-GTI ceiling on (a)(xxiii),(xxiv) and (b)(ii)–(vi); cash only up to 2,000",
+   "sec2025": "133(1), (2), (5), (7)(a)",
+   "sec1961": "80G",
+   "src": "ACT",
+   "page": "194–197",
+   "extract": "exceeds 10% of the adjusted gross total income, then the amount in excess of 10% of the adjusted gross total income shall be ignored"
+  },
+  {
+   "id": "A-38",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Rent paid (no HRA)",
+   "value": {
+    "least_of": [
+     "rent paid − 10% of total income",
+     "5000 per month",
+     "25% of total income"
+    ],
+    "total_income_basis": "before this deduction",
+    "excess_over_pct_of_total_income": 10,
+    "monthly_cap": 5000,
+    "pct_of_total_income_cap": 25
+   },
+   "sec2025": "134(2), 134(5)",
+   "sec1961": "80GG",
+   "src": "ACT",
+   "page": "197–198",
+   "extract": "exceeding 10% of his total income, subject to a maximum of Rs. 5000 per month, or 25% of total income for tax year, whichever is less."
+  },
+  {
+   "id": "A-39",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Donations for scientific research / social-science research — not if GTI includes business income; cash ≤ 2,000",
+   "value": {
+    "pct": 100,
+    "cash_limit": 2000,
+    "barred_if_business_income": true
+   },
+   "sec2025": "135",
+   "sec1961": "80GGA",
+   "src": "ACT",
+   "page": "198",
+   "extract": "the gross total income of the assessee includes income which is chargeable under the head \"Profits and gains of business or profession\""
+  },
+  {
+   "id": "A-40",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Contribution to political party / electoral trust (non-cash) — any person other than local authority and govt-funded AJP",
+   "value": {
+    "pct": 100,
+    "cash": false
+   },
+   "sec2025": "137 (136 for Indian companies)",
+   "sec1961": "80GGC (80GGB)",
+   "src": "ACT",
+   "page": "198–199",
+   "extract": "shall be allowed a deduction for the amount contributed by him, other than by way of cash"
+  },
+  {
+   "id": "A-41",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Interest on deposits",
+   "value": {
+    "non_senior_individual_or_huf": {
+     "cap": 10000,
+     "scope": "savings account interest only (bank, co-op bank, post office)"
+    },
+    "senior_citizen_individual": {
+     "cap": 50000,
+     "scope": "any deposit incl. time deposits"
+    }
+   },
+   "display": "Non-senior individual/HUF: savings interest up to 10,000. Senior citizen: any deposit interest up to 50,000",
+   "sec2025": "153",
+   "sec1961": "80TTA / 80TTB",
+   "src": "ACT",
+   "page": "215",
+   "extract": "up to a maximum amount of Rs. 10000 on deposits in a savings account, excluding time deposits … up to a maximum amount of Rs. 50000 on deposits in any account, including time deposits."
+  },
+  {
+   "id": "A-42",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Person with disability — resident individual",
+   "value": {
+    "disability": 75000,
+    "severe_disability": 125000
+   },
+   "sec2025": "154",
+   "sec1961": "80U",
+   "src": "ACT",
+   "page": "216",
+   "extract": "shall be allowed a deduction of Rs. 75000 or Rs. 125000, respectively"
+  },
+  {
+   "id": "A-43",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Royalty on patents — resident individual patentee",
+   "value": {
+    "cap": 300000
+   },
+   "sec2025": "152(2)",
+   "sec1961": "80RRB",
+   "src": "ACT",
+   "page": "213",
+   "extract": "the whole of such income referred to in sub-section (1) or Rs. 300000, whichever is less."
+  },
+  {
+   "id": "A-44",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Interest on borrowed capital — self-occupied property (s.21(6); max two houses)",
+   "value": {
+    "cap_acquired_or_constructed_within_5_years_with_certificate": 200000,
+    "cap_otherwise": 30000,
+    "aggregate_cap_all_self_occupied": 200000,
+    "pre_construction_interest": "five equal instalments"
+   },
+   "display": "2,00,000 (acquired/constructed, completed within 5 years of end of year of borrowing, lender certificate); else 30,000; aggregate 2,00,000. Old regime only (see A-23).",
+   "sec2025": "22(1)(b),(c), 22(2), 22(5), 21(6), 21(7)",
+   "sec1961": "24(b), 23(2)",
+   "src": "ACT",
+   "page": "53–54",
+   "extract": "shall not exceed— (a) Rs. 200000, subject to the following conditions … (b) Rs. 30000 in any other case."
+  },
+  {
+   "id": "A-45",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "House property — standard deduction and let-out interest (both regimes)",
+   "value": {
+    "standard_deduction_pct_of_annual_value": 30,
+    "let_out_interest_cap": null
+   },
+   "display": "30% of annual value; interest on let-out property without monetary cap",
+   "sec2025": "22(1)(a), 22(1)(b)",
+   "sec1961": "24(a), 24(b)",
+   "src": "ACT",
+   "page": "53",
+   "extract": "(a) 30% of the annual value as determined under section 21;"
+  },
+  {
+   "id": "A-46",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Chapter VIII deductions cannot exceed gross total income; not allowed against s.196/197/198 gains",
+   "value": {
+    "cap": "GTI",
+    "excluded_from_gti_for_chapter_viii": [
+     "196",
+     "197",
+     "198"
+    ]
+   },
+   "sec2025": "122(2), 196(4), 197(5), 198(6)",
+   "sec1961": "80A(2), 111A(2), 112(2), 112A(5)",
+   "src": "ACT",
+   "page": "183, 258, 259, 260",
+   "extract": "the deduction under Chapter VIII shall be allowed from the gross total income as reduced by such capital gains."
+  },
+  {
+   "id": "A-47",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Senior citizen definition (for deductions)",
+   "value": {
+    "age": 60,
+    "residence": "resident in India",
+    "test": "at any time during the relevant tax year"
+   },
+   "sec2025": "2 (definition of 'senior citizen')",
+   "sec1961": "80D/80DDB/80TTB Explanations",
+   "src": "ACT",
+   "page": "21",
+   "extract": "\"senior citizen\" means an individual resident in India who is of the age of sixty years or more at any time during the relevant tax year"
+  },
+  {
+   "id": "A-48",
+   "group": "A8. Special-rate incomes",
+   "desc": "STCG — equity share / equity-oriented fund unit / business-trust unit, STT paid on sale",
+   "value": {
+    "rate_pct": 20
+   },
+   "sec2025": "196(1)",
+   "sec1961": "111A",
+   "src": "ACT",
+   "page": "257–258",
+   "extract": "income-tax calculated on such short-term capital gains at the rate of 20%"
+  },
+  {
+   "id": "A-49",
+   "group": "A8. Special-rate incomes",
+   "desc": "LTCG — equity share (STT on acquisition and transfer) / equity-oriented fund or business-trust unit (STT on transfer)",
+   "value": {
+    "rate_pct": 12.5,
+    "annual_exemption": 125000
+   },
+   "display": "12.5% on gains exceeding 1,25,000",
+   "sec2025": "198(1), 198(2)",
+   "sec1961": "112A",
+   "src": "ACT",
+   "page": "259–260",
+   "extract": "income-tax calculated on such long-term capital gains exceeding Rs. 125000 at the rate of 12.5%"
+  },
+  {
+   "id": "A-50",
+   "group": "A8. Special-rate incomes",
+   "desc": "LTCG — any other long-term capital asset",
+   "value": {
+    "rate_pct": 12.5
+   },
+   "sec2025": "197(1)",
+   "sec1961": "112",
+   "src": "ACT",
+   "page": "258",
+   "extract": "income-tax calculated on such long-term capital gains at the rate of 12.5%."
+  },
+  {
+   "id": "A-51",
+   "group": "A8. Special-rate incomes",
+   "desc": "LTCG on land/building acquired before 23-7-2024 — resident individual/HUF grandfathering",
+   "value": {
+    "tax": "lower of 12.5% without indexation or 20% with indexation"
+   },
+   "display": "Excess of (12.5% on unindexed gain) over (20% on indexed gain) is ignored — needs both gain figures as inputs (OPEN_QUESTIONS Q8)",
+   "sec2025": "197(3)",
+   "sec1961": "112(1) second proviso",
+   "src": "ACT",
+   "page": "258–259",
+   "extract": "B = income-tax computed under sub-section (1)(b) taking the rate as 20% and the capital gains is computed by taking the cost of acquisition as \"indexed cost of acquisition\""
+  },
+  {
+   "id": "A-52",
+   "group": "A8. Special-rate incomes",
+   "desc": "Winnings from lottery, crossword, races, card games, gambling, betting (other than online games)",
+   "value": {
+    "rate_pct": 30
+   },
+   "sec2025": "194(1) Table Sl.1",
+   "sec1961": "115BB (printed in Act)",
+   "src": "ACT",
+   "page": "253",
+   "extract": "1. Any person. Winnings (other than from any online game) from— (a) lottery; … 30% Nil."
+  },
+  {
+   "id": "A-53",
+   "group": "A8. Special-rate incomes",
+   "desc": "Net winnings from online games (computed per Rule 135)",
+   "value": {
+    "rate_pct": 30
+   },
+   "sec2025": "194(1) Table Sl.5; Rule 135",
+   "sec1961": "115BBJ (printed in Act)",
+   "src": "ACT",
+   "page": "255 (Rules p.155)",
+   "extract": "Any income by way of net winnings from any online game, computed in the manner, as may be prescribed. 30%"
+  },
+  {
+   "id": "A-54",
+   "group": "A8. Special-rate incomes",
+   "desc": "Income from transfer of virtual digital asset — no deduction other than cost of acquisition; no set-off or carry-forward of VDA loss",
+   "value": {
+    "rate_pct": 30,
+    "deduction": "cost of acquisition only",
+    "loss_setoff": false,
+    "loss_carry_forward": false
+   },
+   "sec2025": "194(1) Table Sl.4",
+   "sec1961": "115BBH (printed in Act)",
+   "src": "ACT",
+   "page": "255",
+   "extract": "no set off of loss from transfer of the virtual digital asset computed herein shall be allowed against income computed under any provision of this Act"
+  },
+  {
+   "id": "A-55",
+   "group": "A8. Special-rate incomes",
+   "desc": "Royalty on patent developed and registered in India — resident patentee, on option",
+   "value": {
+    "rate_pct": 10
+   },
+   "sec2025": "194(1) Table Sl.2",
+   "sec1961": "115BBF (printed in Act)",
+   "src": "ACT",
+   "page": "253–254",
+   "extract": "Royalty in respect of a patent developed and registered in India. 10%"
+  },
+  {
+   "id": "A-56",
+   "group": "A8. Special-rate incomes",
+   "desc": "Income from transfer of carbon credits",
+   "value": {
+    "rate_pct": 10
+   },
+   "sec2025": "194(1) Table Sl.3",
+   "sec1961": "115BBG (printed in Act)",
+   "src": "ACT",
+   "page": "254",
+   "extract": "3. Any person. Income by way of transfer of carbon credits. 10%"
+  },
+  {
+   "id": "A-57",
+   "group": "A8. Special-rate incomes",
+   "desc": "Unexplained income (ss.102–106) — rate CHANGED by Finance Act 2026 from 60% to 30%; surcharge 25% of such tax",
+   "value": {
+    "rate_pct": 30,
+    "surcharge_pct": 25,
+    "previous_rate_pct": 60
+   },
+   "sec2025": "195(1)(i); FA 2026 s.3(4)(b) Table Sl.8",
+   "sec1961": "115BBE",
+   "src": "ACT + FA26-S3",
+   "page": "257 / web",
+   "extract": "at the rate of 24[30%] … 24. Substituted for \"60%\" by the Finance Act, 2026, w.e.f. 1-4-2026."
+  },
+  {
+   "id": "A-58",
+   "group": "A8. Special-rate incomes",
+   "desc": "Dividend received by a resident — no special rate in the Act; taxed at normal rates. Post-FA 2026: NO deduction of any kind against dividend / mutual-fund unit income",
+   "value": {
+    "special_rate": null,
+    "deduction_against_dividend": false
+   },
+   "display": "Normal slab/entity rate. FA 2026 removed the earlier 20% interest-deduction allowance.",
+   "sec2025": "93(2)",
+   "sec1961": "57 proviso",
+   "src": "ACT",
+   "page": "164",
+   "extract": "in respect of any dividend income or income from units of a Mutual Fund … no deduction shall be allowed."
+  },
+  {
+   "id": "A-59",
+   "group": "A9. Basic-exemption shortfall adjustment",
+   "desc": "Unexhausted maximum-amount-not-chargeable set against s.196 STCG, s.197 LTCG and s.198 LTCG — resident individual / HUF only",
+   "value": {
+    "eligible": "resident individual or resident HUF",
+    "applies_to": [
+     "196",
+     "197",
+     "198"
+    ],
+    "not_applicable_to": [
+     "194 incomes",
+     "195"
+    ]
+   },
+   "display": "Gains reduced by the shortfall of (total income − such gains) below the exemption limit. No equivalent adjustment exists for s.194 incomes (lottery, online games, VDA) or s.195.",
+   "sec2025": "196(2), 197(2), 198(3)",
+   "sec1961": "111A(1) proviso, 112(1)(a) proviso, 112A(2) proviso",
+   "src": "ACT",
+   "page": "258, 260",
+   "extract": "such short-term capital gains shall be reduced by the amount by which the total income as so reduced falls short of the maximum amount which is not chargeable to income-tax"
+  },
+  {
+   "id": "A-60",
+   "group": "A10. Surcharge — Individual/HUF",
+   "desc": "Old regime surcharge slabs (on total income)",
+   "value": [
+    {
+     "over": 5000000,
+     "upto": 10000000,
+     "pct": 10
+    },
+    {
+     "over": 10000000,
+     "upto": 20000000,
+     "pct": 15
+    },
+    {
+     "over": 20000000,
+     "upto": 50000000,
+     "pct": 25,
+     "ti_excludes": "dividend + 196/197/198 gains"
+    },
+    {
+     "over": 50000000,
+     "upto": null,
+     "pct": 37,
+     "ti_excludes": "dividend + 196/197/198 gains"
+    }
+   ],
+   "display": ">50L 10%; >1Cr 15%; >2Cr 25%; >5Cr 37% (the 2Cr and 5Cr tests exclude dividend and s.196/197/198 gains; if total incl. those exceeds 2Cr but the excl. figure does not, 15%)",
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 1 Sl.1; s.3(4)(b) Table Sl.1",
+   "sec1961": "Finance Act First Sch. Part I Para A surcharge",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "(iv) where the total income (excluding dividend income or capital gains under the provisions of sections 196, 197 and 198 of the said Act) exceeds Rs. 50000000, at the rate of 37%"
+  },
+  {
+   "id": "A-61",
+   "group": "A10. Surcharge — Individual/HUF",
+   "desc": "New regime surcharge slabs — maximum 25%",
+   "value": [
+    {
+     "over": 5000000,
+     "upto": 10000000,
+     "pct": 10
+    },
+    {
+     "over": 10000000,
+     "upto": 20000000,
+     "pct": 15
+    },
+    {
+     "over": 20000000,
+     "upto": null,
+     "pct": 25,
+     "ti_excludes": "dividend + 196/197/198 gains"
+    }
+   ],
+   "display": ">50L 10%; >1Cr 15%; >2Cr 25% (no 37% slab). 2Cr test excludes dividend and s.196/197/198 gains",
+   "sec2025": "FA 2026 s.3(4)(b) Table Sl.10",
+   "sec1961": "Finance Act s.2(9) / 115BAC surcharge proviso",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "(iii) where the total income (excluding dividend income or capital gains under the provisions of sections 196, 197 and 198 of the said Act) exceeds Rs. 20000000, at the rate of 25%;"
+  },
+  {
+   "id": "A-62",
+   "group": "A10. Surcharge — Individual/HUF",
+   "desc": "Surcharge cap of 15% on tax attributable to dividend income and s.196/197/198 capital gains (both regimes)",
+   "value": {
+    "cap_pct": 15,
+    "incomes": [
+     "dividend",
+     "196",
+     "197",
+     "198"
+    ]
+   },
+   "display": "Note: the cap covers ALL s.197 LTCG, not only listed securities",
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 1 Sl.1(vi); s.3(4)(b) Table Sl.10(v)",
+   "sec1961": "Finance Act surcharge provisos",
+   "src": "FA26-SCH1 + FA26-S3",
+   "page": "web",
+   "extract": "the rate of surcharge on the amount of income-tax computed in respect of that part of income shall not exceed 15%"
+  },
+  {
+   "id": "A-63",
+   "group": "A10. Surcharge — Individual/HUF",
+   "desc": "Marginal relief on surcharge — old regime thresholds",
+   "value": {
+    "thresholds": [
+     5000000,
+     10000000,
+     20000000,
+     50000000
+    ],
+    "formula": "tax+surcharge ≤ (tax+surcharge on threshold) + (total income − threshold)"
+   },
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 2 Sl.1",
+   "sec1961": "Finance Act marginal relief provisos",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "Wn = Un + Vn … Vn = the total income - amount as specified in column C of the said Table."
+  },
+  {
+   "id": "A-64",
+   "group": "A10. Surcharge — Individual/HUF",
+   "desc": "Marginal relief on surcharge — new regime thresholds",
+   "value": {
+    "thresholds": [
+     5000000,
+     10000000,
+     20000000
+    ],
+    "formula": "tax+surcharge ≤ (tax+surcharge on threshold) + (total income − threshold)"
+   },
+   "sec2025": "FA 2026 s.3(5) Table Sl.6",
+   "sec1961": "Finance Act marginal relief provisos",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "6. Persons specified against Sl. Nos. 10 and 11 in column C. Rs. 5000000 | Rs. 10000000 | Rs. 10000000 | Rs. 20000000 | Rs. 20000000 | -"
+  },
+  {
+   "id": "A-65",
+   "group": "A11. AMT — Individual/HUF",
+   "desc": "AMT applicability — non-corporate person who claimed a Chapter VIII-C deduction (other than s.149) or s.46",
+   "value": {
+    "trigger_deductions": [
+     "Chapter VIII-C other than 149",
+     "46"
+    ],
+    "not_applicable_if": [
+     "tax computed u/s 202(1) (new regime)",
+     "individual/HUF/AOP/BOI/AJP with adjusted total income ≤ 2000000"
+    ],
+    "adjusted_total_income_threshold_ind_huf": 2000000
+   },
+   "display": "Old regime only; individual/HUF only when adjusted total income exceeds 20,00,000",
+   "sec2025": "206(2)(c), 206(2)(d)(ii), 206(2)(d)(iii)",
+   "sec1961": "115JC, 115JEE",
+   "src": "ACT",
+   "page": "280–281",
+   "extract": "if the adjusted total income of such person does not exceed twenty lakh rupees"
+  },
+  {
+   "id": "A-66",
+   "group": "A11. AMT — Individual/HUF",
+   "desc": "AMT rate and adjusted total income",
+   "value": {
+    "rate_pct": 18.5,
+    "ifsc_unit_rate_pct": 9,
+    "cooperative_rate_pct": 15,
+    "adjusted_total_income": "total income + Chapter VIII-C deductions (other than 149) + s.46 deduction net of s.33 depreciation"
+   },
+   "sec2025": "206(2)(b)",
+   "sec1961": "115JC",
+   "src": "ACT",
+   "page": "280",
+   "extract": "(III) in any other case, at a rate of 18.5%;"
+  },
+  {
+   "id": "A-67",
+   "group": "A11. AMT — Individual/HUF",
+   "desc": "AMT credit — UNCHANGED by Finance Act 2026 (only MAT credit was withdrawn)",
+   "value": {
+    "credit": "AMT − regular income-tax",
+    "carry_forward_years": 15,
+    "set_off_limit": "regular income-tax − AMT of that year",
+    "interest_on_credit": false
+   },
+   "sec2025": "206(2)(e)–(i)",
+   "sec1961": "115JD",
+   "src": "ACT",
+   "page": "281",
+   "extract": "such carry forward shall not be allowed beyond the fifteenth tax year immediately succeeding the tax year in which the tax credit becomes allowable"
+  },
+  {
+   "id": "B-01",
+   "group": "B. Firm / LLP",
+   "desc": "'Firm' includes LLP",
+   "value": true,
+   "sec2025": "2(45)",
+   "sec1961": "2(23)",
+   "src": "ACT",
+   "page": "13",
+   "extract": "shall include a \"limited liability partnership\" as defined in section 2(1)(n) of the Limited Liability Partnership Act, 2008"
+  },
+  {
+   "id": "B-02",
+   "group": "B. Firm / LLP",
+   "desc": "Rate of income-tax — every firm",
+   "value": {
+    "rate_pct": 30
+   },
+   "sec2025": "FA 2026 First Sch. Part I-B Para C",
+   "sec1961": "Finance Act First Sch. Part I Para C",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "In the case of every firm,— Rate of income-tax On the whole of the total income | 30%."
+  },
+  {
+   "id": "B-03",
+   "group": "B. Firm / LLP",
+   "desc": "Surcharge — firm",
+   "value": {
+    "over": 10000000,
+    "pct": 12
+   },
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 1 Sl.4",
+   "sec1961": "Finance Act First Sch. Part I Para C surcharge",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "Every firm or local authority. Where the total income exceeds Rs. 10000000, at the rate of 12%."
+  },
+  {
+   "id": "B-04",
+   "group": "B. Firm / LLP",
+   "desc": "Marginal relief — firm",
+   "value": {
+    "thresholds": [
+     10000000
+    ],
+    "formula": "tax+surcharge ≤ (tax on 1Cr) + (total income − 1Cr)"
+   },
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 2 Sl.4",
+   "sec1961": "Finance Act marginal relief proviso",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "4. Table 1: Sl. No. 4.B. | Rs. 1,00,00,000. | -"
+  },
+  {
+   "id": "B-05",
+   "group": "B. Firm / LLP",
+   "desc": "Special-rate incomes (ss.194, 196, 197, 198) apply to firms at the same rates; no s.198 exemption shortfall adjustment; no rebate",
+   "value": {
+    "ltcg_198_exemption": 125000,
+    "shortfall_adjustment": false,
+    "rebate": false
+   },
+   "sec2025": "194, 196, 197, 198, 156",
+   "sec1961": "115BB etc., 111A, 112, 112A, 87A",
+   "src": "ACT",
+   "page": "253–260",
+   "extract": "Where the total income of an assessee includes any income arising from the transfer of a long-term capital asset"
+  },
+  {
+   "id": "B-06",
+   "group": "B. Firm / LLP",
+   "desc": "Remuneration to working partners — maximum allowable (must be authorised by deed)",
+   "value": {
+    "first_slab_book_profit": 600000,
+    "first_slab_floor": 300000,
+    "first_slab_pct": 90,
+    "balance_pct": 60,
+    "on_loss": 300000
+   },
+   "display": "On first 6,00,000 of book profit, or in case of loss: higher of 3,00,000 or 90% of book profit; on balance: 60%",
+   "sec2025": "35(e)(iii)",
+   "sec1961": "40(b)(v)",
+   "src": "ACT",
+   "page": "69",
+   "extract": "(A) on the first Rs. 600000 of the book profit or in case of a loss, Rs. 300000 or at the rate of 90% of the book profit, whichever is higher; (B) on the balance of the book profit, at the rate of 60%"
+  },
+  {
+   "id": "B-07",
+   "group": "B. Firm / LLP",
+   "desc": "Interest to partners — maximum allowable",
+   "value": {
+    "rate_pct_simple_pa": 12
+   },
+   "sec2025": "35(e)(iv)",
+   "sec1961": "40(b)(iv)",
+   "src": "ACT",
+   "page": "70",
+   "extract": "on interest to any partner as authorised by the partnership deed, exceeding 12% simple interest per annum"
+  },
+  {
+   "id": "B-08",
+   "group": "B. Firm / LLP",
+   "desc": "Book profit for partner remuneration",
+   "value": "net profit per P&L computed as per Chapter IV-D, increased by aggregate remuneration to all partners if deducted",
+   "sec2025": "35(e)(v)(A)",
+   "sec1961": "40(b) Explanation 3",
+   "src": "ACT",
+   "page": "70",
+   "extract": "as increased by the aggregate amount of the remuneration to all the partners of the firm, if such amount has been deducted while computing the net profit"
+  },
+  {
+   "id": "B-09",
+   "group": "B. Firm / LLP",
+   "desc": "Remuneration to non-working partner; remuneration/interest not authorised by deed or for a period before the deed — wholly disallowed",
+   "value": {
+    "non_working_partner_remuneration_allowed": false
+   },
+   "sec2025": "35(e)(i), 35(e)(ii)",
+   "sec1961": "40(b)(i)–(iii)",
+   "src": "ACT",
+   "page": "69",
+   "extract": "to a partner, who is not a working partner"
+  },
+  {
+   "id": "B-10",
+   "group": "B. Firm / LLP",
+   "desc": "AMT — firm/LLP: 18.5% of adjusted total income where a Chapter VIII-C (other than s.149) or s.46 deduction is claimed. No 20-lakh threshold for firms. Credit: 15 years.",
+   "value": {
+    "rate_pct": 18.5,
+    "threshold": null,
+    "credit_years": 15
+   },
+   "sec2025": "206(2)",
+   "sec1961": "115JC–115JD",
+   "src": "ACT",
+   "page": "280–281",
+   "extract": "where the regular income-tax payable for a tax year by a person, other than a company, is less than the alternate minimum tax payable for such tax year"
+  },
+  {
+   "id": "B-11",
+   "group": "B. Firm / LLP",
+   "desc": "Marginal relief also applies where income is chargeable under s.206(2) (AMT)",
+   "value": true,
+   "sec2025": "FA 2026 s.3(5)",
+   "sec1961": "—",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "having total income chargeable to tax under section 202, 206(1) or 206(2) of the said Act"
+  },
+  {
+   "id": "C-01",
+   "group": "C. Companies",
+   "desc": "Domestic company — normal rate by turnover test",
+   "value": {
+    "turnover_reference_tax_year": "2024-25",
+    "turnover_threshold": 4000000000,
+    "rate_if_not_exceeding_pct": 25,
+    "rate_otherwise_pct": 30
+   },
+   "display": "25% if total turnover or gross receipt in tax year 2024-25 does not exceed Rs. 400 crore; otherwise 30%",
+   "sec2025": "FA 2026 First Sch. Part I-B Para E(I)",
+   "sec1961": "Finance Act First Sch. Part I Para E",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "where its total turnover or the gross receipt in the tax year 2024-25 does not exceed Rs. 400 crores; | 25% of the total income; … other than that referred to in item (i). | 30% of the total income."
+  },
+  {
+   "id": "C-02",
+   "group": "C. Companies",
+   "desc": "Surcharge — domestic company under normal provisions (also applies to s.199 and MAT u/s 206)",
+   "value": [
+    {
+     "over": 10000000,
+     "upto": 100000000,
+     "pct": 7
+    },
+    {
+     "over": 100000000,
+     "upto": null,
+     "pct": 12
+    }
+   ],
+   "display": ">1Cr up to 10Cr: 7%; >10Cr: 12%",
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 1 Sl.5; s.3(4)(b) Table Sl.6",
+   "sec1961": "Finance Act First Sch. Part I Para E surcharge",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "Every domestic company. (i) Where the total income exceeds Rs. 10000000 but does not exceed Rs. 100000000, at the rate of 7%; (ii) where the total income exceeds Rs. 100000000, at the rate of 12%."
+  },
+  {
+   "id": "C-03",
+   "group": "C. Companies",
+   "desc": "Marginal relief — domestic company, normal provisions",
+   "value": {
+    "thresholds": [
+     10000000,
+     100000000
+    ],
+    "formula": "tax+surcharge ≤ (tax+surcharge on threshold) + (total income − threshold)"
+   },
+   "sec2025": "FA 2026 First Sch. Part I-B Para F Table 2 Sl.5; s.3(5) Table Sl.5",
+   "sec1961": "Finance Act marginal relief provisos",
+   "src": "FA26-SCH1",
+   "page": "web",
+   "extract": "5. Table 1: Sl. Nos. 5.B and 6.B. | Rs. 1,00,00,000. Rs. 10,00,00,000. | Rs. 10,00,00,000. -"
+  },
+  {
+   "id": "C-04",
+   "group": "C. Companies",
+   "desc": "Concessional regime — any domestic company, on option",
+   "value": {
+    "rate_pct": 22,
+    "option": "on or before s.263(1) due date; applies to subsequent years; cannot be withdrawn",
+    "deductions_forgone": [
+     "45(2)",
+     "47(1)(b)",
+     "Chapter VIII other than 146 and 148",
+     "33(8)",
+     "45(3)(a)/(b)/(c)",
+     "46",
+     "47(1)(a)",
+     "48",
+     "49",
+     "144"
+    ],
+    "no_setoff_of_bf_loss_or_depreciation_attributable_to_those": true
+   },
+   "display": "22%. Total income computed without ss.45(2), 47(1)(b), Chapter VIII (except 146, 148), and s.205(1)(a)–(g) items. Irrevocable.",
+   "sec2025": "200(1), 200(5), 200(6), 205(1)",
+   "sec1961": "115BAA",
+   "src": "ACT",
+   "page": "262, 269",
+   "extract": "the income-tax payable for a tax year shall be at the rate of 22%, at the option of a person being a domestic company"
+  },
+  {
+   "id": "C-05",
+   "group": "C. Companies",
+   "desc": "Concessional regime — new manufacturing domestic company",
+   "value": {
+    "rate_pct": 15,
+    "non_manufacturing_income_rate_pct": 22,
+    "stcg_non_depreciable_rate_pct": 22,
+    "excess_profit_205_4_rate_pct": 30,
+    "set_up_and_registered_on_or_after": "2019-10-01",
+    "commenced_manufacture_on_or_before": "2024-03-31"
+   },
+   "display": "15% (22% on non-manufacturing income and on STCG of non-depreciable assets; 30% on s.205(4) deemed income). Company must be registered on/after 1-10-2019 AND have commenced manufacture on or before 31-3-2024",
+   "sec2025": "201(1) Table, 201(2), 201(3)",
+   "sec1961": "115BAB",
+   "src": "ACT",
+   "page": "262–264",
+   "extract": "has commenced manufacturing or production of an article or thing on or before the 31st March, 2024"
+  },
+  {
+   "id": "C-06",
+   "group": "C. Companies",
+   "desc": "FINDING: s.201 is closed to new entrants — a company that had not commenced manufacture by 31-3-2024 cannot opt. UI should offer s.201 only as a 'continuing option' for companies that already qualify.",
+   "value": {
+    "available_to_companies_commencing_after": "2024-03-31",
+    "answer": false
+   },
+   "sec2025": "201(1) Table Sl.1 col. D(c)",
+   "sec1961": "115BAB(2)(a)",
+   "src": "ACT",
+   "page": "263",
+   "extract": "(c) has commenced manufacturing or production of an article or thing on or before the 31st March, 2024;"
+  },
+  {
+   "id": "C-07",
+   "group": "C. Companies",
+   "desc": "Surcharge — domestic company under s.200 or s.201: flat, no threshold, no marginal relief",
+   "value": {
+    "pct": 10,
+    "pct_if_special_purpose_vehicle_sch_V_note_2": 25,
+    "marginal_relief": false
+   },
+   "display": "Flat 10% (25% for an SPV referred to in Schedule V Note 2 — inserted by the Taxation and Other Laws (Amendment) Act, 2026, w.r.e.f. 1-4-2026)",
+   "sec2025": "FA 2026 s.3(4)(b) Table Sl.9, 9A",
+   "sec1961": "Finance Act s.2(9) proviso",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "9. 200 or 201. Every domestic company other than a special purpose vehicle referred to in Schedule V [Note 2]. 10%."
+  },
+  {
+   "id": "C-08",
+   "group": "C. Companies",
+   "desc": "Under ss.200/201, tax on s.196/197/198 gains also bears the flat surcharge (Para F slab surcharge excluded)",
+   "value": true,
+   "sec2025": "FA 2026 s.3(4)(a)(i)",
+   "sec1961": "—",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "except in case of— (i) a domestic company whose income is chargeable to tax under section 200 or 201 of the said Act"
+  },
+  {
+   "id": "C-09",
+   "group": "C. Companies",
+   "desc": "Manufacturing domestic company regime (set up on/after 1-3-2016) — on option",
+   "value": {
+    "rate_pct": 25,
+    "surcharge": "as C-02",
+    "mat_applies": true
+   },
+   "display": "25%; normal 7%/12% surcharge; MAT not excluded (s.206(1)(q) lists only ss.200(5), 201(2)). In scope for v1? — OPEN_QUESTIONS Q12",
+   "sec2025": "199",
+   "sec1961": "115BA",
+   "src": "ACT",
+   "page": "261–262",
+   "extract": "be computed at the rate of 25% subject to the following conditions:— (a) the company has been set-up and registered on or after the 1st March, 2016"
+  },
+  {
+   "id": "C-10",
+   "group": "C. Companies",
+   "desc": "MAT rate — CHANGED by Finance Act 2026 from 15% to 14%",
+   "value": {
+    "rate_pct": 14,
+    "previous_rate_pct": 15,
+    "ifsc_unit_rate_pct": 9
+   },
+   "sec2025": "206(1)(b)",
+   "sec1961": "115JB(1)",
+   "src": "ACT",
+   "page": "271",
+   "extract": "in case of any other company, at a rate of 28[14%]. … 28. Substituted for \"15%\" by the Finance Act, 2026, w.e.f. 1-4-2026."
+  },
+  {
+   "id": "C-11",
+   "group": "C. Companies",
+   "desc": "MAT trigger — book profit deemed total income where normal tax is less than MAT",
+   "value": {
+    "test": "income-tax on total income < MAT on book profit"
+   },
+   "sec2025": "206(1)(a)",
+   "sec1961": "115JB(1)",
+   "src": "ACT",
+   "page": "271",
+   "extract": "the book profit shall be deemed to be the total income of that assessee for such tax year; and (ii) the assessee shall be liable to pay income-tax equal to the minimum alternate tax."
+  },
+  {
+   "id": "C-12",
+   "group": "C. Companies",
+   "desc": "MAT does not apply to companies that opted for s.200 or s.201 (or life-insurance business)",
+   "value": {
+    "excluded": [
+     "200(5)",
+     "201(2)",
+     "life insurance business u/s 194(1) Sl.6"
+    ]
+   },
+   "sec2025": "206(1)(q)",
+   "sec1961": "115JB(5A)",
+   "src": "ACT",
+   "page": "278",
+   "extract": "(ii) who has exercised the option under section 200(5) or section 201(2)."
+  },
+  {
+   "id": "C-13",
+   "group": "C. Companies",
+   "desc": "MAT is FINAL — no new MAT credit arises from tax year 2026-27 (clauses (m)–(p) omitted by Finance Act 2026)",
+   "value": {
+    "new_credit": false
+   },
+   "sec2025": "206(1)(m)–(p) [omitted]",
+   "sec1961": "115JAA",
+   "src": "ACT",
+   "page": "278",
+   "extract": "31. Clauses (m), (n), (o) and (p) omitted by the Finance Act, 2026, w.e.f. 1-4-2026."
+  },
+  {
+   "id": "C-14",
+   "group": "C. Companies",
+   "desc": "Brought-forward MAT credit (as on 31-3-2026 under s.115JAA of 1961 Act) — set-off ONLY by a domestic company that has opted for s.200 or s.201",
+   "value": {
+    "eligible": "domestic company that exercised option u/s 200(5) or 201(2) for a tax year beginning on/after 1-4-2026",
+    "set_off_cap_pct_of_tax_payable": 25,
+    "carry_forward_limit": "15th tax year after the year the credit first became allowable under s.115JAA"
+   },
+   "display": "Set-off in any year capped at 25% of tax payable on total income under the other provisions; balance carried forward; 15-year outer limit. Not available under the normal (MAT) regime.",
+   "sec2025": "206(3)(a), 206(3)(b)",
+   "sec1961": "115JAA",
+   "src": "ACT",
+   "page": "281–282",
+   "extract": "such credit brought forward shall be allowed to be set off in any tax year to the extent of 25% of the tax payable on the total income computed as per the other provisions of this Act for that tax year"
+  },
+  {
+   "id": "C-15",
+   "group": "C. Companies",
+   "desc": "Book profit — statutory additions and reductions (v1: book profit is a user input; adjustments listed on the note page)",
+   "value": "206(1)(c)–(e) list",
+   "sec2025": "206(1)(c), (d), (e)",
+   "sec1961": "115JB Explanation 1, (2A)–(2C)",
+   "src": "ACT",
+   "page": "271–276",
+   "extract": "\"book profit\" means the profit as shown in the statement of profit and loss for the relevant tax year prepared as per clause (f), as increased by—"
+  },
+  {
+   "id": "C-16",
+   "group": "C. Companies",
+   "desc": "Inter-corporate dividend deduction (allowed under normal regime and under ss.200/201)",
+   "value": {
+    "deduction": "dividend received from domestic company / foreign company / business trust, limited to dividend distributed at least one month before the s.263(1) due date"
+   },
+   "sec2025": "148; 200(1)(a)(ii); 201(3)(a)(ii)",
+   "sec1961": "80M",
+   "src": "ACT",
+   "page": "209, 262, 264",
+   "extract": "as does not exceed the amount of dividend distributed by it at least one month before the due date for filing the return of income under section 263(1)."
+  },
+  {
+   "id": "C-17",
+   "group": "C. Companies",
+   "desc": "Buy-back — Finance Act 2026: consideration is no longer 'dividend' (s.2(40)(f) omitted); taxed as capital gains in the shareholder's hands",
+   "value": {
+    "treatment": "capital gains = consideration − cost of acquisition, in the year of buy-back"
+   },
+   "sec2025": "69(1); 2(40)(f) [omitted]",
+   "sec1961": "46A; 2(22)(f)",
+   "src": "ACT",
+   "page": "11, 126–127",
+   "extract": "the difference between the cost of acquisition and the value of consideration so received shall be deemed to be the \"Capital gains\" arising to such shareholder"
+  },
+  {
+   "id": "C-18",
+   "group": "C. Companies",
+   "desc": "Buy-back — additional income-tax where the shareholder is a promoter (buy-back u/s 68 Companies Act)",
+   "value": {
+    "stcg_196": {
+     "promoter_domestic_company_pct": 2,
+     "other_promoter_pct": 10
+    },
+    "ltcg_197_198": {
+     "promoter_domestic_company_pct": 9.5,
+     "other_promoter_pct": 17.5
+    },
+    "surcharge_on_this_tax_pct": 12,
+    "promoter_unlisted": "Companies Act s.2(69) promoter, or holder of more than 10% shareholding"
+   },
+   "display": "Additional tax on promoter: STCG 2% (domestic co.) / 10% (others); LTCG 9.5% / 17.5%; plus 12% surcharge on tax charged u/s 69",
+   "sec2025": "69(2), 69(3); FA 2026 s.3(6)",
+   "sec1961": "— (new)",
+   "src": "ACT + FA26-S3",
+   "page": "127 / web",
+   "extract": "1. Short-term capital gains referred to in section 196 arising from the transfer of such securities. 2% 10% 2. Long-term capital gains referred to in section 197 or section 198 … 9.5% 17.5%"
+  },
+  {
+   "id": "C-19",
+   "group": "C. Companies",
+   "desc": "NOTE (Private vs Public): deemed dividend on loans/advances applies only to a company in which the public are NOT substantially interested",
+   "value": {
+    "shareholder_voting_power_min_pct": 10,
+    "concern_substantial_interest_min_pct": 20,
+    "limited_to": "accumulated profits"
+   },
+   "sec2025": "2(40)(e)",
+   "sec1961": "2(22)(e)",
+   "src": "ACT",
+   "page": "11–12",
+   "extract": "any payment by a company, not being a company in which the public are substantially interested, of any sum … as an advance or loan to a shareholder … holding not less than 10% of the voting power"
+  },
+  {
+   "id": "C-20",
+   "group": "C. Companies",
+   "desc": "NOTE (Private vs Public): closely-held company — carry-forward of losses lost on change in shareholding unless 51% voting power continuity",
+   "value": {
+    "continuity_pct": 51
+   },
+   "sec2025": "119(3), 119(4)",
+   "sec1961": "79",
+   "src": "ACT",
+   "page": "181–182",
+   "extract": "shares of the company carrying not less than 51% of the voting power were beneficially held by the persons who beneficially held shares of the company carrying not less than 51% of the voting power on the last day of the year or years in which the loss was incurred"
+  },
+  {
+   "id": "C-21",
+   "group": "C. Companies",
+   "desc": "Special-rate incomes for companies (ss.194, 196, 197, 198) at the same rates; s.198 exemption 1,25,000 applies; no shortfall adjustment; no rebate",
+   "value": {
+    "stcg_196_pct": 20,
+    "ltcg_197_pct": 12.5,
+    "ltcg_198_pct": 12.5,
+    "ltcg_198_exemption": 125000
+   },
+   "sec2025": "196, 197, 198",
+   "sec1961": "111A, 112, 112A",
+   "src": "ACT",
+   "page": "257–260",
+   "extract": "the tax payable by an assessee on his total income shall be determined as per the provisions of sub-section (2)"
+  },
+  {
+   "id": "D-01",
+   "group": "D. Section 8 company",
+   "desc": "Gate question: is the company a 'registered non-profit organisation' (registered u/s 332)? If NO → compute as a company (group C).",
+   "value": {
+    "gate": "registration u/s 332"
+   },
+   "sec2025": "332(1), 334",
+   "sec1961": "12A / 12AB",
+   "src": "ACT",
+   "page": "419, 423",
+   "extract": "The following persons may, for claiming benefits under this Part as a registered non-profit organisation, make an application for registration"
+  },
+  {
+   "id": "D-02",
+   "group": "D. Section 8 company",
+   "desc": "Tax of a registered NPO",
+   "value": {
+    "specified_income_rate_pct": 30,
+    "taxable_regular_income_and_residual": "rate applicable under other provisions of the Act"
+   },
+   "display": "30% on specified income + applicable rate on taxable regular income and residual income (which rate for a Section 8 company? — OPEN_QUESTIONS Q16)",
+   "sec2025": "334(1)",
+   "sec1961": "115BBI / 164(2)",
+   "src": "ACT",
+   "page": "423",
+   "extract": "(a) at the rate of 30% on specified income for such tax year; and (b) at the rate applicable on taxable regular income and any residual income for such tax year under other provisions of this Act."
+  },
+  {
+   "id": "D-03",
+   "group": "D. Section 8 company",
+   "desc": "Regular income — components",
+   "value": [
+    "income from registered charitable/religious activity",
+    "income from property/deposits/investments held for charitable or religious purposes",
+    "voluntary contributions",
+    "gains of permitted commercial activity"
+   ],
+   "sec2025": "335",
+   "sec1961": "11(1), 12",
+   "src": "ACT",
+   "page": "423",
+   "extract": "(d) voluntary contributions received by such registered non-profit organisation in such tax year"
+  },
+  {
+   "id": "D-04",
+   "group": "D. Section 8 company",
+   "desc": "Taxable regular income — 85% rule",
+   "value": {
+    "application_threshold_pct": 85,
+    "formula": "if (applied + accumulated) ≥ 85% of regular income → nil; else 85% of regular income − applied − accumulated"
+   },
+   "sec2025": "336",
+   "sec1961": "11(1)(a), 11(2)",
+   "src": "ACT",
+   "page": "424",
+   "extract": "(a) nil, where 85% or more of the regular income of such tax year has been applied … or accumulated … (b) in any other case, 85% of the regular income for such tax year as reduced by its application … or accumulation"
+  },
+  {
+   "id": "D-05",
+   "group": "D. Section 8 company",
+   "desc": "Deemed accumulation of 15% of regular income",
+   "value": {
+    "pct": 15
+   },
+   "sec2025": "343(1)",
+   "sec1961": "11(1)(a)",
+   "src": "ACT",
+   "page": "429",
+   "extract": "to the extent of 15% of regular income, shall be considered as deemed accumulated income"
+  },
+  {
+   "id": "D-06",
+   "group": "D. Section 8 company",
+   "desc": "Application of income — donation to another registered NPO counts at 85%; corpus donation to another NPO not application; no application out of corpus/loan/accumulation",
+   "value": {
+    "donation_to_other_npo_pct": 85
+   },
+   "sec2025": "341(1), 341(3), 341(4)",
+   "sec1961": "11(1) Explanations 4, 4A",
+   "src": "ACT",
+   "page": "426–427",
+   "extract": "(b) 85% of the sum paid by way of donation made to any other registered non-profit organisation."
+  },
+  {
+   "id": "D-07",
+   "group": "D. Section 8 company",
+   "desc": "Deemed application (shortfall option) — to be applied in the year of receipt/next year, option by s.263(1) due date",
+   "value": true,
+   "sec2025": "341(5)–(8)",
+   "sec1961": "11(1) Explanation 1(2)",
+   "src": "ACT",
+   "page": "427–428",
+   "extract": "the shortfall, or any part thereof, at the option of the registered non-profit organisation, may be treated as deemed application."
+  },
+  {
+   "id": "D-08",
+   "group": "D. Section 8 company",
+   "desc": "Accumulation — statement by s.263(1) due date; period not exceeding 5 years; s.350 modes",
+   "value": {
+    "max_years": 5
+   },
+   "sec2025": "342(1), 342(4)",
+   "sec1961": "11(2)",
+   "src": "ACT",
+   "page": "428–429",
+   "extract": "stating therein the purpose and period, not exceeding five years, for which the income is being accumulated or set apart."
+  },
+  {
+   "id": "D-09",
+   "group": "D. Section 8 company",
+   "desc": "Corpus donations excluded from regular income (if invested in s.350 modes)",
+   "value": true,
+   "sec2025": "338(b), 339",
+   "sec1961": "11(1)(d)",
+   "src": "ACT",
+   "page": "426",
+   "extract": "(b) the corpus donation received by the registered non-profit organisation under section 339."
+  },
+  {
+   "id": "D-10",
+   "group": "D. Section 8 company",
+   "desc": "Anonymous donations — specified income taxed at 30%",
+   "value": {
+    "rate_pct": 30,
+    "exempt_threshold": "higher of 100000 or 5% of total donations received",
+    "not_applicable_to": "NPO created wholly for religious purposes; religious-cum-charitable NPO except donations directed to its university/educational/hospital/medical institution",
+    "exempt_floor": 100000,
+    "exempt_pct_of_total_donations": 5
+   },
+   "display": "30% on anonymous donations exceeding the higher of 1,00,000 or 5% of total donations",
+   "sec2025": "337 Table Sl.1; 334(1)(a)",
+   "sec1961": "115BBC",
+   "src": "ACT",
+   "page": "424",
+   "extract": "excluding the anonymous donations up to Rs. 100000 or 5% of the total donations received by it during the tax year, whichever is higher."
+  },
+  {
+   "id": "D-11",
+   "group": "D. Section 8 company",
+   "desc": "Other specified income taxed at 30% (benefit to related person, non-permitted investments, misapplied/unutilised accumulation, etc.)",
+   "value": "337 Table Sl.2–13",
+   "sec2025": "337 Table Sl.2–13",
+   "sec1961": "115BBI, 13",
+   "src": "ACT",
+   "page": "424–425",
+   "extract": "2. Any portion of income applied by it, directly or indirectly, for the benefit of any related person"
+  },
+  {
+   "id": "D-12",
+   "group": "D. Section 8 company",
+   "desc": "General-public-utility NPO — commercial receipts limit",
+   "value": {
+    "max_pct_of_total_receipts": 20
+   },
+   "sec2025": "346(b)",
+   "sec1961": "2(15) proviso",
+   "src": "ACT",
+   "page": "430",
+   "extract": "do not exceed 20% of the total receipts of such registered non-profit organisation of the relevant tax year"
+  },
+  {
+   "id": "D-13",
+   "group": "D. Section 8 company",
+   "desc": "NOTE: tax on accreted income (conversion, merger with non-NPO, dissolution, etc.) at maximum marginal rate, plus 12% surcharge",
+   "value": {
+    "rate": "maximum marginal rate",
+    "surcharge_pct": 12,
+    "accreted_income": "aggregate FMV of total assets − total liabilities"
+   },
+   "sec2025": "352(1), 352(2); FA 2026 s.3(6)",
+   "sec1961": "115TD",
+   "src": "ACT + FA26-S3",
+   "page": "432 / web",
+   "extract": "be liable to pay additional income-tax on accreted income at the maximum marginal rate"
+  },
+  {
+   "id": "E-01",
+   "group": "E. Common",
+   "desc": "Health and Education Cess",
+   "value": {
+    "pct": 4,
+    "base": "income-tax + surcharge"
+   },
+   "sec2025": "FA 2026 s.3(15)",
+   "sec1961": "Finance Act s.2(13)",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "\"Health and Education Cess on income-tax\", calculated at the rate of 4% of such income-tax and surcharge"
+  },
+  {
+   "id": "E-02",
+   "group": "E. Common",
+   "desc": "Rounding — total income AND tax payable/refundable, each to nearest multiple of Rs. 10",
+   "value": {
+    "multiple": 10,
+    "paise": "ignored first",
+    "rule": "last digit ≥ 5 round up, < 5 round down"
+   },
+   "sec2025": "516",
+   "sec1961": "288A, 288B",
+   "src": "ACT",
+   "page": "576",
+   "extract": "shall be rounded off to the nearest multiple of Rs. 10 ignoring any part of a rupee consisting of paise"
+  },
+  {
+   "id": "E-03",
+   "group": "E. Common",
+   "desc": "Advance tax — liability threshold",
+   "value": {
+    "min_tax_payable": 10000
+   },
+   "sec2025": "404",
+   "sec1961": "208",
+   "src": "ACT",
+   "page": "509",
+   "extract": "where the amount of such tax payable during that year, as computed under this Part, is Rs. 10000 or more."
+  },
+  {
+   "id": "E-04",
+   "group": "E. Common",
+   "desc": "Advance tax — resident individual aged 60+ with no business/profession income is exempt",
+   "value": {
+    "age": 60,
+    "condition": "no income under PGBP"
+   },
+   "sec2025": "403(3)",
+   "sec1961": "207(2)",
+   "src": "ACT",
+   "page": "509",
+   "extract": "is of the age of sixty years or more at any time during the tax year."
+  },
+  {
+   "id": "E-05",
+   "group": "E. Common",
+   "desc": "Advance tax — instalments (cumulative %)",
+   "value": [
+    {
+     "due": "15 June",
+     "cumulative_pct": 15
+    },
+    {
+     "due": "15 September",
+     "cumulative_pct": 45
+    },
+    {
+     "due": "15 December",
+     "cumulative_pct": 75
+    },
+    {
+     "due": "15 March",
+     "cumulative_pct": 100
+    }
+   ],
+   "display": "15 Jun 15%; 15 Sep 45%; 15 Dec 75%; 15 Mar 100%. Payment by 31 March counts as advance tax.",
+   "sec2025": "408(1), 408(3)",
+   "sec1961": "211",
+   "src": "ACT",
+   "page": "511–512",
+   "extract": "1. On or before the 15th June. Not less than 15% of such advance tax."
+  },
+  {
+   "id": "E-06",
+   "group": "E. Common",
+   "desc": "Advance tax — presumptive assessee (s.58(2) Table Sl.1 or 3): whole amount by 15 March",
+   "value": {
+    "due": "15 March",
+    "pct": 100
+   },
+   "sec2025": "408(2)",
+   "sec1961": "211(1)(b)",
+   "src": "ACT",
+   "page": "512",
+   "extract": "shall pay the whole amount of advance tax … on or before the 15th March."
+  },
+  {
+   "id": "E-07",
+   "group": "E. Common",
+   "desc": "Advance tax = tax on current income at rates in force less TDS/TCS",
+   "value": {
+    "formula": "A = B − C"
+   },
+   "sec2025": "405(1)",
+   "sec1961": "209",
+   "src": "ACT",
+   "page": "509",
+   "extract": "C = amount of income-tax which would be deductible or collectible at source during the said financial year"
+  },
+  {
+   "id": "E-08",
+   "group": "E. Common",
+   "desc": "Interest for default in payment of advance tax",
+   "value": {
+    "rate_pct_per_month_or_part": 1,
+    "trigger": "no advance tax paid, or advance tax paid < 90% of assessed tax",
+    "from": "1 April following the tax year",
+    "on": "assessed tax, or shortfall of advance tax from assessed tax",
+    "min_paid_pct_of_assessed_tax": 90
+   },
+   "sec2025": "424(1), 424(2)",
+   "sec1961": "234B",
+   "src": "ACT",
+   "page": "526",
+   "extract": "is less than 90% of the assessed tax, the assessee shall be liable to pay simple interest at the rate of 1% for every month or part of a month"
+  },
+  {
+   "id": "E-09",
+   "group": "E. Common",
+   "desc": "Interest for deferment of advance tax — expressed in the Act as flat percentages of the shortfall",
+   "value": [
+    {
+     "due": "15 June",
+     "required_pct": 15,
+     "interest_pct_of_shortfall": 3,
+     "safe_harbour_paid_pct": 12
+    },
+    {
+     "due": "15 September",
+     "required_pct": 45,
+     "interest_pct_of_shortfall": 3,
+     "safe_harbour_paid_pct": 36
+    },
+    {
+     "due": "15 December",
+     "required_pct": 75,
+     "interest_pct_of_shortfall": 3
+    },
+    {
+     "due": "15 March",
+     "required_pct": 100,
+     "interest_pct_of_shortfall": 1
+    }
+   ],
+   "display": "Shortfall at 15 Jun / 15 Sep / 15 Dec: 3% each; at 15 Mar: 1%. No interest if paid ≥12% by 15 Jun, ≥36% by 15 Sep. Presumptive assessee: 1% on 15-Mar shortfall.",
+   "sec2025": "425(1) Table, 425(2), 425(3)",
+   "sec1961": "234C",
+   "src": "ACT",
+   "page": "527–528",
+   "extract": "1. 15th day of June 15% of the tax due on returned income. Shortfall till 15th day of June 3%"
+  },
+  {
+   "id": "E-10",
+   "group": "E. Common",
+   "desc": "No deferment interest for shortfall due to capital gains, s.2(49)(n) income (winnings), first-time business income or dividend, if tax paid in remaining instalments / by 31 March",
+   "value": [
+    "capital gains",
+    "income u/s 2(49)(n)",
+    "new business income",
+    "dividend (other than 2(40)(e))"
+   ],
+   "sec2025": "425(4), 425(6)",
+   "sec1961": "234C(1) first proviso",
+   "src": "ACT",
+   "page": "528–529",
+   "extract": "the shortfall is on account of under estimation of, or failure to estimate the following income:— (i) capital gains;"
+  },
+  {
+   "id": "E-11",
+   "group": "E. Common",
+   "desc": "Residential status — v1 supports RESIDENT assessees only",
+   "value": {
+    "supported": [
+     "resident"
+    ],
+    "non_resident": "not supported — show message"
+   },
+   "display": "Design decision from the brief, not a statutory value",
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "brief",
+   "page": "—",
+   "extract": "Residential status: v1 supports RESIDENT only; non-residents → show \"not supported\"."
+  },
+  {
+   "id": "E-12",
+   "group": "E. Common",
+   "desc": "Maximum marginal rate — definition",
+   "value": "rate (incl. surcharge) applicable to the highest slab for an individual/AOP/BOI as specified in the Finance Act of the relevant year",
+   "sec2025": "2(70)",
+   "sec1961": "2(29C)",
+   "src": "ACT",
+   "page": "18",
+   "extract": "the rate of income-tax (including surcharge on income-tax) applicable in relation to the highest slab of income for an individual"
+  },
+  {
+   "id": "E-13",
+   "group": "E. Common",
+   "desc": "Agricultural income aggregation for rate purposes (individual/HUF) — net agricultural income > 5,000 and total income above exemption limit",
+   "value": {
+    "threshold": 5000,
+    "formula": "tax(TI + agri) − tax(agri + exemption limit)"
+   },
+   "display": "Partial integration applies under both regimes. In scope for v1? — OPEN_QUESTIONS Q19",
+   "sec2025": "FA 2026 s.3(2)",
+   "sec1961": "Finance Act s.2(2)",
+   "src": "FA26-S3",
+   "page": "web",
+   "extract": "Zn = Xn - Yn … Aggregate Income (AIn) = Total income + Net agricultural income."
+  },
+  {
+   "id": "A-68",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "House-property loss — set-off against other heads limited (old regime; new regime allows none, see A-24)",
+   "value": {
+    "cap": 200000
+   },
+   "sec2025": "109(1)(b)",
+   "sec1961": "71(3A)",
+   "src": "ACT",
+   "page": "171",
+   "extract": "loss under the head \"Income from house property\" shall be set off to the extent of Rs. 200000 against income under any other head."
+  },
+  {
+   "id": "Z-01",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Old-regime rebate applies against all income-tax except tax on s.198 LTCG",
+   "value": {
+    "old_regime_rebate_excluded_tax": [
+     "198"
+    ]
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "DECIDED by CA on 2026-11-11 (as the Act reads) — OPEN_QUESTIONS Q4"
+  },
+  {
+   "id": "Z-02",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Rebate income tests (5,00,000 / 12,00,000) use total income including special-rate income",
+   "value": {
+    "rebate_threshold_income": "total_income"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q5(a)"
+  },
+  {
+   "id": "Z-03",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "New-regime marginal rebate compares slab-rate tax only with the excess over 12,00,000",
+   "value": {
+    "new_regime_marginal_rebate_tax_base": "slab_tax_only"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q5(b)"
+  },
+  {
+   "id": "Z-04",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Order in which the basic-exemption shortfall is applied to capital gains",
+   "value": {
+    "shortfall_order": [
+     "196",
+     "197",
+     "198"
+    ]
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q6"
+  },
+  {
+   "id": "Z-05",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Surcharge marginal relief: income at the threshold is found by reducing income in this order; the 2 crore / 5 crore tests on income excluding capped incomes get their own relief check",
+   "value": {
+    "reduction_order": [
+     "normal",
+     "dividend",
+     "flat30",
+     "196",
+     "197",
+     "198"
+    ],
+    "relief_on_excluding_thresholds": true
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q9"
+  },
+  {
+   "id": "Z-06",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Company with nil turnover in tax year 2024-25 is treated as not exceeding the 400 crore limit",
+   "value": {
+    "nil_turnover_not_exceeding": true
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q11"
+  },
+  {
+   "id": "Z-07",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Base for the 25% cap on brought-forward MAT credit",
+   "value": {
+    "mat_credit_cap_base": "tax_surcharge_cess"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q13"
+  },
+  {
+   "id": "Z-08",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "MAT / AMT comparison is made on income-tax before surcharge and cess; surcharge and cess are then applied to whichever is higher",
+   "value": {
+    "mat_amt_comparison_base": "tax_before_surcharge_cess"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q14"
+  },
+  {
+   "id": "Z-09",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "No marginal relief on the flat surcharge under ss.200/201",
+   "value": {
+    "marginal_relief_200_201": false
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q15"
+  },
+  {
+   "id": "Z-10",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Deferment interest applied as the flat percentages printed in s.425(1)",
+   "value": {
+    "deferment_interest": "flat_pct_of_shortfall"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q18"
+  },
+  {
+   "id": "Z-11",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Rate on taxable regular income of a Section 8 company registered as an NPO — NOT SET; engine refuses to compute this tax",
+   "value": {
+    "npo_company_regular_income_rate": null
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "BLOCKED at CA request on 2026-11-11 — OPEN_QUESTIONS Q16"
+  },
+  {
+   "id": "Z-12",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "v1 scope chosen by the assistant (CA gave no preference): AMT for individuals/HUF is computed; the rest are not covered and raise a warning",
+   "value": {
+    "computed": [
+     "AMT individual/HUF"
+    ],
+    "not_covered": [
+     "s.197(3) land/building grandfathering",
+     "s.199 company regime",
+     "agricultural income aggregation",
+     "s.195 unexplained income",
+     "s.201 non-manufacturing / deemed income split"
+    ]
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q7, Q8, Q12, Q19, Q20"
+  },
+  {
+   "id": "Z-13",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Chapter VIII deductions are set only against normal-rate income (never against ss.194/196/197/198 income)",
+   "value": {
+    "chapter_viii_against": "normal_income_only"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q22"
+  },
+  {
+   "id": "Z-14",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "For the 15% surcharge cap, slab tax is attributed to dividend income in proportion to dividend / normal-rate income",
+   "value": {
+    "dividend_tax_attribution": "proportionate"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q23"
+  },
+  {
+   "id": "Z-15",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "AMT / MAT credit set-off reduces the final liability after cess; the set-off limit is measured on the Z-08 base",
+   "value": {
+    "credit_setoff_point": "after_cess"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q24"
+  },
+  {
+   "id": "Z-16",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "s.516 rounding of total income: the rounding difference is carried in normal-rate income",
+   "value": {
+    "ti_rounding_adjusts": "normal_income"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q25"
+  },
+  {
+   "id": "Z-17",
+   "group": "Z. Decisions and assumptions (not statutory text)",
+   "desc": "Simplified inputs: s.134 rent taken for 12 months; s.126 amounts entered per bucket as already-qualifying sums and only the 25,000 / 50,000 bucket caps are applied",
+   "value": {
+    "rent_months": 12,
+    "health_inputs": "qualifying_amount_per_bucket"
+   },
+   "sec2025": "—",
+   "sec1961": "—",
+   "src": "decision",
+   "page": "—",
+   "extract": "ASSUMED — CA to confirm — OPEN_QUESTIONS Q26"
+  },
+  {
+   "id": "A-69",
+   "group": "A7. Old regime — deductions with caps",
+   "desc": "Arrears of rent / unrealised rent received — taxable as house property in the year of receipt, less 30% (both regimes)",
+   "value": {
+    "deduction_pct": 30
+   },
+   "sec2025": "23(1), 23(3)",
+   "sec1961": "25A",
+   "src": "ACT",
+   "page": "54",
+   "extract": "A sum equal to 30% of the arrears of rent or the unrealised rent referred to in sub-section (1) shall be allowed as deduction."
+  },
+  {
+   "id": "P-01",
+   "group": "P. Presumptive income (s.58)",
+   "desc": "Presumptive business income — eligible assessee (resident individual, HUF or firm other than LLP; no Chapter VIII-C claim; not a specified profession, commission, brokerage or agency)",
+   "value": {
+    "digital_pct": 6,
+    "other_pct": 8,
+    "turnover_limit": 20000000,
+    "turnover_limit_low_cash": 30000000,
+    "cash_limit_pct_of_turnover": 5,
+    "basis": "higher of presumptive amount and profit actually earned"
+   },
+   "display": "6% of receipts by banking/online mode + 8% of other receipts, or actual profit if higher. Turnover up to 2 crore, or 3 crore where cash receipts do not exceed 5%.",
+   "sec2025": "58(2) Table Sl.1; 58(11)(a)",
+   "sec1961": "44AD",
+   "src": "ACT",
+   "page": "104, 106-107",
+   "extract": "6 % of total turnover or gross receipts which is received by specified banking or online mode … 8 % of total turnover or gross receipts as reduced by the turnover or gross receipts covered in (i)"
+  },
+  {
+   "id": "P-02",
+   "group": "P. Presumptive income (s.58)",
+   "desc": "Presumptive income from specified profession (s.62(4)) — specified assessee (resident individual or firm other than LLP; not HUF)",
+   "value": {
+    "pct": 50,
+    "receipts_limit": 5000000,
+    "receipts_limit_low_cash": 7500000,
+    "cash_limit_pct_of_receipts": 5,
+    "basis": "higher of 50% and profit actually earned"
+   },
+   "display": "50% of gross receipts, or actual profit if higher. Receipts up to 50 lakh, or 75 lakh where cash receipts do not exceed 5%.",
+   "sec2025": "58(2) Table Sl.3; 58(11)(b)",
+   "sec1961": "44ADA",
+   "src": "ACT",
+   "page": "105, 107",
+   "extract": "50% of the gross receipts or profit claimed to have been actually earned, whichever is higher."
+  },
+  {
+   "id": "P-03",
+   "group": "P. Presumptive income (s.58)",
+   "desc": "Goods-carriage presumption (s.58(2) Table Sl.2) — NOT COVERED in this version",
+   "value": {
+    "covered": false
+   },
+   "sec2025": "58(2) Table Sl.2",
+   "sec1961": "44AE",
+   "src": "ACT",
+   "page": "104-105",
+   "extract": "being a heavy goods vehicle, calculated at the rate of Rs. 1000 per ton of gross vehicle weight"
+  }
+ ]
+}

@@ -23,3 +23,11 @@ _design/
 _gst-checker-src/node_modules/
 _gst-checker-src/dist/
 _gst-checker-src/docs/
+_income-tax-calculator-src/node_modules/
+_income-tax-calculator-src/dist/
+_income-tax-calculator-src/reference/*.pdf
+# Internal CA review notes for the income tax calculator (kept local, not published)
+_income-tax-calculator-src/OPEN_QUESTIONS.md
+_income-tax-calculator-src/rules/RULES_REVIEW.md
+_income-tax-calculator-src/tests/CASES_REVIEW.md
+_income-tax-calculator-src/tests/CROSSCHECK.md
