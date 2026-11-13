@@ -322,6 +322,7 @@ async function pdfBuild(meta) {
     link.href = u; link.download = "Biz_Matrix_" + ((meta.biz || "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "") || "Full_Report") + ".pdf"; link.style.display = "none"; document.body.appendChild(link); link.click();
     setTimeout(() => { link.remove(); URL.revokeObjectURL(u); }, 2000);
     toast("Your report is ready. Check your browser's Downloads folder.");
+    if (window.bmTrack) window.bmTrack("report_download", { structure: state.rec && state.rec.key });
   } catch (e) {
     console.error("PDF error:", e);
     toast("PDF download could not be completed. Opening the print dialog so you can choose Save as PDF.");

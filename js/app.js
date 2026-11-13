@@ -525,7 +525,7 @@ function renderQuestion(){
  if(q.type==="select")g("selq").onchange=ev=>{state.answers[q.id]=ev.target.value};
  else document.querySelectorAll(".option").forEach(c=>c.addEventListener("click",()=>{const v=c.dataset.v;
   if(q.type==="multi"){let a=(state.answers[q.id]||[]).slice();a=a.includes(v)?a.filter(x=>x!==v):(v==="n"?["n"]:a.filter(x=>x!=="n").concat(v));state.answers[q.id]=a;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",a.includes(o.dataset.v)))}
-  else{state.answers[q.id]=v;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",o===c))}}));
+  else{if(q.id==="objective"&&!state.__started&&window.bmTrack){state.__started=1;bmTrack("assessment_start")}state.answers[q.id]=v;document.querySelectorAll(".option").forEach(o=>o.classList.toggle("selected",o===c))}}));
  g("prevQ").disabled=prevVis(state.i)<0;
  g("nextQ").textContent=nextVis(state.i)<0?"See my result →":"Continue →";
 }
@@ -588,6 +588,7 @@ function generate(){
     state.rec=recommendation();
     if(state.rec.conflict){renderConflict();return;}
     renderDashboard();
+    if(window.bmTrack)bmTrack("assessment_complete",{structure:state.rec.key,confidence:state.rec.engine&&state.rec.engine.confidence});
   }catch(e){console.error(e);toast("Could not generate the dashboard ("+e.message+"). Please use Back to review your answers, or reload the page.")}
 }
 const RG=(()=>{

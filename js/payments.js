@@ -139,8 +139,10 @@
   async function checkPayment() {
     if (!pendingOrder) return;
     await ensureSession();
+    const orderId = pendingOrder;
     const result = await api('/orders/' + encodeURIComponent(pendingOrder) + '/verify', {});
     if (await unlock(result)) {
+      if (window.bmTrack) window.bmTrack('purchase', { transaction_id: orderId, value: 49, currency: 'INR', items: [{ item_name: 'Full structure report', price: 49, quantity: 1 }] });
       const url = new URL(window.location.href); url.searchParams.delete('cashfree_order_id');
       window.history.replaceState({}, '', url.href);
       show('receipt');
