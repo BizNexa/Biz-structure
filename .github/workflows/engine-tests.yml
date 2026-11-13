@@ -1,11 +1,45 @@
-name: Engine regression tests
+name: Tests
 on: [push, pull_request]
 jobs:
-  test:
+  site:
+    name: Structure engine, knowledge base and payment signature
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --test tests/engine.test.cjs tests/kb.test.cjs
+      - run: node --test worker/signature.test.js tests/engine.test.cjs tests/kb.test.cjs
+
+  gst-checker:
+    name: GST Registration Checker
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: _gst-checker-src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: _gst-checker-src/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  income-tax-calculator:
+    name: Income Tax Calculator
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: _income-tax-calculator-src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # the tests run TypeScript directly, which needs Node's built-in type stripping
+          node-version: 24
+          cache: npm
+          cache-dependency-path: _income-tax-calculator-src/package-lock.json
+      - run: npm ci
+      - run: npm test

@@ -21,7 +21,22 @@ async function loadReportImage(src) {
   try { const b = await (await fetch(src)).blob(); return await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(b); }); } catch (e) { return null; }
 }
 
+// The PDF library (about 125 KB) is fetched only when a report is built; the page prefetches it at idle time.
+function ensurePdfLib() {
+  if (window.jspdf && typeof window.jspdf.jsPDF === "function") return Promise.resolve();
+  if (ensurePdfLib.p) return ensurePdfLib.p;
+  const link = document.querySelector("link[data-pdf-lib]");
+  const src = link ? link.getAttribute("href") : "../js/pdf.min.js";
+  ensurePdfLib.p = new Promise((resolve, reject) => {
+    const s = document.createElement("script"); s.src = src; s.async = true;
+    s.onload = () => resolve(); s.onerror = () => { ensurePdfLib.p = null; reject(new Error("PDF engine unavailable")); };
+    document.head.appendChild(s);
+  });
+  return ensurePdfLib.p;
+}
+
 async function pdfBuild(meta) {
+  try { await ensurePdfLib(); } catch (e) { toast("Could not load the PDF engine. Check your connection and try again."); return; }
   meta = meta || {};
   try {
     if (!window.jspdf || typeof window.jspdf.jsPDF !== "function") throw new Error("PDF engine unavailable");

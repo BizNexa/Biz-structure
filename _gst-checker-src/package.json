@@ -23,11 +23,11 @@
     "build:site": "npm run rules:lint && npm run rules:build && tsc --noEmit && vite build --outDir ../gst-registration-checker --emptyOutDir"
   },
   "dependencies": {
-    "jspdf": "^2.5.2",
-    "jspdf-autotable": "^3.8.4",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "yaml": "^2.5.1",
+    "yaml": "^2.9.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {

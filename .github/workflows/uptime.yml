@@ -1,0 +1,35 @@
+name: Uptime check
+# Checks the live site and the payment server every 30 minutes. If anything is down,
+# the run fails and GitHub emails the repository owner (Settings → Notifications → Actions).
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Pages respond
+        run: |
+          fail=0
+          for path in / /assessment/ /business-structure/ /gst-registration-checker/ /income-tax-calculator/ /privacy-policy/; do
+            code=""
+            for attempt in 1 2 3; do   # GitHub Pages occasionally returns a one-off 503; retry before alerting
+              code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.bizmatrix.in${path}?uptime=$(date +%s)")
+              [ "$code" = "200" ] && break
+              sleep 10
+            done
+            echo "${path} -> ${code}"
+            [ "$code" = "200" ] || fail=1
+          done
+          exit $fail
+
+      - name: Payment server ready
+        run: |
+          body=$(curl -s --max-time 20 https://biz-structure.nexifydigital03.workers.dev/health)
+          echo "$body"
+          for key in ok paymentsReady premiumReady kbReady; do
+            echo "$body" | grep -q "\"$key\":true" || { echo "::error::$key is not true"; exit 1; }
+          done
