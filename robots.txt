@@ -1,9 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /github-pages-deployment/
-Disallow: /saas-backend/
-Disallow: /saas-frontend/
-Disallow: /tools/
-Disallow: /_gst-checker-src/
 
 Sitemap: https://www.bizmatrix.in/sitemap.xml

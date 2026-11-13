@@ -299,3 +299,6 @@ footer.bm-footer { background: #fff; color: var(--ink); border-top: 3px solid va
 .crumbs { font-size: .85rem; color: var(--muted); margin-bottom: 12px; }
 .crumbs a { color: var(--gold-700); text-decoration: none; font-weight: 600; }
 .crumbs a:hover { text-decoration: underline; }
+
+/* Phone tap targets: footer links at least 44px tall */
+@media (max-width: 700px) { .bm-footer li a { display: inline-flex; align-items: center; min-height: 44px; } }

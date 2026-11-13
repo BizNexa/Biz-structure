@@ -93,3 +93,6 @@
 [data-theme="dark"] .aq-tip{background:#E8EDF1;color:#0A1E2A}
 html{background:var(--paper)}
 [data-theme="dark"] .aq-brand img{filter:brightness(0) invert(1) opacity(.92)}
+
+/* Phone tap targets */
+@media (max-width: 700px) { .aq-why-m > summary { min-height: 44px; display: flex; align-items: center; } .aq-brand { display: inline-flex; align-items: center; min-height: 44px; } }

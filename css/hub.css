@@ -78,3 +78,4 @@
 .hero-alt a{color:var(--navy-700);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 [data-theme="dark"] .hero-alt a{color:var(--accent)}
 @media(max-width:700px){.hero-cta{margin-top:18px}.hub .btn.hero-main{width:100%;max-width:360px;justify-content:center}.hub-hero .lead{font-size:.95rem}}
+@media(max-width:700px){.hero-alt a{display:inline-block;padding:12px 2px}}

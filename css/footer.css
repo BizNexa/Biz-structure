@@ -25,3 +25,6 @@ footer.bm-footer section,footer.bm-footer nav{display:block!important;padding:0!
 footer.bm-footer ul{display:grid!important}
 [data-theme="dark"] .final{background:linear-gradient(160deg,var(--navy-900),var(--navy-800))!important}
 [data-theme="dark"] .final p,[data-theme="dark"] .final .fine{color:#C7D4DE!important}
+
+/* Phone tap targets: footer links at least 44px tall */
+@media (max-width: 700px) { .bm-footer li a { display: inline-flex; align-items: center; min-height: 44px; } .bm-footer li { margin: 0; } }
