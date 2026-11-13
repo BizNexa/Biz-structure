@@ -148,7 +148,7 @@
   function analyseThen(fn) {
     const box = document.createElement("div");
     box.className = "aq-analyse"; box.setAttribute("role", "status"); box.setAttribute("aria-live", "polite");
-    const steps = ["Applying 23 legal rules", "Scoring 9 weighted factors", "Matching 120 registrations to your profile", "Building your compliance calendar"];
+    const steps = ["Applying 25 legal rules", "Scoring 9 weighted factors", "Matching 120 registrations to your profile", "Building your compliance calendar"];
     box.innerHTML = `<div class="aq-an-card"><div class="aq-an-seal" aria-hidden="true"></div><h2>Analysing your answers</h2><ol>${steps.map(s => `<li>${s}</li>`).join("")}</ol></div>`;
     document.body.appendChild(box);
     const items = box.querySelectorAll("li"), step = reduce() ? 60 : 380;

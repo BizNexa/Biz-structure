@@ -112,6 +112,8 @@
     "R-021": { basis: "REG", cite: "Consolidated FDI Policy (DPIIT)", plain: "Sector licensing and FDI caps can override entity choice.", review: true },
     "R-022": { basis: "LAW", cite: "Companies Act s.8(1)", plain: "Section 8 can be formed as a private (2+ members) or public (7+ members) company." },
     "R-023": { basis: "LAW", cite: "FEMA (Non-debt Instruments) Rules 2019", plain: "An NRI may invest in a firm or proprietary concern only on the conditions FEMA allows (generally non-repatriation); confirm before choosing.", review: true },
+    "R-024": { basis: "LAW+JDG", cite: "Partnership Act 1932 s.25; proprietor has no separate legal personality", plain: "You said claims could exceed your personal assets. A proprietor or partner is personally liable without limit, so these forms are removed." },
+    "R-025": { basis: "LAW/REG", cite: "FEMA (Non-debt Instruments) Rules 2019; RBI Master Direction on Foreign Investment", plain: "A foreign national cannot set up a proprietorship or partnership in India without prior RBI approval. Companies and LLPs are the usual routes." },
     "TIE": { basis: "JDG", cite: "Rulebook D5", plain: "The top two structures are within 5 points of each other. Compare both side by side before deciding.", review: true }
   };
 
@@ -133,7 +135,9 @@
     if (mo === "over_200") x(["PVT", "OPC"], "R-007");
     var res = a.residency || "resident";
     if (res === "foreign_national") { x(["OPC"], "R-008"); review.push("R-008"); }
+    if (res === "foreign_national") x(["PROP", "PF"], "R-025");
     if (res === "nri" && (has("PROP") || has("PF"))) review.push("R-023");
+    if (a.liability === "critical") x(["PROP", "PF"], "R-024");
     if ((res === "nri" || res === "foreign_national") && a.all_non_resident) review.push("R-020");
     var fo = a.foreign || "none";
     if (fo === "investment") { x(["PROP", "PF", "OPC"], "R-009"); if (has("LLP")) review.push("R-009"); }

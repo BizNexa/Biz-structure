@@ -662,7 +662,7 @@
         "sector": "other"
       },
       "expected": "OPC",
-      "runner_up": "PROP"
+      "amended": "14 Nov 2026: R-024 removes PROP/PF when liability is critical, so OPC is the only eligible structure (owner-approved)."
     },
     {
       "id": "TC-03",
@@ -787,8 +787,8 @@
         "sector": "other",
         "all_non_resident": true
       },
-      "expected": "PROP",
-      "runner_up": "OPC"
+      "expected": "OPC",
+      "amended": "14 Nov 2026: R-024 (owner-approved). Was PROP; a founder who says claims could exceed personal assets is no longer advised to take unlimited liability."
     },
     {
       "id": "TC-08",
@@ -1245,7 +1245,7 @@
     "lt_25L|retain": {
       "PROP": {
         "tax": 0,
-        "rate": 0.0
+        "rate": 0
       },
       "PF": {
         "tax": 68640,
@@ -1271,7 +1271,7 @@
     "lt_25L|withdraw": {
       "PROP": {
         "tax": 0,
-        "rate": 0.0
+        "rate": 0
       },
       "PF": {
         "tax": 68640,
