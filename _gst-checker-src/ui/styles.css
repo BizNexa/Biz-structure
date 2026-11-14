@@ -219,6 +219,9 @@ button { font: inherit; }
 .side-summary b { text-align: right; }
 .cross { background: linear-gradient(135deg, var(--gold-50), #fff); }
 .cross p { color: var(--ink-2); font-size: .94rem; margin: 6px 0 12px; }
+.cross { border-top: 3px solid var(--gold-400); }
+.cross .btn { width: 100%; justify-content: center; }
+.cross-sample { display: inline-block; margin-top: 10px; font-size: .9rem; font-weight: 600; color: var(--gold-700, #7D6013); text-decoration: underline; text-underline-offset: 3px; }
 .disclaimer-sm { font-size: .82rem; color: var(--muted); line-height: 1.5; }
 .eyebrow { margin: 0 0 8px; color: var(--gold-700); font-size: .76rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 

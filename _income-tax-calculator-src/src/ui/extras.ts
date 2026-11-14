@@ -10,8 +10,12 @@ export const DISCLAIMER =
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
 
+/** Link to the Business Structure tool: the structure decides how business income is taxed. */
+export const structureCrossHtml = (short = false) =>
+  `<aside class="xsell no-print" aria-label="Business structure"><div><b>${short ? 'Starting or running a business?' : 'Is your business taxed the right way?'}</b><p>A proprietor's business profit is taxed at slab rates, an LLP or firm pays 30% plus surcharge and cess, and a company can pay about 25.17%. Find the structure that fits you in 4 quick taps, free.</p></div><div class="xsell-cta"><a class="btn sm" href="../business-structure/#quiz" data-xsell="itc">Find my business structure →</a><a class="xsell-sample" href="../assets/sample-report.pdf" target="_blank" rel="noopener" data-sample="itc">See a sample report</a></div></aside>`;
+
 export const disclaimerHtml = (compact = false) =>
-  `<aside class="disclaimer ${compact ? 'compact' : ''}" role="note"><b>${esc(DISCLAIMER_TITLE)}</b><p>${esc(DISCLAIMER)}</p></aside>`;
+  (compact ? '' : structureCrossHtml()) + `<aside class="disclaimer ${compact ? 'compact' : ''}" role="note"><b>${esc(DISCLAIMER_TITLE)}</b><p>${esc(DISCLAIMER)}</p></aside>`;
 
 /** Legend and quick links at the top of a sheet. */
 export function sheetGuide(sections: [id: string, label: string][]): string {

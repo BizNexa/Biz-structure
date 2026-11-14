@@ -324,8 +324,11 @@ export function Result({ view: v, inputs, turnoverLabel, lawDate, onRestart }: P
         <div className="card cross">
           <b>{t('result.crossSell')}</b>
           <p>{t('result.crossSellText')}</p>
-          <a className="btn ghost sm" href="../business-structure/">
+          <a className="btn sm" href="../business-structure/#quiz" onClick={() => (window as unknown as { bmTrack?: (n: string, p?: object) => void }).bmTrack?.('cross_sell', { from: 'gst', verdict: v.verdict })}>
             {t('result.crossSellCta')} →
+          </a>
+          <a className="cross-sample" href="../assets/sample-report.pdf" target="_blank" rel="noopener" data-sample="gst-result">
+            {t('result.crossSellSample')}
           </a>
         </div>
       </aside>

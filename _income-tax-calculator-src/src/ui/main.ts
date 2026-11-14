@@ -4,7 +4,7 @@ import { buildRules, type RawRuleFile } from '../engine/index.ts';
 import { ENTITIES, type Entity } from './schema.ts';
 import { mountSheet } from './sheet.ts';
 import { mountEntitySheet } from './entitySheet.ts';
-import { DISCLAIMER, DISCLAIMER_TITLE, disclaimerHtml } from './extras.ts';
+import { DISCLAIMER, DISCLAIMER_TITLE, disclaimerHtml, structureCrossHtml } from './extras.ts';
 
 const R = buildRules(rulesFile as unknown as RawRuleFile);
 
@@ -27,6 +27,7 @@ const icon = (e: Entity) => `<span class="ico" aria-hidden="true"><svg viewBox="
 function entityHtml(): string {
   return `<h2>Who is the tax being computed for?</h2><p class="lede">Tax Year 2026-27 under the Income-tax Act, 2025. Residents only. Each choice opens a computation sheet you fill in directly.</p>
     <div class="options two">${ENTITIES.map((e) => `<button class="option ${state.entity === e.id ? 'on' : ''}" data-entity="${e.id}">${icon(e.id)}<span><b>${esc(e.label)}</b><small>${esc(e.hint)}</small></span></button>`).join('')}</div>
+    ${structureCrossHtml(true)}
     ${disclaimerHtml(true)}`;
 }
 
@@ -105,6 +106,13 @@ app.addEventListener('click', (ev) => {
     go('sheet');
   } else if (el.dataset.nav === 'not-covered') openNotCovered(ev);
   else if (el.dataset.nav === 'close') go(state.back);
+});
+
+// Count clicks through to the Business Structure tool (sent only with analytics consent).
+document.addEventListener('click', (ev) => {
+  const a = (ev.target as HTMLElement).closest<HTMLElement>('[data-xsell]');
+  const w = window as unknown as { bmTrack?: (n: string, p?: object) => void };
+  if (a) w.bmTrack?.('cross_sell', { from: 'itc', screen: state.screen });
 });
 
 // The footer link sits outside the calculator card.
