@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/tokens.css?v=6cad6dd8"><link rel="stylesheet" href="../css/landing.css?v=8f3c72a5">
+<link rel="stylesheet" href="../css/tokens.css?v=6cad6dd8"><link rel="stylesheet" href="../css/landing.css?v=8f3c72a5"><link rel="stylesheet" href="../css/quiz.css?v=c996f6a8">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -129,17 +129,19 @@
 <section class="hero">
   <div class="wrap">
     <div class="hero-copy">
-      <h1>Pick the right business structure in India. Know every registration that follows.</h1>
-      <p class="lead">Answer 17 to 22 plain questions, about 3 to 5 minutes. Biz Matrix recommends one of seven structures, explains why, and lists the registrations, documents and compliances that follow for FY 2026–27.</p>
+      <h1>Proprietorship, LLP or Pvt Ltd? Get it right before you register.</h1>
+      <p class="lead">Changing your structure later costs time and money. Biz Matrix checks the legal rules first, compares all seven structures on nine weighted factors, then lists every registration, document and compliance that follows for FY 2026–27.</p>
+      <ul class="proof-strip" aria-label="What you get">
+        <li>7 structures compared</li>
+        <li>Legal rules checked first</li>
+        <li>Answers stay in your browser</li>
+      </ul>
       <div class="btns"><a class="btn" href="../assessment/" data-cta="hero-assess">Start free assessment</a><a class="txt-link" href="#sample">See a sample report ↓</a></div>
-      <p class="price-line"><b>Free</b><span>assessment and 35% preview of your result. Full report and PDF: ₹49, one-time, inclusive of taxes.</span></p>
+      <p class="price-line"><b>Free</b><span>result and 35% preview. Full report and PDF: ₹49, one-time, inclusive of taxes.</span></p>
     </div>
-    <div class="board op-sample" role="img" aria-label="Illustrative sample result: Limited Liability Partnership, fit score 78, with 2 mandatory plus 14 triggered registrations">
-      <div class="board-h"><span>Our recommendation</span><span class="tag-sample">Illustrative sample</span></div>
-      <div class="res"><strong class="serif">Limited Liability Partnership</strong><div class="seal"><b>78</b><small>FIT / 100</small></div></div>
-      <ol class="why-mini"><li>Two or more owners who want limited liability</li><li>Most profit withdrawn, which an LLP taxes once</li><li>No shares or ESOPs needed</li></ol>
-      <div class="eqn"><span><b>2</b> mandatory</span><i>+</i><span><b>14</b> triggered</span><i>=</i><span><b>16</b> registrations</span></div>
-      <p class="board-f">Plus 25 documents and 20 first-year compliances, each with its due date.</p>
+    <div class="bm-quiz" id="quiz" data-bm-quiz data-assess="../assessment/" data-sample="../assets/sample-report.pdf" aria-live="polite">
+      <div class="bq-top"><span class="bq-kicker">Quick check</span></div>
+      <div class="bq-body"><h2 class="bq-q">Which structure fits you?</h2><p class="bq-sub">Answer the full assessment to see your recommended structure and the registrations that follow.</p><a class="btn bq-go" href="../assessment/" style="margin-top:18px">Start free assessment</a></div>
     </div>
   </div>
 </section>
@@ -154,6 +156,33 @@
       <li class="reveal" style="--d:4">Rules change, and a checklist from last year may no longer be right</li>
     </ul>
     <p class="after reveal" style="--d:5">Biz Matrix turns your business profile into one clear decision and one working plan.</p>
+  </div>
+</section>
+
+<section class="white compare-sec" id="compare">
+  <div class="wrap">
+    <h2 class="reveal">Four common choices. Very different consequences.</h2>
+    <p class="lead reveal" style="--d:1">The structure you register decides who carries the risk, how you can raise money and how your profit is taxed.</p>
+    <div class="compare-wrap reveal" style="--d:2" tabindex="0" role="region" aria-label="Comparison of common business structures">
+      <table class="compare">
+        <thead><tr><th scope="col"><span class="sr-only">Topic</span></th><th scope="col">Sole proprietorship</th><th scope="col">Partnership firm</th><th scope="col">LLP</th><th scope="col">Private limited</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Owners</th><td>1</td><td>2 to 50</td><td>2 or more</td><td>2 to 200</td></tr>
+          <tr><th scope="row">Your personal assets</th><td>At risk for business debts</td><td>At risk, jointly with partners</td><td>Protected: liability limited to your contribution</td><td>Protected: liability limited to unpaid share capital</td></tr>
+          <tr><th scope="row">Money from investors</th><td>Not possible</td><td>Not possible</td><td>No shares to issue</td><td>Yes, by issuing shares</td></tr>
+          <tr><th scope="row">Profit you take out</th><td>Taxed once, at your slab rates</td><td>Taxed once, in the firm</td><td>Taxed once, in the LLP</td><td>Taxed twice: company tax, then tax on dividends</td></tr>
+          <tr><th scope="row">Yearly paperwork</th><td>Light</td><td>Light</td><td>Moderate: two MCA returns a year</td><td>Highest: audit, board meetings, MCA returns</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="compare-cards reveal" style="--d:2">
+      <article class="cmp-card"><h3>Sole proprietorship</h3><dl><div><dt>Owners</dt><dd>1</dd></div><div><dt>Your personal assets</dt><dd>At risk for business debts</dd></div><div><dt>Money from investors</dt><dd>Not possible</dd></div><div><dt>Profit you take out</dt><dd>Taxed once, at your slab rates</dd></div><div><dt>Yearly paperwork</dt><dd>Light</dd></div></dl></article>
+      <article class="cmp-card"><h3>Partnership firm</h3><dl><div><dt>Owners</dt><dd>2 to 50</dd></div><div><dt>Your personal assets</dt><dd>At risk, jointly with partners</dd></div><div><dt>Money from investors</dt><dd>Not possible</dd></div><div><dt>Profit you take out</dt><dd>Taxed once, in the firm</dd></div><div><dt>Yearly paperwork</dt><dd>Light</dd></div></dl></article>
+      <article class="cmp-card"><h3>LLP</h3><dl><div><dt>Owners</dt><dd>2 or more</dd></div><div><dt>Your personal assets</dt><dd>Protected: liability limited to your contribution</dd></div><div><dt>Money from investors</dt><dd>No shares to issue</dd></div><div><dt>Profit you take out</dt><dd>Taxed once, in the LLP</dd></div><div><dt>Yearly paperwork</dt><dd>Moderate: two MCA returns a year</dd></div></dl></article>
+      <article class="cmp-card"><h3>Private limited</h3><dl><div><dt>Owners</dt><dd>2 to 200</dd></div><div><dt>Your personal assets</dt><dd>Protected: liability limited to unpaid share capital</dd></div><div><dt>Money from investors</dt><dd>Yes, by issuing shares</dd></div><div><dt>Profit you take out</dt><dd>Taxed twice: company tax, then tax on dividends</dd></div><div><dt>Yearly paperwork</dt><dd>Highest: audit, board meetings, MCA returns</dd></div></dl></article>
+    </div>
+    <p class="fine reveal" style="--d:3">In general terms. One Person Company, public company and Section 8 company are also covered. Your report applies the rules to your own answers.</p>
+    <div class="btns reveal" style="--d:3"><a class="btn" href="#quiz" data-cta="compare-quiz">Which one is me? Take the 20-second check</a></div>
   </div>
 </section>
 
@@ -339,5 +368,8 @@ document.querySelectorAll("[data-cta]").forEach(function (a) {
 })();
 </script>
 <script>(function(){if(!("IntersectionObserver" in window))return;var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});document.querySelectorAll("section:not(.hero) .wrap").forEach(function(el){el.classList.add("reveal");io.observe(el)})})();</script><script src="../js/consent.js?v=9c05a3dd" defer></script>
+<div class="sticky-cta" id="stickyCta" aria-hidden="true"><p><b>Find your structure, free</b>Full report ₹49, one-time</p><a class="btn" href="../assessment/" data-cta="sticky-assess" tabindex="-1">Start</a></div>
+<script src="../js/engine.js?v=d802357d" defer></script><script src="../js/quiz.js?v=e587be12" defer></script>
+<script>(function(){var b=document.getElementById("stickyCta"),hero=document.querySelector(".hero"),fin=document.getElementById("start");if(!b||!hero||!("IntersectionObserver" in window))return;document.body.classList.add("has-sticky");var past=false,atEnd=false,set=function(){var on=past&&!atEnd;b.classList.toggle("show",on);b.setAttribute("aria-hidden",on?"false":"true");b.querySelector("a").tabIndex=on?0:-1};new IntersectionObserver(function(es){past=!es[0].isIntersecting;set()}).observe(hero);if(fin)new IntersectionObserver(function(es){atEnd=es[0].isIntersecting;set()}).observe(fin)})();</script>
 </body>
 </html>

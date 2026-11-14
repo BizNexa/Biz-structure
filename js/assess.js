@@ -99,7 +99,7 @@
       if (d.done && firstOpen === undefined) { restoring = false; generate(); return true; }
       state.i = firstOpen !== undefined ? firstOpen : (vis.includes(d.i) ? d.i : vis[0] || 0);
       renderQuestion();
-      const s = $("aqSaved"); if (s) { s.hidden = false; s.textContent = "Welcome back: we restored your saved answers."; }
+      const s = $("aqSaved"); if (s) { s.hidden = false; s.textContent = d.from === "quiz" ? "Your quick-check answers are filled in. Carry on from here." : "Welcome back: we restored your saved answers."; }
       return true;
     } catch (e) { return false; } finally { restoring = false; }
   }
