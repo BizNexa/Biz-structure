@@ -53,7 +53,7 @@
     if (!document.getElementById("bm-consent-css")) { var st = document.createElement("style"); st.id = "bm-consent-css"; st.textContent = CSS; document.head.appendChild(st); }
     var box = document.createElement("div");
     box.className = "bm-consent"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Analytics and advertising cookies");
-    box.innerHTML = '<p>We would like to use Google Analytics and Google advertising cookies to count visits, measure our ads and show our ads to people who have visited. They are off unless you accept. Your assessment answers and tool inputs are never sent. <a href="' + privacyHref() + '">Privacy &amp; cookies</a></p>' +
+    box.innerHTML = '<p>We use Google cookies to count visits and show our ads, only if you accept. Your answers are never sent to Google. <a href="' + privacyHref() + '">Privacy &amp; cookies</a></p>' +
       '<div class="bm-c-btns"><button type="button" class="bm-c-no">Reject</button><button type="button" class="bm-c-yes">Accept</button></div>';
     document.body.appendChild(box);
     box.querySelector(".bm-c-yes").onclick = function () { write("granted"); box.remove(); loadAnalytics(); };
