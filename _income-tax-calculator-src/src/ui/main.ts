@@ -7,7 +7,6 @@ import { mountEntitySheet } from './entitySheet.ts';
 import { DISCLAIMER, DISCLAIMER_TITLE, disclaimerHtml } from './extras.ts';
 
 const R = buildRules(rulesFile as unknown as RawRuleFile);
-const meta = rulesFile.meta as { extracted_on: string; verified_on?: string };
 
 type Screen = 'entity' | 'sheet' | 'not-covered';
 const state: { screen: Screen; back: Screen; entity: Entity | null } = { screen: 'entity', back: 'entity', entity: null };
@@ -54,11 +53,10 @@ function render(): void {
   const wide = state.screen !== 'entity';
   document.body.classList.toggle('is-wide', wide);
   const body = state.screen === 'sheet' ? '<div id="sheet-root"></div>' : state.screen === 'not-covered' ? notCoveredHtml() : entityHtml();
-  const verified = meta.verified_on ? `, verified on ${esc(meta.verified_on)}` : '';
   app.innerHTML = `<div class="tool-card ${wide ? 'wide' : ''}">
       <div class="tool-top no-print"><span class="tool-name">Income Tax Calculator</span><span class="law-chip">TY 2026-27 · Finance Act 2026</span></div>
       <div class="fade-in">${body}</div>
-      <p class="tool-foot">Rules version: TY 2026-27, Finance Act 2026${verified}. Not tax advice — consult a qualified professional before any decision.
+      <p class="tool-foot">Rules version: TY 2026-27, Finance Act 2026. Not tax advice — consult a qualified professional before any decision.
         <a href="#calculator" data-nav="not-covered" class="no-print">What is not covered</a></p>
     </div>
     <div class="toast" role="status" hidden></div>`;
@@ -70,7 +68,7 @@ function render(): void {
     else mountEntitySheet(sheetRoot, state.entity, R, cb);
   }
   const ver = document.getElementById('rules-version');
-  if (ver) ver.innerHTML = `<b>${esc(DISCLAIMER_TITLE)}.</b> ${esc(DISCLAIMER)} Rules version: TY 2026-27, Finance Act 2026${verified}.`;
+  if (ver) ver.innerHTML = `<b>${esc(DISCLAIMER_TITLE)}.</b> ${esc(DISCLAIMER)} Rules version: TY 2026-27, Finance Act 2026.`;
 }
 
 function go(screen: Screen): void {

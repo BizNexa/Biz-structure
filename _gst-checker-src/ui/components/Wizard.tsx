@@ -21,7 +21,7 @@ interface Props {
   onComplete: () => void;
 }
 
-export function Wizard({ answers, asOf, lawDate, onAnswers, onComplete }: Props) {
+export function Wizard({ answers, asOf, onAnswers, onComplete }: Props) {
   const flow = useMemo(() => computeFlow(answers, asOf), [answers, asOf]);
   const [cursor, setCursor] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,6 @@ export function Wizard({ answers, asOf, lawDate, onAnswers, onComplete }: Props)
     <div className="tool-card" ref={cardRef}>
       <div className="tool-top">
         <span className="tool-name">{t('app.name')}</span>
-        <span className="law-chip">{t('app.lawAsOn', { date: lawDate })}</span>
       </div>
       <div className="stepper" aria-hidden="true">
         {STEPS.map((s, i) => (

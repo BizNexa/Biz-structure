@@ -1608,7 +1608,7 @@ function pdfBuild(meta){
   /* ---------- HEADERS / FOOTERS ---------- */
   const n=doc.getNumberOfPages();
   for(let i=2;i<=n;i++){doc.setPage(i);if(i!==tocPage){fill(C.emerald);doc.rect(0,0,W,4,"F");doc.setFontSize(7.5);ink(C.muted);doc.text("BIZ MATRIX  |  "+pdfClean(ent.name).toUpperCase(),M,22);ink(C.emerald);doc.text("Back to contents",W-M,22,{align:"right"});doc.link(W-M-70,13,70,12,{pageNumber:tocPage})}
-   stroke(C.line);doc.setLineWidth(.5);doc.line(M,H-38,W-M,H-38);doc.setFontSize(7.5);ink(C.muted);doc.text("Decision support, law verified "+BizEngine.VERIFIED+". Not legal, tax or professional advice.  |  Engine v"+BizEngine.VERSION+"  |  "+rid,M,H-24);fill(C.emerald);doc.roundedRect(W-M-54,H-33,54,14,7,7,"F");ink([255,255,255]);doc.text(i+" / "+n,W-M-27,H-23,{align:"center"})}
+   stroke(C.line);doc.setLineWidth(.5);doc.line(M,H-38,W-M,H-38);doc.setFontSize(7.5);ink(C.muted);doc.text("Decision support. Not legal, tax or professional advice.  |  Engine v"+BizEngine.VERSION+"  |  "+rid,M,H-24);fill(C.emerald);doc.roundedRect(W-M-54,H-33,54,14,7,7,"F");ink([255,255,255]);doc.text(i+" / "+n,W-M-27,H-23,{align:"center"})}
   doc.setProperties({title:"Biz Matrix Report - "+(meta.biz?pdfClean(meta.biz)+" - ":"")+pdfClean(ent.name),subject:"Business structure & registration intelligence",author:"Biz Matrix",creator:"Biz Matrix"});
   window.__lastPdf=doc;
   const blob=doc.output("blob");

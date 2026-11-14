@@ -66,12 +66,12 @@ function renderCompliance() {
     groups += `<section class="cx-group"><div class="cx-gh"><h3>${title} <span class="num">(${rows.length})</span></h3><p>${sub}</p></div>${rows.map(row).join("")}</section>`;
   }
   document.getElementById("compliance").innerHTML =
-    `<div class="cx-top"><span class="cx-badge">Compliance Intelligence Baseline verified to 5 October 2026</span><span class="cx-badge">Compliance Master: law as of 6 Nov 2026</span></div>
+    `
     <div class="cx-tiles" role="group" aria-label="Filter by frequency">${tiles.map(([k, t]) => `<button type="button" class="cx-tile${f === k ? " on" : ""}" data-cf="${k}" aria-pressed="${f === k}"><b class="num">${counts[k]}</b><span>${t}</span></button>`).join("")}</div>
     <div class="cx-tools"><label class="cx-search"><span class="sr-only">Search compliances</span><input type="search" id="cxQ" placeholder="Search by name, form or law" value="${esc(KBU.compQuery)}"></label>
       </div>
     <p class="preview-count">${AccessProvider.isPremium() ? "Full compliance list" : "35% free preview"}: ${g.visible.length} of ${g.total} obligations${f !== "all" || q ? " matching your filter" : " that apply to your profile"}. Tap a row for form, law, penalty and portal.</p>
-    <p class="cx-note">Due dates are statutory as verified on ${BizEngine.VERIFIED}; authorities often extend them by circular. Confirm on the official portal before you file.</p>
+    <p class="cx-note">Due dates are statutory; authorities often extend them by circular. Confirm on the official portal before you file.</p>
     ${groups || '<p class="empty-preview">No obligations match this filter.</p>'}
     ${BlurredLock(g.hidden.map(row).join(""), g.locked, "compliance obligations")}`;
   document.querySelectorAll("[data-cf]").forEach(b => b.onclick = () => { KBU.compFilter = b.dataset.cf; renderCompliance(); });

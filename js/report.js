@@ -149,8 +149,8 @@ async function pdfBuild(meta) {
     // prepared using + disclaimer
     const fy = H - 120; stroke(C.line); doc.line(M, fy, W - M, fy);
     font("b", 9); ink(C.ink); doc.text(T("Prepared using Biz Matrix on " + dateStr), M, fy + 18);
-    font("r", 8.5); ink(C.muted); doc.text(T("Report ID " + rid + "  ·  Law verified " + BizEngine.VERIFIED), M, fy + 32);
-    font("r", 8); ink(C.muted); doc.text(doc.splitTextToSize(T("Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules with a qualified professional before filing."), CW), M, fy + 50);
+    font("r", 8.5); ink(C.muted); doc.text(T("Report ID " + rid), M, fy + 32);
+    font("r", 8); ink(C.muted); doc.text(doc.splitTextToSize(T("Structured decision support. Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules with a qualified professional before filing."), CW), M, fy + 50);
 
     /* ================= PAGE 2: EXECUTIVE SUMMARY (one page) ================= */
     newPage(); y = 58;
@@ -244,7 +244,7 @@ async function pdfBuild(meta) {
     });
 
     /* ================= COMPLIANCE BY PERIOD ================= */
-    h2("Compliance calendar", "Grouped by when each item falls due. From the Initial & Annual Compliance Master (law as of 6 Nov 2026). Due dates are statutory; authorities often extend them by circular.");
+    h2("Compliance calendar", "Grouped by when each item falls due. From the Initial & Annual Compliance Master. Due dates are statutory; authorities often extend them by circular.");
     para("Status: VP = checked against an official government source; VS = confirmed through reputable secondary sources; UV = established position not re-verified, confirm on the named portal.", { size: 8.6, color: C.muted, after: 8 });
     const deadlines = comp.filter(r => r.detail && compVis.has(r) && compPeriod(r) === "first30");
     if (deadlines.length) callout("Key deadlines in your first 30 days", deadlines.slice(0, 6).map(r => "• " + short(r.title, 62) + ": " + short(r.detail.due, 80)).join("\n"), "amber");
@@ -323,14 +323,14 @@ async function pdfBuild(meta) {
     }
     if (flags.length) block("Get professional help on", flags.map(f => BizEngine.RULES[f].plain));
     // disclaimer moved to its own page
-    if (false) callout("", "Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules before filing.", "mint");
+    if (false) callout("", "Structured decision support. Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules before filing.", "mint");
 
 
     /* ================= DISCLAIMER ================= */
     newPage(); h2("Important notice", "Please read before relying on this report.");
-    [["What this report is", "Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". It is not legal, tax or professional advice for your specific facts and does not create a professional engagement."],
+    [["What this report is", "Structured decision support. It is not legal, tax or professional advice for your specific facts and does not create a professional engagement."],
      ["How the recommendation is made", "Legal hard rules run first; the structures that survive are scored on nine weighted factors (BizMatrix Rulebook v" + BizEngine.VERSION + "). Weights are judgements tagged by basis, not law. The full method is published at bizmatrix.in/methodology."],
-     ["Sources", (KB.full ? "BizMatrix Master Registration Checklist v1.0; Registration Master Map FY 2026-27; Initial & Annual Compliance Master (law as of 6 Nov 2026); " : "") + "BizMatrix Knowledge Base & Decision Rulebook v" + BizEngine.VERSION + "."],
+     ["Sources", (KB.full ? "BizMatrix Master Registration Checklist v1.0; Registration Master Map FY 2026-27; Initial & Annual Compliance Master; " : "") + "BizMatrix Knowledge Base & Decision Rulebook v" + BizEngine.VERSION + "."],
      ["Verification status", "VP: checked against an official government source. VS: confirmed through reputable secondary sources. UV: established position not re-verified; confirm on the named portal before relying on it."],
      ["Before you file", "Thresholds, fees, forms and due dates change by notification and vary by state. Confirm current requirements with the issuing authority or a Chartered Accountant, Company Secretary or advocate. Final responsibility for the chosen structure, registrations and filings rests with you."]
     ].forEach(([t, b]) => { need(50); font("b", 10.5); ink(C.emerald); doc.text(T(t), M, y + 10); y += 16; para(b, { size: 9.4, color: C.ink, after: 10 }); });
@@ -364,7 +364,7 @@ async function pdfBuild(meta) {
       font("b", 7.5); ink(C.muted); doc.text(T("BIZ MATRIX  ·  " + ent.name.toUpperCase() + (meta.biz ? "  ·  " + short(meta.biz, 36).toUpperCase() : "")), M, 26);
       if (i !== tocPage) { ink(C.emerald); doc.text("Contents", W - M, 26, { align: "right" }); doc.link(W - M - 44, 17, 44, 12, { pageNumber: tocPage }); }
       stroke(C.line); doc.setLineWidth(0.5); doc.line(M, H - 40, W - M, H - 40);
-      font("r", 7.2); ink(C.muted); doc.text(T("Decision support, law verified " + BizEngine.VERIFIED + ". Not legal, tax or professional advice.  ·  " + rid), M, H - 26);
+      font("r", 7.2); ink(C.muted); doc.text(T("Decision support. Not legal, tax or professional advice.  ·  " + rid), M, H - 26);
       fill(C.gold); doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, "F"); font("b", 7.5); ink(C.ink); doc.text(i + " / " + n, W - M - 24, H - 25, { align: "center" });
     }
     if (PREVIEW) {

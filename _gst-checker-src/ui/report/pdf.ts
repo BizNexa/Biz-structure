@@ -176,7 +176,6 @@ export function buildReport(v: ResultView, inputs: [string, string][], turnoverL
   doc.text('GST REGISTRATION REPORT', W - M, 60, { align: 'right' });
   font('r', 8.5);
   ink(C.muted);
-  doc.text(T('Law as on ' + law), W - M, 74, { align: 'right' });
   stroke(C.line);
   doc.setLineWidth(0.6);
   doc.line(M, 98, W - M, 98);
@@ -275,7 +274,7 @@ export function buildReport(v: ResultView, inputs: [string, string][], turnoverL
   doc.text(T('Prepared using the Biz Matrix GST Registration Checker on ' + dateStr), M, fy + 18);
   font('r', 8.5);
   ink(C.muted);
-  doc.text(T(`Report ID ${rid}  ·  Rulebook v${v.rulesetVersion}  ·  Law as on ${law}`), M, fy + 32);
+  doc.text(T(`Report ID ${rid}  ·  Rulebook v${v.rulesetVersion}`), M, fy + 32);
   font('r', 8);
   doc.text(doc.splitTextToSize(T(en.result.disclaimer.replace('{date}', law)), CW), M, fy + 50);
 
@@ -436,7 +435,7 @@ export function buildReport(v: ResultView, inputs: [string, string][], turnoverL
     doc.line(M, H - 40, W - M, H - 40);
     font('r', 7.2);
     ink(C.muted);
-    doc.text(T(`General guidance, law as on ${law}. Not legal or tax advice.  ·  Rulebook v${v.rulesetVersion}  ·  ${rid}`), M, H - 26);
+    doc.text(T(`General guidance. Not legal or tax advice.  ·  Rulebook v${v.rulesetVersion}  ·  ${rid}`), M, H - 26);
     fill(C.gold);
     doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, 'F');
     font('b', 7.5);

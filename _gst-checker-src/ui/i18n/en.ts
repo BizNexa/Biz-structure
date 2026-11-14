@@ -59,7 +59,7 @@ export const en = {
     template: 'Format',
     templateNote: 'Use the standard format prescribed by Circular 257/03/2026-GST.',
     disclaimer:
-      'This checker gives general guidance based on GST law updated as on {date}. It is not legal or tax advice for your specific facts. Please confirm with a GST professional before you file.',
+      'This checker gives general guidance based on GST law. It is not legal or tax advice for your specific facts. Please confirm with a GST professional before you file.',
     crossSell: 'Starting a new business?',
     crossSellText: 'Biz Matrix also helps you choose the right business structure and lists every registration that follows.',
     crossSellCta: 'Try the Business Structure tool',
