@@ -34,6 +34,12 @@
     if (loaded && window.gtag) window.gtag("event", name, params || {});
   };
 
+  // Count opens of the sample report PDF (only sent when the visitor accepted analytics)
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="sample-report.pdf"]') : null;
+    if (a) window.bmTrack("sample_view", { placement: a.getAttribute("data-sample") || location.pathname });
+  });
+
   var CSS = ".bm-consent{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:560px;margin:0 auto;background:var(--surface,#fff);color:var(--ink,#1F2328);border:1px solid var(--line,#E9E1CF);border-radius:16px;box-shadow:0 18px 50px rgba(31,35,40,.22);padding:16px 18px;font:15px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}" +
     ".bm-consent p{margin:0 0 12px}.bm-consent a{color:inherit;text-decoration:underline}" +
     ".bm-consent .bm-c-btns{display:flex;gap:10px;flex-wrap:wrap}" +

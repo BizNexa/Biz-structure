@@ -40,7 +40,7 @@ function previewNotice(preview) {
 /* Free preview: the remaining 65% is shown blurred and inert, with one unlock card on top. */
 function BlurredLock(innerHtml, remainingCount, label = 'items') {
   if (!remainingCount || AccessProvider.isPremium()) return '';
-  return `<div class="bm-lock"><div class="bm-lock-content" aria-hidden="true" inert>${innerHtml}</div><div class="bm-lock-cta" role="group" aria-label="Locked content"><p><b>${remainingCount} more ${escapeHtml(label)}</b> in the full report</p><button type="button" class="btn primary" data-buy>Unlock for &#8377;49</button></div></div>`;
+  return `<div class="bm-lock"><div class="bm-lock-content" aria-hidden="true" inert>${innerHtml}</div><div class="bm-lock-cta" role="group" aria-label="Locked content"><p><b>${remainingCount} more ${escapeHtml(label)}</b> in the full report</p><button type="button" class="btn primary" data-buy>Unlock for &#8377;49</button><a class="bm-lock-sample" href="../assets/sample-report.pdf" target="_blank" rel="noopener" data-sample="results-lock">See a sample report</a></div></div>`;
 }
 function lockSkeleton(n) {
   return Array.from({ length: Math.min(Math.max(n, 2), 5) }, (_, i) => `<div class="bm-skel"><span style="width:${38 + (i * 17) % 40}%"></span><span style="width:${70 + (i * 11) % 25}%"></span><span style="width:${50 + (i * 23) % 35}%"></span></div>`).join('');

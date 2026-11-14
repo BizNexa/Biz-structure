@@ -60,6 +60,7 @@
             ${next ? `<button class="btn op-next" type="button" data-jump="action">Next: ${e2(next.title)} →</button>` : ""}
             <button class="btn" type="button" data-jump="compliance">View compliance</button>
             <button class="op-link" type="button" data-jump="documents">Prepare documents</button>
+            ${AccessProvider.isPremium() ? "" : `<button class="op-link" type="button" data-preview-pdf>Free preview PDF</button>`}
           </div>
         </div>
         <aside class="op-reasons" aria-labelledby="opWhy">

@@ -38,9 +38,11 @@ function ensurePdfLib() {
 async function pdfBuild(meta) {
   try { await ensurePdfLib(); } catch (e) { toast("Could not load the PDF engine. Check your connection and try again."); return; }
   meta = meta || {};
+  // Free preview PDF: same report, but only the free 35% is written into the file; the rest is drawn as blurred placeholders.
+  const PREVIEW = !!meta.preview && !AccessProvider.isPremium();
   try {
     if (!window.jspdf || typeof window.jspdf.jsPDF !== "function") throw new Error("PDF engine unavailable");
-    toast("Building your report…");
+    toast(PREVIEW ? "Building your free preview…" : "Building your report…");
     const key = state.rec.key, ent = ENTITIES[key], A = state.answers, R = state.rec.engine;
     const doc = new window.jspdf.jsPDF({ unit: "pt", format: "a4", compress: true });
     const fontsOk = await loadReportFonts(doc);
@@ -53,6 +55,12 @@ async function pdfBuild(meta) {
     const font = (w, size) => { if (w === "x") doc.setFont(FX, "normal"); else doc.setFont(F, w === "b" ? "bold" : "normal"); if (size) doc.setFontSize(size); };
     const docs = KB.documents(key, A), regs = KB.registrations(key, A), comp = KB.compliances(key, A), plan = KB.actionPlan(key, A), sum = KB.summary(key, A);
     const flags = reviewFlags();
+    // Rows the free preview may show: exactly what the on-screen 35% preview shows (KB.gate). Paid reports show everything.
+    const vis = l => new Set(PREVIEW ? KB.gate(l).visible : l);
+    const regsVis = vis(regs), docsVis = vis(docs.docs), compVis = vis(comp);
+    const planVis = new Set(PREVIEW ? plan.slice(0, Math.max(1, Math.ceil(plan.length * 0.35))) : plan);
+    const TEX = PREVIEW ? await loadReportImage("../assets/report-blur.png") : null;
+    const pills = []; // [page, top, bottom] of locked areas; a lock badge is drawn on each at the end
     const rid = "BM-" + Date.now().toString(36).toUpperCase().slice(-6) + "-" + key.slice(0, 3).toUpperCase();
     const dateStr = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
     let y = M, sec = 0; const toc = [];
@@ -79,15 +87,33 @@ async function pdfBuild(meta) {
     const table = (head, body, o = {}) => {
       if (!body.length) return;
       need(60);
+      const lk = PREVIEW && o.lock ? o.lock : null, isL = d => !!lk && d.section === "body" && lk(d.row.index);
       doc.autoTable(Object.assign({
-        startY: y, head: [head], body, margin: { left: M, right: M, top: 64, bottom: 62 }, theme: "plain",
+        startY: y, head: [head], body, rowPageBreak: PREVIEW ? "avoid" : "auto", margin: { left: M, right: M, top: 64, bottom: 62 }, theme: "plain",
         styles: { font: F, fontSize: 8.4, cellPadding: { top: 5, bottom: 5, left: 6, right: 6 }, textColor: C.body, lineColor: C.line, lineWidth: { bottom: 0.5 }, valign: "top", overflow: "linebreak" },
         headStyles: { font: F, fontStyle: "bold", fillColor: C.mint, textColor: C.ink, fontSize: 8.2, lineWidth: { bottom: 1 }, lineColor: C.gold },
         alternateRowStyles: { fillColor: C.soft },
-        didParseCell: d => { d.cell.text = (d.cell.text || []).map(T); if (o.pc) o.pc(d); },
-        didDrawCell: d => { if (o.dc) o.dc(d); }
+        didParseCell: d => { if (isL(d)) { d.cell.text = [""]; d.cell.styles.minCellHeight = 26; return; } d.cell.text = (d.cell.text || []).map(T); if (o.pc) o.pc(d); },
+        didDrawCell: d => {
+          if (isL(d)) { blurBox(d.cell.x + 6, d.cell.y + 6, d.cell.width - 12, Math.min(16, d.cell.height - 12)); if (d.column.index === 0) markLocked(d.cell.y, d.cell.y + d.cell.height); return; }
+          if (o.dc) o.dc(d);
+        }
       }, o.opts || {}));
       y = doc.lastAutoTable.finalY + 14;
+    };
+    // Free preview helpers: blurred-text placeholder and the lock badge
+    const curPage = () => doc.internal.getCurrentPageInfo().pageNumber;
+    const blurBox = (x0, y0, w, h) => {
+      if (w < 14 || h < 6) return;
+      if (TEX) doc.addImage(TEX, "PNG", x0, y0, w, h, "bmblur", "FAST");
+      else { fill([226, 222, 212]); doc.roundedRect(x0, y0 + h * 0.1, w, h * 0.32, 2, 2, "F"); doc.roundedRect(x0, y0 + h * 0.6, w * 0.7, h * 0.32, 2, 2, "F"); }
+    };
+    const markLocked = (y0, y1) => { const p = curPage(), l = pills[pills.length - 1]; if (l && l[0] === p && y0 - l[2] < 3 && y0 >= l[1]) l[2] = Math.max(l[2], y1); else pills.push([p, y0, y1]); };
+    const lockPill = (cx, cy) => {
+      const t = "Included in your full report"; font("b", 8.6); const pw = doc.getTextWidth(t) + 36, ph = 20, px = cx - pw / 2, py = cy - ph / 2;
+      fill(C.white); stroke(C.gold); doc.setLineWidth(0.9); doc.roundedRect(px, py, pw, ph, 10, 10, "FD");
+      stroke(C.goldT); doc.setLineWidth(1.3); doc.roundedRect(px + 11.6, py + 4.2, 5.8, 8, 2.9, 2.9, "S"); fill(C.goldT); doc.roundedRect(px + 10.5, py + 8.6, 8, 6.6, 1.2, 1.2, "F");
+      doc.setLineWidth(0.5); ink(C.ink); doc.text(t, px + 25, py + 13.4);
     };
     const chip = (text, x, yy, bg, fg) => { font("b", 7.4); const w = doc.getTextWidth(T(text)) + 12; fill(bg); doc.roundedRect(x, yy - 9, w, 13, 6.5, 6.5, "F"); ink(fg); doc.text(T(text), x + 6, yy); return w; };
     const check = (x, yy, id, on) => { const cb = new doc.AcroFormCheckBox(); cb.fieldName = id; cb.x = x; cb.y = yy; cb.width = 10; cb.height = 10; cb.appearanceState = on ? "On" : "Off"; cb.value = on ? "On" : "Off"; doc.addField(cb); stroke(C.emerald); doc.setLineWidth(0.8); doc.roundedRect(x, yy, 10, 10, 2, 2, "S"); };
@@ -105,7 +131,7 @@ async function pdfBuild(meta) {
     font("b", 10); ink(C.muted); doc.text("OUR RECOMMENDATION", M, cy);
     font("x", 32); ink(C.forest); const tl = doc.splitTextToSize(T(ent.name), W - 2 * M - 140); doc.text(tl, M, cy + 36); cy += 36 + tl.length * 36;
     font("r", 11); ink(C.body); const fitLine = doc.splitTextToSize(T(ent.best || ""), W - 2 * M - 140); doc.text(fitLine, M, cy); cy += fitLine.length * 15 + 12;
-    chip(conf.toUpperCase(), M, cy + 4, C.goldS, C.goldT); cy += 26;
+    const cw0 = chip(conf.toUpperCase(), M, cy + 4, C.goldS, C.goldT); if (PREVIEW) chip("FREE PREVIEW", M + cw0 + 8, cy + 4, C.redS, C.red); cy += 26;
     // seal
     const gx = W - M - 58, gy = 196, gr = 50;
     doc.setLineWidth(2); stroke(C.goldT); doc.circle(gx, gy, gr, "S"); doc.setLineWidth(0.8); doc.setLineDashPattern([2, 2], 0); doc.circle(gx, gy, gr - 6, "S"); doc.setLineDashPattern([], 0); doc.setLineWidth(0.5);
@@ -150,7 +176,7 @@ async function pdfBuild(meta) {
     font("b", 11); ink(C.emerald); doc.text("Your next 3 actions", M, y + 8); y += 16;
     sum.next.slice(0, 3).forEach((p, i) => { stroke(C.emerald); doc.setLineWidth(1); doc.circle(M + 8, y + 8, 8, "S"); doc.setLineWidth(0.5); font("b", 8.5); ink(C.emerald); doc.text(String(i + 1), M + 8, y + 11, { align: "center" }); font("b", 9.8); ink(C.ink); doc.text(T(short(p.title, 78)), M + 24, y + 11); font("r", 8.4); ink(C.muted); doc.text(T("When: " + short(p.when, 64) + "   ·   Who: " + p.owner), M + 24, y + 23); y += 31; });
     // key deadlines callout
-    const soon = comp.filter(r => r.detail && compPeriod(r) === "first30").slice(0, 4);
+    const soon = comp.filter(r => r.detail && compVis.has(r) && compPeriod(r) === "first30").slice(0, 4);
     if (soon.length) { y += 4; callout("Key deadlines: first 30 days", soon.map(r => "• " + short(r.title, 60) + ": " + short(r.detail.due, 70)).join("\n"), "amber"); }
     if (flags.length && y < bottom - 40) { font("r", 8.6); ink(C.amb); doc.text(doc.splitTextToSize(T("Talk to a professional before filing: " + flags.length + " point(s) depend on your specific facts (" + flags.join(", ") + "). See Section 2."), CW), M, y + 6); }
 
@@ -190,6 +216,7 @@ async function pdfBuild(meta) {
       if (!list.length) return; h3(title + " (" + list.length + ")");
       table(["Registration", "Why it applies", "Authority & when", "Fee / if missed"], list.map(r => [r.name, r.why, [r.detail && r.detail.authority, r.detail && (r.detail.timeline || r.detail.validity)].filter(Boolean).join(" · ") || "—", [r.detail && r.detail.fee, r.detail && r.detail.penalty].filter(Boolean).join(" · ") || "—"]), {
         opts: { columnStyles: { 0: { cellWidth: 130, fontStyle: "bold", textColor: tone }, 1: { cellWidth: 140 } } },
+        lock: i => !regsVis.has(list[i]),
         dc: d => { if (d.section === "body" && d.column.index === 0 && list[d.row.index]) { const u = url(list[d.row.index].detail && list[d.row.index].detail.portal); if (u) doc.link(d.cell.x, d.cell.y, d.cell.width, d.cell.height, { url: u }); } }
       });
     };
@@ -210,6 +237,7 @@ async function pdfBuild(meta) {
       if (!list.length) { y += 4; return; }
       table(["", "Document", "Provided by", "Type", "Notes"], list.map(d => ["", d.name + (d.mandatory ? "" : " (if applicable)"), d.who, TAGC[d.tag] ? TAGC[d.tag][0] : d.tag, [d.trigger && "When: " + d.trigger, d.detail && d.detail.validity, d.detail && d.detail.notes].filter(Boolean).join(" · ")]), {
         opts: { columnStyles: { 0: { cellWidth: 22 }, 1: { cellWidth: 190, fontStyle: "bold", textColor: C.ink }, 2: { cellWidth: 82 }, 3: { cellWidth: 52 } } },
+        lock: i => !docsVis.has(list[i]),
         pc: d => { if (d.section === "body" && d.column.index === 3 && list[d.row.index]) { const t = TAGC[list[d.row.index].tag]; if (t) { d.cell.styles.textColor = t[2]; d.cell.styles.fontStyle = "bold"; } } },
         dc: d => { const it = list[d.row.index]; if (d.section === "body" && d.column.index === 0 && it && d.cell.height > 14) check(d.cell.x + 6, d.cell.y + 5, "doc_" + it.id + "_" + d.row.index + "_" + doc.getNumberOfPages(), !!KBU.done[it.id]); }
       });
@@ -218,9 +246,9 @@ async function pdfBuild(meta) {
     /* ================= COMPLIANCE BY PERIOD ================= */
     h2("Compliance calendar", "Grouped by when each item falls due. From the Initial & Annual Compliance Master (law as of 6 Nov 2026). Due dates are statutory; authorities often extend them by circular.");
     para("Status: VP = checked against an official government source; VS = confirmed through reputable secondary sources; UV = established position not re-verified, confirm on the named portal.", { size: 8.6, color: C.muted, after: 8 });
-    const deadlines = comp.filter(r => r.detail && compPeriod(r) === "first30");
+    const deadlines = comp.filter(r => r.detail && compVis.has(r) && compPeriod(r) === "first30");
     if (deadlines.length) callout("Key deadlines in your first 30 days", deadlines.slice(0, 6).map(r => "• " + short(r.title, 62) + ": " + short(r.detail.due, 80)).join("\n"), "amber");
-    const ctab = (title, list) => { if (!list.length) return; h3(title + " (" + list.length + ")"); table(["Compliance", "When", "Form / law", "If missed", "Status"], list.map(r => [r.title, r.detail ? r.detail.due : "", r.detail ? [r.detail.form, r.detail.law].filter(Boolean).join(" — ") : "", r.detail ? r.detail.penalty : "", r.detail ? r.detail.status : ""]), { opts: { columnStyles: { 0: { cellWidth: 140, fontStyle: "bold", textColor: C.ink }, 1: { cellWidth: 100 }, 4: { cellWidth: 38, halign: "center", fontStyle: "bold" } } } }); };
+    const ctab = (title, list) => { if (!list.length) return; h3(title + " (" + list.length + ")"); table(["Compliance", "When", "Form / law", "If missed", "Status"], list.map(r => [r.title, r.detail ? r.detail.due : "", r.detail ? [r.detail.form, r.detail.law].filter(Boolean).join(" — ") : "", r.detail ? r.detail.penalty : "", r.detail ? r.detail.status : ""]), { opts: { columnStyles: { 0: { cellWidth: 140, fontStyle: "bold", textColor: C.ink }, 1: { cellWidth: 100 }, 4: { cellWidth: 38, halign: "center", fontStyle: "bold" } } }, lock: i => !compVis.has(list[i]) }); };
     ctab("Before incorporation", comp.filter(r => compPeriod(r) === "before"));
     ctab("First 30 days", comp.filter(r => compPeriod(r) === "first30"));
     ctab("First year", comp.filter(r => compPeriod(r) === "firstyear"));
@@ -229,15 +257,16 @@ async function pdfBuild(meta) {
     // month-by-month calendar
     const MON = ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"], cal = MON.map(() => []);
     comp.filter(r => r.part === "annual" && r.detail && r.kind !== "monthly" && r.kind !== "event").forEach(r => { const due = r.detail.due; MON.forEach((m, i) => { const re = new RegExp("\\b(\\d{1,2})\\s*" + m + "|" + m + "[a-z]*\\s+(\\d{1,2})\\b", "i"); const mm = due.match(re); if (mm) cal[i].push((mm[1] || mm[2]) + " " + m + ": " + short(r.title, 46)); }); });
-    if (cal.some(c => c.length)) {
+    if (PREVIEW || cal.some(c => c.length)) {
       need(200); h3("FY 2026-27 calendar at a glance");
       const monthly = comp.filter(r => r.part === "annual" && r.kind === "monthly").map(r => short(r.title, 40));
-      if (monthly.length) para("Every month: " + monthly.slice(0, 6).join("; ") + ".", { size: 8.8, color: C.muted });
+      if (monthly.length && !PREVIEW) para("Every month: " + monthly.slice(0, 6).join("; ") + ".", { size: 8.8, color: C.muted });
       const cw = (CW - 3 * 8) / 4;
       for (let row = 0; row < 3; row++) {
-        const items = [0, 1, 2, 3].map(c => cal[row * 4 + c].slice(0, 7)), hh = 26 + Math.max(1, ...items.map(i => i.length)) * 11.5;
+        const items = [0, 1, 2, 3].map(c => PREVIEW ? [] : cal[row * 4 + c].slice(0, 7)), hh = PREVIEW ? 26 + 3 * 11.5 : 26 + Math.max(1, ...items.map(i => i.length)) * 11.5;
         need(hh + 8);
-        items.forEach((it, c) => { const x0 = M + c * (cw + 8); fill(C.soft); stroke(C.line); doc.roundedRect(x0, y, cw, hh, 6, 6, "FD"); fill(C.emerald); doc.roundedRect(x0, y, cw, 18, 6, 6, "F"); doc.rect(x0, y + 10, cw, 8, "F"); font("b", 8.5); ink(C.white); doc.text(MON[row * 4 + c] + (row * 4 + c < 9 ? " 2026" : " 2027"), x0 + 8, y + 12.5); font("r", 7.3); ink(C.body); it.forEach((t, k) => doc.text(T(doc.splitTextToSize(T(t), cw - 14)[0]), x0 + 7, y + 30 + k * 11.5)); if (!it.length) { ink(C.muted); doc.text("No fixed-date filing", x0 + 7, y + 30); } });
+        items.forEach((it, c) => { const x0 = M + c * (cw + 8); fill(C.soft); stroke(C.line); doc.roundedRect(x0, y, cw, hh, 6, 6, "FD"); fill(C.emerald); doc.roundedRect(x0, y, cw, 18, 6, 6, "F"); doc.rect(x0, y + 10, cw, 8, "F"); font("b", 8.5); ink(C.white); doc.text(MON[row * 4 + c] + (row * 4 + c < 9 ? " 2026" : " 2027"), x0 + 8, y + 12.5); if (PREVIEW) { blurBox(x0 + 7, y + 23, cw - 14, 12); blurBox(x0 + 7, y + 40, cw - 24, 12); return; } font("r", 7.3); ink(C.body); it.forEach((t, k) => doc.text(T(doc.splitTextToSize(T(t), cw - 14)[0]), x0 + 7, y + 30 + k * 11.5)); if (!it.length) { ink(C.muted); doc.text("No fixed-date filing", x0 + 7, y + 30); } });
+        if (PREVIEW) markLocked(row ? y - 8 : y, y + hh);
         y += hh + 8;
       }
     }
@@ -249,6 +278,7 @@ async function pdfBuild(meta) {
       const items = plan.filter(p => String(p.phase) === String(k)); if (!items.length) return;
       need(70); fill(C.mint); doc.roundedRect(M, y, CW, 26, 6, 6, "F"); fill(C.gold); doc.rect(M, y, 3.5, 26, "F"); font("x", 11); ink(C.goldT); doc.text("PHASE " + k, M + 12, y + 17); font("b", 11); ink(C.ink); doc.text(T(KB.PHASES[k][0]), M + 72, y + 17); font("r", 9); ink(C.muted); doc.text(T(KB.PHASES[k][1]), W - M - 12, y + 17, { align: "right" }); y += 34;
       items.forEach((p, i) => {
+        if (!planVis.has(p)) { need(54); blurBox(M + 22, y + 2, CW * 0.5, 12); blurBox(M + 22, y + 20, CW - 40, 14); markLocked(y - 2, y + 48); y += 48; stroke(C.line); doc.setLineWidth(0.4); doc.line(M + 22, y - 4, W - M, y - 4); return; }
         font("r", 8.8); const lines = doc.splitTextToSize(T(p.text), CW - 40), h = 30 + lines.length * 11.5;
         need(h + 4); check(M + 4, y + 3, "act_" + k + "_" + i, !!KBU.actDone[p.phase + p.title]);
         font("b", 10); ink(C.ink); const tt = T(short(p.title, 70)); doc.text(tt, M + 22, y + 11); const tw2 = doc.getTextWidth(tt); chip(p.priority, M + 30 + tw2, y + 11, PRI[p.priority][0], PRI[p.priority][1]);
@@ -261,15 +291,17 @@ async function pdfBuild(meta) {
 
     /* ================= 8. RISKS ================= */
     h2("Penalties to avoid", "The costliest misses for your profile. Diarise these first.");
-    const risky = comp.filter(r => r.detail && /₹|per day|prosecution|imprisonment|disqualif|strike|cancel/i.test(r.detail.penalty)).slice(0, 12);
-    table(["Compliance", "Due", "Consequence"], risky.map(r => [r.title, r.detail.due, r.detail.penalty]), { opts: { columnStyles: { 0: { cellWidth: 170, fontStyle: "bold", textColor: C.ink }, 1: { cellWidth: 120 }, 2: { textColor: C.red } } } });
+    const risky = comp.filter(r => r.detail && compVis.has(r) && /₹|per day|prosecution|imprisonment|disqualif|strike|cancel/i.test(r.detail.penalty)).slice(0, 12);
+    const riskMore = PREVIEW ? Math.min(3, comp.filter(r => !compVis.has(r)).length) : 0;
+    table(["Compliance", "Due", "Consequence"], risky.map(r => [r.title, r.detail.due, r.detail.penalty]).concat(Array.from({ length: riskMore }, () => ["", "", ""])), { opts: { columnStyles: { 0: { cellWidth: 170, fontStyle: "bold", textColor: C.ink }, 1: { cellWidth: 120 }, 2: { textColor: C.red } } }, lock: i => i >= risky.length });
 
     /* ================= 9. PORTALS ================= */
     h2("Official portals", "Use only official portals. Each link opens the site.");
     const portals = []; const seen = new Set();
-    regs.forEach(r => { const u = url(r.detail && r.detail.portal); if (u && !seen.has(u)) { seen.add(u); portals.push([r.name, u.replace("https://", ""), u]); } });
+    regs.forEach(r => { if (!regsVis.has(r)) return; const u = url(r.detail && r.detail.portal); if (u && !seen.has(u)) { seen.add(u); portals.push([r.name, u.replace("https://", ""), u]); } });
     [["MCA (company / LLP filings)", "https://www.mca.gov.in"], ["Income Tax e-filing", "https://www.incometax.gov.in"], ["GST portal", "https://www.gst.gov.in"]].forEach(([n, u]) => { if (!seen.has(u)) portals.unshift([n, u.replace("https://", ""), u]); });
-    table(["For", "Portal"], portals.map(p => [p[0], p[1]]), { opts: { columnStyles: { 0: { cellWidth: 260, fontStyle: "bold", textColor: C.ink }, 1: { textColor: C.emerald } } }, dc: d => { if (d.section === "body" && portals[d.row.index]) doc.link(d.cell.x, d.cell.y, d.cell.width, d.cell.height, { url: portals[d.row.index][2] }); } });
+    const portMore = PREVIEW ? Math.min(3, regs.filter(r => !regsVis.has(r)).length) : 0;
+    table(["For", "Portal"], portals.map(p => [p[0], p[1]]).concat(Array.from({ length: portMore }, () => ["", ""])), { lock: i => i >= portals.length, opts: { columnStyles: { 0: { cellWidth: 260, fontStyle: "bold", textColor: C.ink }, 1: { textColor: C.emerald } } }, dc: d => { if (d.section === "body" && portals[d.row.index]) doc.link(d.cell.x, d.cell.y, d.cell.width, d.cell.height, { url: portals[d.row.index][2] }); } });
 
     /* ================= ASSUMPTIONS ================= */
     { const asm = assumptions(A);
@@ -282,10 +314,13 @@ async function pdfBuild(meta) {
     const block = (title, lines) => { need(30 + lines.length * 14); font("b", 10.5); ink(C.emerald); doc.text(T(title), M, y + 10); y += 18; lines.forEach(l => { font("r", 9.4); ink(C.ink); const ls = doc.splitTextToSize(T(l), CW - 14); need(ls.length * 13); fill(C.gold); doc.circle(M + 3, y + 6.5, 1.8, "F"); doc.text(ls, M + 12, y + 9); y += ls.length * 13 + 2; }); y += 6; };
     block("Decision", [`Form a ${ent.name}. ${only ? "It is the only structure your answers allow." : `Fit ${state.rec.fit}/100, ${conf.toLowerCase()}.`}`].concat(x.why.slice(0, 2)));
     block("Do first", sum.next.slice(0, 5).map(p => p.title + " (" + short(p.when, 40) + ")"));
-    block("Registrations", [`${sum.regsMandatory} mandatory: ` + regs.filter(r => r.level === "mandatory").slice(0, 6).map(r => short(r.name, 34)).join(", ") + (sum.regsMandatory > 6 ? " …" : ""), `${sum.regsTriggered} triggered by your answers` + (sum.regsTriggered ? ": " + regs.filter(r => r.level === "triggered").slice(0, 6).map(r => short(r.name, 34)).join(", ") : ".")]);
-    block("Documents", [`${sum.docs} documents across ${docs.steps.length} steps; start with founder KYC, premises proof and DSCs.`]);
-    block("Compliance rhythm", [`First year: ${sum.compInitial} setup items. Then ${sum.monthly} monthly, ${sum.quarterly} quarterly and the annual filings in Section 5.`, "Keep one shared calendar; review it monthly with your CA / CS."]);
-    const watch = plan.find(p => p.phase === 6 && /threshold/i.test(p.title)); if (watch) block("Watch", [watch.text]);
+    if (PREVIEW) { need(170); const y0 = y; for (let k = 0; k < 4; k++) { blurBox(M, y + 3, CW * (k % 2 ? 0.22 : 0.3), 11); y += 18; blurBox(M + 12, y, CW - 30, 14); y += 22; } markLocked(y0, y); }
+    else {
+      block("Registrations", [`${sum.regsMandatory} mandatory: ` + regs.filter(r => r.level === "mandatory").slice(0, 6).map(r => short(r.name, 34)).join(", ") + (sum.regsMandatory > 6 ? " …" : ""), `${sum.regsTriggered} triggered by your answers` + (sum.regsTriggered ? ": " + regs.filter(r => r.level === "triggered").slice(0, 6).map(r => short(r.name, 34)).join(", ") : ".")]);
+      block("Documents", [`${sum.docs} documents across ${docs.steps.length} steps; start with founder KYC, premises proof and DSCs.`]);
+      block("Compliance rhythm", [`First year: ${sum.compInitial} setup items. Then ${sum.monthly} monthly, ${sum.quarterly} quarterly and the annual filings in Section 5.`, "Keep one shared calendar; review it monthly with your CA / CS."]);
+      const watch = plan.find(p => p.phase === 6 && /threshold/i.test(p.title)); if (watch) block("Watch", [watch.text]);
+    }
     if (flags.length) block("Get professional help on", flags.map(f => BizEngine.RULES[f].plain));
     // disclaimer moved to its own page
     if (false) callout("", "Structured decision support based on the law as verified on " + BizEngine.VERIFIED + ". Not legal, tax or professional advice for your specific facts. Confirm current notifications and state rules before filing.", "mint");
@@ -299,6 +334,23 @@ async function pdfBuild(meta) {
      ["Verification status", "VP: checked against an official government source. VS: confirmed through reputable secondary sources. UV: established position not re-verified; confirm on the named portal before relying on it."],
      ["Before you file", "Thresholds, fees, forms and due dates change by notification and vary by state. Confirm current requirements with the issuing authority or a Chartered Accountant, Company Secretary or advocate. Final responsibility for the chosen structure, registrations and filings rests with you."]
     ].forEach(([t, b]) => { need(50); font("b", 10.5); ink(C.emerald); doc.text(T(t), M, y + 10); y += 16; para(b, { size: 9.4, color: C.ink, after: 10 }); });
+
+    /* ================= FREE PREVIEW: how to unlock ================= */
+    const price = Math.round((APP_CONFIG.pricePaise || 4900) / 100);
+    if (PREVIEW) {
+      newPage();
+      font("b", 8.5); ink(C.goldT); doc.text("UNLOCK THE FULL REPORT", M, y + 8);
+      font("x", 22); ink(C.forest); const ht = doc.splitTextToSize(T("Everything blurred in this preview is already worked out for your answers"), CW); doc.text(ht, M, y + 34); y += 34 + ht.length * 26;
+      para("The full report has the same pages with every row complete: who provides each document, every due date, the authority and fee for each registration, and the penalty if a filing is missed.", { size: 10.5, after: 14 });
+      const lockedN = [[regs.length - regsVis.size, "registrations"], [docs.docs.length - docsVis.size, "documents"], [comp.length - compVis.size, "compliances"], [plan.length - planVis.size, "action steps"]];
+      fill(C.soft); doc.roundedRect(M, y, CW, 74, 8, 8, "F"); font("b", 8); ink(C.goldT); doc.text("BLURRED IN THIS PREVIEW", M + 16, y + 19);
+      const cw1 = (CW - 32) / 4; lockedN.forEach(([v, l], i) => { const x0 = M + 16 + i * cw1; font("x", 22); ink(C.forest); doc.text(String(v), x0, y + 47); font("r", 8.5); ink(C.muted); doc.text(l, x0, y + 61); });
+      y += 96;
+      [["1", "Open www.bizmatrix.in/assessment/ and see your result. On the same device and browser your answers are usually kept; if not, the assessment takes about 3 to 5 minutes."], ["2", "Choose Unlock and pay ₹" + price + " once, by card or UPI, on the payment provider's secure page."], ["3", "Download the full PDF report. Your access code lets you restore it on another device."]].forEach(([k, s]) => {
+        need(40); fill(C.mint); doc.circle(M + 9, y + 6, 9, "F"); font("b", 9.5); ink(C.goldT); doc.text(k, M + 9, y + 9.5, { align: "center" }); font("r", 10); ink(C.body); const ls = doc.splitTextToSize(T(s), CW - 30); doc.text(ls, M + 28, y + 10); y += Math.max(26, ls.length * 14 + 10);
+      });
+      y += 10; need(60); fill(C.gold); doc.roundedRect(M, y, CW, 46, 10, 10, "F"); font("b", 13); ink(C.forest); doc.text(T("Unlock for ₹" + price + "  →  www.bizmatrix.in/assessment/"), W / 2, y + 28, { align: "center" }); doc.link(M, y, CW, 46, { url: "https://www.bizmatrix.in/assessment/" }); y += 60;
+    }
     /* ================= CONTENTS ================= */
     doc.setPage(tocPage); y = 64;
     font("b", 8.5); ink(C.goldT); doc.text("CONTENTS", M, y + 8); font("x", 22); ink(C.forest); doc.text("What's inside", M, y + 34); fill(C.gold); doc.rect(M, y + 42, 36, 2.5, "F"); y += 70;
@@ -315,17 +367,33 @@ async function pdfBuild(meta) {
       font("r", 7.2); ink(C.muted); doc.text(T("Decision support, law verified " + BizEngine.VERIFIED + ". Not legal, tax or professional advice.  ·  " + rid), M, H - 26);
       fill(C.gold); doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, "F"); font("b", 7.5); ink(C.ink); doc.text(i + " / " + n, W - M - 24, H - 25, { align: "center" });
     }
-    doc.setProperties({ title: "Biz Matrix Report - " + (meta.biz ? meta.biz + " - " : "") + ent.name, subject: "Business structure, registration and compliance plan", author: "Biz Matrix", creator: "Biz Matrix" });
+    if (PREVIEW) {
+      pills.forEach(([p, a, b]) => { if (b - a < 45) return; doc.setPage(p); lockPill(W / 2, (a + b) / 2); });
+      for (let i = 1; i <= n; i++) {
+        doc.setPage(i);
+        doc.saveGraphicsState(); doc.setGState(new doc.GState({ opacity: 0.06 })); font("x", 96); ink(C.goldT); doc.text("PREVIEW", W / 2, H / 2 + 30, { align: "center", angle: 35 }); doc.restoreGraphicsState();
+        font("b", 7.2); ink(C.goldT); doc.text(T("FREE PREVIEW: blurred parts unlock with the full report (₹" + price + ") at www.bizmatrix.in/assessment/"), M, H - 13); doc.link(M, H - 21, CW, 10, { url: "https://www.bizmatrix.in/assessment/" });
+      }
+    }
+    doc.setProperties({ title: (PREVIEW ? "Biz Matrix Free Preview - " : "Biz Matrix Report - ") + (meta.biz ? meta.biz + " - " : "") + ent.name, subject: "Business structure, registration and compliance plan", author: "Biz Matrix", creator: "Biz Matrix" });
     window.__lastPdf = doc;
     const blob = doc.output("blob"); if (!blob || !blob.size) throw new Error("Empty PDF generated");
     const u = URL.createObjectURL(blob), link = document.createElement("a");
-    link.href = u; link.download = "Biz_Matrix_" + ((meta.biz || "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "") || "Full_Report") + ".pdf"; link.style.display = "none"; document.body.appendChild(link); link.click();
+    link.href = u; link.download = (PREVIEW ? "Biz_Matrix_Free_Preview_" : "Biz_Matrix_") + ((meta.biz || "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "") || (PREVIEW ? "Report" : "Full_Report")) + ".pdf"; link.style.display = "none"; document.body.appendChild(link); link.click();
     setTimeout(() => { link.remove(); URL.revokeObjectURL(u); }, 2000);
-    toast("Your report is ready. Check your browser's Downloads folder.");
-    if (window.bmTrack) window.bmTrack("report_download", { structure: state.rec && state.rec.key });
+    toast(PREVIEW ? "Your free preview is ready. Check your browser's Downloads folder." : "Your report is ready. Check your browser's Downloads folder.");
+    if (window.bmTrack) window.bmTrack(PREVIEW ? "preview_pdf_download" : "report_download", { structure: state.rec && state.rec.key });
   } catch (e) {
     console.error("PDF error:", e);
     toast("PDF download could not be completed. Opening the print dialog so you can choose Save as PDF.");
     setTimeout(printNow, 120);
   }
 }
+
+// "Free preview PDF" on the result card: the free 35% as a PDF, with the locked rows blurred
+document.addEventListener("click", e => {
+  const b = e.target && e.target.closest ? e.target.closest("[data-preview-pdf]") : null; if (!b) return;
+  if (!state.rec || !state.rec.key) { toast("Please complete the assessment first."); return; }
+  if (AccessProvider.isPremium()) { pdfNow(); return; }
+  askCover(meta => pdfBuild(Object.assign({}, meta, { preview: true })));
+});
