@@ -7,7 +7,7 @@
 (function () {
   "use strict";
   var GA_ID = "G-12QWJZJMJ7";
-  var KEY = "bm_consent";
+  var KEY = "bm_consent_v2"; // v2 = analytics + advertising; earlier analytics-only choices are asked again
   var loaded = false;
 
   function read() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
@@ -20,7 +20,8 @@
     if (loaded || !GA_ID) return;
     loaded = true;
     window.gtag = gtag;
-    gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" });
+    // Consent Mode v2: the visitor accepted analytics and advertising cookies on the banner
+    gtag("consent", "default", { ad_storage: "granted", ad_user_data: "granted", ad_personalization: "granted", analytics_storage: "granted" });
     gtag("js", new Date());
     gtag("config", GA_ID, { anonymize_ip: true });
     var s = document.createElement("script");
@@ -51,8 +52,8 @@
     if (document.querySelector(".bm-consent")) return;
     if (!document.getElementById("bm-consent-css")) { var st = document.createElement("style"); st.id = "bm-consent-css"; st.textContent = CSS; document.head.appendChild(st); }
     var box = document.createElement("div");
-    box.className = "bm-consent"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Analytics cookies");
-    box.innerHTML = '<p>We would like to use Google Analytics to count visits and see which pages help people. It is off unless you accept. Your assessment answers and tool inputs are never sent. <a href="' + privacyHref() + '">Privacy &amp; cookies</a></p>' +
+    box.className = "bm-consent"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Analytics and advertising cookies");
+    box.innerHTML = '<p>We would like to use Google Analytics and Google advertising cookies to count visits, measure our ads and show our ads to people who have visited. They are off unless you accept. Your assessment answers and tool inputs are never sent. <a href="' + privacyHref() + '">Privacy &amp; cookies</a></p>' +
       '<div class="bm-c-btns"><button type="button" class="bm-c-no">Reject</button><button type="button" class="bm-c-yes">Accept</button></div>';
     document.body.appendChild(box);
     box.querySelector(".bm-c-yes").onclick = function () { write("granted"); box.remove(); loadAnalytics(); };
