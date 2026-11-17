@@ -61,6 +61,7 @@
             <button class="btn" type="button" data-jump="compliance">View compliance</button>
             <button class="op-link" type="button" data-jump="documents">Prepare documents</button>
             ${AccessProvider.isPremium() ? "" : `<button class="op-link" type="button" data-preview-pdf>Free preview PDF</button>`}
+            <a class="op-link" href="../entity-tax-comparison/#tool" data-cta="result-etc">Compare tax by structure</a>
           </div>
         </div>
         <aside class="op-reasons" aria-labelledby="opWhy">

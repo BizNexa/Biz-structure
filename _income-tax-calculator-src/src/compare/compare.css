@@ -181,3 +181,12 @@
 .wk-sum b { font: 800 1.2rem var(--display); color: var(--gold-800); }
 .wk-notes { margin: 12px 0 0; padding-left: 18px; font-size: .84rem; color: var(--ink-2); display: grid; gap: 4px; }
 @media (max-width: 700px) { .wk-t .ref { display: none; } .wk-t .num { width: auto; } }
+
+/* more free tools */
+.xt-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.xt-row .eyebrow { grid-column: 1 / -1; margin: 6px 0 0; }
+.xt { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); text-decoration: none; color: var(--ink); transition: border-color .15s ease, transform .15s ease; }
+.xt:hover { border-color: var(--gold-400); transform: translateY(-2px); }
+.xt b { font-size: .98rem; } .xt span { font-size: .85rem; color: var(--muted); }
+.xt b::after { content: " →"; color: var(--gold-700); }
+@media (max-width: 760px) { .xt-row { grid-template-columns: 1fr; } }

@@ -327,6 +327,10 @@ export function Result({ view: v, inputs, turnoverLabel, lawDate, onRestart }: P
           <a className="btn sm" href="../business-structure/#quiz" onClick={() => (window as unknown as { bmTrack?: (n: string, p?: object) => void }).bmTrack?.('cross_sell', { from: 'gst', verdict: v.verdict })}>
             {t('result.crossSellCta')} →
           </a>
+          <a className="cross-sample" href="../entity-tax-comparison/#tool" onClick={() => (window as unknown as { bmTrack?: (n: string, p?: object) => void }).bmTrack?.('cross_sell', { from: 'gst', to: 'entity_tax' })}>
+            Compare tax: proprietor vs LLP vs Pvt Ltd
+          </a>
+          <br />
           <a className="cross-sample" href="../assets/sample-report.pdf" target="_blank" rel="noopener" data-sample="gst-result">
             {t('result.crossSellSample')}
           </a>

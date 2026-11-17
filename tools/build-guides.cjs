@@ -141,6 +141,12 @@ function guidePage(g) {
       ${g.faqs.map(([q, a]) => `<details class="g-faq"><summary>${esc(q)}</summary><p>${a}</p></details>`).join("\n      ")}
     </section>
     <p class="g-note">General information about Indian law, not legal, tax or professional advice for your situation. Fees, forms and thresholds change by notification and vary by State; confirm with a Chartered Accountant, Company Secretary or advocate before you file.</p>
+    <section class="g-related" aria-labelledby="toolsH"><h2 id="toolsH">Free tools</h2><ul>
+      <li><a href="${R}business-structure/#quiz" data-cta="guide-tool-quiz"><b>Find your business structure</b><span>4 quick taps, then a full plan of registrations and compliances</span></a></li>
+      <li><a href="${R}entity-tax-comparison/#tool" data-cta="guide-tool-etc"><b>Entity Tax Comparison</b><span>Total tax as a proprietor, firm / LLP or Pvt Ltd for your profit</span></a></li>
+      <li><a href="${R}gst-registration-checker/#checker" data-cta="guide-tool-gst"><b>GST Registration Checker</b><span>Do you need GST registration? About 2 minutes</span></a></li>
+      <li><a href="${R}income-tax-calculator/#calculator" data-cta="guide-tool-itc"><b>Income Tax Calculator</b><span>Your tax for 2026-27, new vs old regime</span></a></li>
+    </ul></section>
     <section class="g-related" aria-labelledby="relH"><h2 id="relH">Related guides</h2><ul>${rel}</ul></section>
   </article>
   <aside class="g-side" aria-label="Quick check">
