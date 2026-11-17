@@ -159,3 +159,25 @@
   .cb-owner { grid-template-columns: 1fr 1fr; } .cb-owner b { grid-column: 1 / -1; padding: 0; }
   .cb-tiles { grid-template-columns: 1fr; }
 }
+
+/* ---------- working (full width, tabbed) ---------- */
+.wk { margin-top: 26px; }
+.wk-lead { color: var(--muted); margin: 4px 0 12px; font-size: .92rem; }
+.wk-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.wk-tab { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 16px; min-height: 52px; border: 1.5px solid var(--line); border-bottom: 3px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; font: 600 .9rem var(--body); color: var(--ink-2); }
+.wk-tab b { font: 800 1rem var(--display); color: var(--ink); }
+.wk-tab.on { border-color: var(--c); border-bottom-color: var(--c); background: color-mix(in srgb, var(--c) 8%, var(--surface)); color: var(--ink); }
+.wk-pane { margin-top: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 6px 18px 18px; }
+.wk-sec h4 { font-size: .95rem; margin: 16px 0 8px; color: var(--ink); }
+.wk-t { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.wk-t th { text-align: left; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--paper); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.wk-t td { padding: 8px 10px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+.wk-t td small { display: block; color: var(--muted); font-size: .76rem; }
+.wk-t .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; width: 150px; }
+.wk-t .ref { color: var(--muted); font-size: .78rem; width: 30%; }
+.wk-t tr.tot td { font-weight: 700; color: var(--ink); background: var(--gold-50); }
+.wk-t tr.nt td { color: var(--muted); font-style: italic; }
+.wk-sum { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--gold-100); font-weight: 700; }
+.wk-sum b { font: 800 1.2rem var(--display); color: var(--gold-800); }
+.wk-notes { margin: 12px 0 0; padding-left: 18px; font-size: .84rem; color: var(--ink-2); display: grid; gap: 4px; }
+@media (max-width: 700px) { .wk-t .ref { display: none; } .wk-t .num { width: auto; } }

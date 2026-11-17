@@ -220,7 +220,7 @@ function tableHtml(cards: EntityCard[], lowest: EntityCard['key'] | null, profit
     const p = Math.max(profit, 1), t = (c.totalTax / p) * 100, h = (c.takeHome / p) * 100, r = Math.max(0, 100 - t - h);
     return `<div class="ct-split" title="Tax ${t.toFixed(0)}%, take-home ${h.toFixed(0)}%, kept ${r.toFixed(0)}%"><i class="t" style="width:${t}%"></i><i class="h" style="width:${h}%"></i><i class="r" style="width:${r}%"></i></div>`;
   };
-  const calc = (c: EntityCard) => `<details class="cmp-calc"><summary>Show calculation</summary>${c.sections.map((s) => `<h4>${esc(s.title)}</h4>${traceTable(s.lines)}`).join('')}${c.notes.length ? `<ul class="cmp-notes">${c.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}</details>`;
+  void 0; const _calc = (c: EntityCard): string => `<details class="cmp-calc"><summary>Show calculation</summary>${c.sections.map((s) => `<h4>${esc(s.title)}</h4>${traceTable(s.lines)}`).join('')}${c.notes.length ? `<ul class="cmp-notes">${c.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}</details>`;
   return `<div class="ct-wrap" role="region" aria-label="Comparison table" tabindex="0"><table class="ct">
     <thead><tr><th scope="col" class="ct-corner">For your profit of <b>${rs(profit)}</b></th>${head}</tr></thead>
     <tbody>
@@ -234,8 +234,24 @@ function tableHtml(cards: EntityCard[], lowest: EntityCard['key'] | null, profit
       ${row('How it is paid out', '', (c) => `<span class="ct-small">${esc(c.basis)}</span>`)}
       ${row('Compared with', '', (c) => c.alternative ? `<span class="ct-small">${esc(c.alternative.label)}: <b>${rs(c.alternative.totalTax)}</b></span>` : '<span class="ct-small">—</span>')}
       ${cards.some((c) => c.warnings.length) ? row('Please note', '', (c) => c.warnings.map((w) => `<span class="ct-warn">${esc(w)}</span>`).join('') || '—') : ''}
-      ${row('Working', 'Every line with its section', calc)}
     </tbody></table></div>`;
+}
+
+/** Full-width working: one tab per structure, each a clean Particulars / Amount / Section table. */
+function workingHtml(cards: EntityCard[]): string {
+  const av = cards.filter((c) => c.available);
+  if (!av.length) return '';
+  const tabs = av.map((c, i) => `<button type="button" role="tab" class="wk-tab ${i === 0 ? 'on' : ''}" data-wk="${c.key}" aria-selected="${i === 0}" style="--c:${COLORS[c.key]}">${esc(c.name)}<b>${rs(c.totalTax)}</b></button>`).join('');
+  const panes = av.map((c, i) => `<div class="wk-pane" role="tabpanel" data-wkp="${c.key}" ${i === 0 ? '' : 'hidden'}>
+      ${c.sections.map((s) => `<section class="wk-sec"><h4>${esc(s.title)}</h4><table class="wk-t"><thead><tr><th>Particulars</th><th class="num">Amount</th><th>Section</th></tr></thead><tbody>${s.lines.map((l) => {
+        const tot = /^(Tax payable|Total income|Income-tax|Tax liability)/i.test(l.label);
+        return `<tr class="${tot ? 'tot' : ''}${l.amount === null ? ' nt' : ''}"><td>${esc(l.label)}${l.note ? `<small>${esc(l.note)}</small>` : ''}</td><td class="num">${l.amount === null ? '' : rs(l.amount)}</td><td class="ref">${esc(l.ref || '')}</td></tr>`;
+      }).join('')}</tbody></table></section>`).join('')}
+      <div class="wk-sum"><span>Total tax under ${esc(c.name)}</span><b>${rs(c.totalTax)}</b></div>
+      ${c.notes.length ? `<ul class="wk-notes">${c.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+    </div>`).join('');
+  return `<section class="wk" aria-labelledby="wkH"><h3 class="cb-sub" id="wkH">How each figure is worked out</h3><p class="wk-lead">Every line with its section of the Income-tax Act, 2025. Choose a structure:</p>
+    <div class="wk-tabs" role="tablist">${tabs}</div>${panes}</section>`;
 }
 
 function run(): void {
@@ -255,10 +271,15 @@ function run(): void {
       : `<div class="cb-tile off"><span class="ct-ico" style="--c:#9AA0A6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[c.key]}</svg></span><p>${esc(c.name)}</p><b>Not possible</b><small>${esc(c.reason || '')}</small></div>`).join('')}</div>
     <h3 class="cb-sub">Detailed comparison</h3>
     ${tableHtml(r.cards, r.lowest, Math.max(0, x.profit))}
+    ${workingHtml(r.cards)}
     ${chartHtml(x)}
     <div class="cmp-actions"><button type="button" class="btn quiet sm" id="cmpPdf">Download summary (PDF)</button></div>
     <details class="cmp-asm"><summary>Assumptions</summary><ul>${r.assumptions.map((a) => `<li>${esc(a)}</li>`).join('')}</ul></details>`;
   $('cmpPdf').onclick = downloadPdf;
+  document.querySelectorAll<HTMLButtonElement>('[data-wk]').forEach((b) => (b.onclick = () => {
+    document.querySelectorAll<HTMLElement>('[data-wk]').forEach((t) => { t.classList.toggle('on', t === b); t.setAttribute('aria-selected', String(t === b)); });
+    document.querySelectorAll<HTMLElement>('[data-wkp]').forEach((p) => (p.hidden = p.dataset.wkp !== b.dataset.wk));
+  }));
   if (!viewed && started) { viewed = true; track('result_viewed', { tool: 'entity_tax_comparison', lowest: r.lowest }); }
 }
 
@@ -268,33 +289,130 @@ function loadPdfLib(): Promise<void> {
   if (w.jspdf) return Promise.resolve();
   return new Promise((res, rej) => { const s = document.createElement('script'); s.src = '../js/pdf.min.js'; s.onload = () => res(); s.onerror = rej; document.head.appendChild(s); });
 }
+/* Branded PDF, in the style of the Biz Matrix structure report (Inter, navy + brass, section bars, page footers). */
+async function pdfFonts(doc: any): Promise<boolean> {
+  const files: [string, string, string][] = [['Inter-Regular.ttf', 'Inter', 'normal'], ['Inter-SemiBold.ttf', 'Inter', 'bold'], ['Inter-ExtraBold.ttf', 'InterX', 'normal']];
+  try {
+    const bins = await Promise.all(files.map(async ([f]) => {
+      const buf = new Uint8Array(await (await fetch('../assets/fonts/' + f)).arrayBuffer());
+      let s = ''; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, Array.from(buf.subarray(i, i + 0x8000)));
+      return s;
+    }));
+    files.forEach(([f, n, st], i) => { doc.addFileToVFS(f, bins[i]); doc.addFont(f, n, st); });
+    return true;
+  } catch { return false; }
+}
+async function pdfLogo(): Promise<string | null> {
+  try { const b = await (await fetch('../assets/bizmatrix-logo.png')).blob(); return await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result)); r.onerror = rej; r.readAsDataURL(b); }); } catch { return null; }
+}
+
 async function downloadPdf(): Promise<void> {
   if (!lastInput || !lastResult) return;
   try { await loadPdfLib(); } catch { window.print(); return; }
   const { jsPDF } = (window as unknown as { jspdf: { jsPDF: new (o: object) => any } }).jspdf;
-  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-  const M = 44, W = doc.internal.pageSize.getWidth();
-  const clean = (s: string) => s.replace(/₹/g, 'Rs. ').replace(/[–—]/g, '-').replace(/[^\x20-\x7E]/g, '');
-  let y = 54;
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.text('Entity Tax Comparison - Tax Year 2026-27', M, y); y += 18;
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(100);
-  doc.text(clean('Biz Matrix · Illustrative estimate under the Income-tax Act, 2025 as amended by the Finance Act, 2026. Not professional advice.'), M, y); y += 22;
-  doc.setTextColor(30);
-  const x = lastInput;
-  const inputs = [['Business type', x.businessType], ['Turnover / receipts', clean(rs(x.turnover))], ['Received by bank or online', x.digitalPct + '%'], ['Profit before paying owners', clean(rs(x.profit))],
-    ['Owners', x.owners.map((o, i) => `#${i + 1}: ${o.sharePct}%, other income ${clean(rs(o.otherIncome))}`).join('; ')], ['Take-home share', x.extractionPct + '%']];
-  (doc as any).autoTable({ startY: y, head: [['Input', 'Value']], body: inputs, theme: 'grid', styles: { fontSize: 9 }, headStyles: { fillColor: [201, 162, 39], textColor: 20 }, margin: { left: M, right: M } });
-  y = (doc as any).lastAutoTable.finalY + 16;
-  const body = lastResult.cards.map((c) => c.available
-    ? [c.name + (c.key === lastResult!.lowest ? ' (lowest)' : ''), clean(rs(c.entityTax)), clean(rs(c.ownerTax)), clean(rs(c.totalTax)), c.effectiveRatePct.toFixed(2) + '%', clean(rs(c.takeHome)), clean(rs(c.retained)), clean(c.basis)]
-    : [c.name, '-', '-', '-', '-', '-', '-', clean(c.reason || '')]);
-  (doc as any).autoTable({ startY: y, head: [['Structure', 'Business tax', 'Owners tax', 'Total tax', 'Effective', 'Take-home', 'Retained', 'Basis']], body, theme: 'grid', styles: { fontSize: 8 }, headStyles: { fillColor: [201, 162, 39], textColor: 20 }, margin: { left: M, right: M } });
-  y = (doc as any).lastAutoTable.finalY + 18;
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.text('Assumptions', M, y); y += 12;
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
-  for (const a of lastResult.assumptions) { const l = doc.splitTextToSize(clean('- ' + a), W - 2 * M); if (y + l.length * 11 > 800) { doc.addPage(); y = 54; } doc.text(l, M, y); y += l.length * 11 + 2; }
-  y += 8; const disc = doc.splitTextToSize(clean('Illustrative estimate for Tax Year 2026-27, not legal, tax or professional advice. Rates are read from the Biz Matrix rules file, which is under professional review. Confirm with a Chartered Accountant before choosing a structure or filing.'), W - 2 * M);
-  doc.setTextColor(120); doc.text(disc, M, y);
+  const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
+  const fontsOk = await pdfFonts(doc);
+  const F = fontsOk ? 'Inter' : 'helvetica', FX = fontsOk ? 'InterX' : 'helvetica';
+  const T = (s: string) => { s = String(s ?? '').replace(/[–—]/g, '-').replace(/÷/g, '/').replace(/★/g, ''); return fontsOk ? s.replace(/[^\x09\x0A\x20-\x7E\xA0-ɏ‐-‧₹←-↓−≤≥]/g, '') : s.replace(/₹/g, 'Rs. ').replace(/[^\x20-\x7E]/g, ''); };
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 44, CW = W - 2 * M;
+  const C = { ink: [31, 35, 40], body: [58, 61, 66], muted: [94, 90, 82], gold: [201, 162, 39], goldT: [125, 96, 19], goldS: [245, 238, 220], soft: [251, 248, 241], line: [233, 225, 207], white: [255, 255, 255], green: [46, 139, 87], red: [176, 58, 46] };
+  const fill = (c: number[]) => doc.setFillColor(...c), ink = (c: number[]) => doc.setTextColor(...c);
+  const font = (w: 'r' | 'b' | 'x', size: number) => { if (w === 'x') doc.setFont(FX, 'normal'); else doc.setFont(F, w === 'b' ? 'bold' : 'normal'); doc.setFontSize(size); };
+  const x = lastInput, r = lastResult, cards = r.cards, av = cards.filter((c) => c.available);
+  const win = cards.find((c) => c.key === r.lowest);
+  let y = 0, sec = 0;
+  const need = (n: number) => { if (y + n > H - 60) { doc.addPage(); y = 64; } };
+  const h2 = (title: string) => { sec++; need(70); font('b', 8); ink(C.goldT); doc.text('SECTION ' + String(sec).padStart(2, '0'), M, y + 8); font('x', 16); ink(C.ink); doc.text(T(title), M, y + 28); fill(C.gold); doc.rect(M, y + 35, 32, 2.5, 'F'); y += 50; };
+  const table = (head: string[], body: (string | number)[][], o: any = {}) => {
+    (doc as any).autoTable(Object.assign({
+      startY: y, head: [head.map(T)], body: body.map((r2) => r2.map((v) => T(String(v)))), theme: 'plain', margin: { left: M, right: M, top: 64, bottom: 62 },
+      styles: { font: F, fontSize: 8.6, cellPadding: { top: 5, bottom: 5, left: 6, right: 6 }, textColor: C.body, lineColor: C.line, lineWidth: { bottom: 0.5 }, valign: 'top' },
+      headStyles: { font: F, fontStyle: 'bold', fillColor: C.goldS, textColor: C.ink, lineWidth: { bottom: 1 }, lineColor: C.gold },
+      alternateRowStyles: { fillColor: C.soft },
+    }, o));
+    y = (doc as any).lastAutoTable.finalY + 14;
+  };
+
+  /* ---- cover block ---- */
+  fill(C.gold); doc.rect(0, 0, 6, H, 'F');
+  const logo = await pdfLogo();
+  if (logo) doc.addImage(logo, 'PNG', M, 40, 140, 33); else { font('x', 18); ink(C.goldT); doc.text('Biz Matrix', M, 62); }
+  font('b', 8); ink(C.goldT); doc.text('ENTITY TAX COMPARISON  ·  TAX YEAR 2026-27', W - M, 60, { align: 'right' });
+  doc.setDrawColor(...C.line); doc.setLineWidth(0.6); doc.line(M, 88, W - M, 88);
+  y = 122; font('b', 9); ink(C.muted); doc.text('WHICH STRUCTURE PAYS LESS TAX', M, y);
+  font('x', 24); ink(C.ink); const ttl = doc.splitTextToSize(T(win ? `${win.name} pays the least: ${rs(win.totalTax)}` : 'Tax comparison'), CW); doc.text(ttl, M, y + 30); y += 30 + ttl.length * 28;
+  const second = av.filter((c) => c.key !== r.lowest).sort((a2, b2) => a2.totalTax - b2.totalTax)[0];
+  if (win && second) { font('r', 11); ink(C.body); doc.text(T(`${rs(second.totalTax - win.totalTax)} a year less than ${second.name}, for a profit of ${rs(Math.max(0, x.profit))}.`), M, y); y += 24; }
+  // summary tiles
+  const tw = (CW - 2 * 10) / 3;
+  cards.forEach((c, i) => {
+    const tx = M + i * (tw + 10), isWin = c.key === r.lowest && av.length > 1;
+    fill(isWin ? C.goldS : C.soft); doc.setDrawColor(...(isWin ? C.gold : C.line)); doc.setLineWidth(isWin ? 1.2 : 0.6); doc.roundedRect(tx, y, tw, 78, 8, 8, 'FD');
+    font('b', 9); ink(C.body); doc.text(doc.splitTextToSize(T(c.name), tw - 20), tx + 10, y + 18);
+    if (c.available) { font('x', 17); ink(isWin ? C.goldT : C.ink); doc.text(T(rs(c.totalTax)), tx + 10, y + 50); font('r', 8); ink(C.muted); doc.text(T(`${c.effectiveRatePct.toFixed(1)}% of profit${isWin ? '  ·  LOWEST' : ''}`), tx + 10, y + 66); }
+    else { font('b', 11); ink(C.muted); doc.text('Not possible', tx + 10, y + 50); }
+  });
+  y += 96;
+
+  /* ---- 1. inputs ---- */
+  h2('Your inputs');
+  const typeName = { trading: 'Trading', manufacturing: 'Manufacturing', services: 'Services', profession: 'Specified profession' }[x.businessType];
+  table(['Input', 'Value'], [
+    ['Business', typeName], ['Yearly turnover / receipts', rs(x.turnover)], ['Received by bank or online', x.digitalPct + '%'],
+    ['Yearly profit before paying the owners', rs(x.profit)], ['Owners', String(x.owners.length)],
+    ...x.owners.map((o, i) => [`Owner ${i + 1}`, `${o.sharePct}% share · other income ${rs(o.otherIncome)} · ${o.regime === 'auto' || !o.regime ? 'best regime' : o.regime + ' regime'}`]),
+    ['Take home', x.extractionPct + '% of profit'], ['Company regime', x.companyRegime === 'normal' ? 'Normal provisions (with MAT)' : 'Concessional, 22%'],
+  ], { columnStyles: { 0: { cellWidth: 190, fontStyle: 'bold', textColor: C.ink } } });
+
+  /* ---- 2. comparison ---- */
+  h2('Side-by-side comparison');
+  const col = (f: (c: EntityCard) => string) => cards.map((c) => (c.available ? f(c) : '-'));
+  const lowIdx = cards.findIndex((c) => c.key === r.lowest);
+  table(['', ...cards.map((c) => c.name)], [
+    ['Total tax', ...col((c) => rs(c.totalTax))],
+    ['Effective tax rate', ...col((c) => c.effectiveRatePct.toFixed(1) + '%')],
+    ['Tax paid by the business', ...col((c) => rs(c.entityTax))],
+    ['Tax paid by the owners', ...col((c) => rs(c.ownerTax))],
+    ['Take-home after tax', ...col((c) => rs(c.takeHome))],
+    ['Left in the business', ...col((c) => rs(c.retained))],
+    ['How it is paid out', ...col((c) => c.basis)],
+    ['Compared with', ...col((c) => (c.alternative ? `${c.alternative.label}: ${rs(c.alternative.totalTax)}` : '-'))],
+  ], {
+    columnStyles: { 0: { cellWidth: 120, fontStyle: 'bold', textColor: C.ink } },
+    didParseCell: (d: any) => { if (d.section === 'body' && d.column.index === lowIdx + 1 && av.length > 1) { d.cell.styles.fillColor = C.goldS; if (d.row.index === 0) { d.cell.styles.fontStyle = 'bold'; d.cell.styles.textColor = C.goldT; } } },
+  });
+
+  /* ---- 3+. working per structure ---- */
+  for (const c of av) {
+    h2(`Working: ${c.name}`);
+    for (const s of c.sections) {
+      need(60); font('b', 9.5); ink(C.goldT); const st = doc.splitTextToSize(T(s.title), CW); doc.text(st, M, y + 8); y += st.length * 12 + 6;
+      table(['Particulars', 'Amount', 'Section'], s.lines.map((l) => [l.label + (l.note ? ` (${l.note})` : ''), l.amount === null ? '' : rs(l.amount), l.ref || '']),
+        { columnStyles: { 1: { halign: 'right', cellWidth: 90 }, 2: { cellWidth: 140, textColor: C.muted, fontSize: 7.6 } },
+          didParseCell: (d: any) => { if (d.section === 'body' && /^(Tax payable|Total income|Income-tax$|Tax liability)/i.test(String(d.row.raw[0]))) { d.cell.styles.fontStyle = 'bold'; d.cell.styles.textColor = C.ink; } } });
+    }
+    need(30); fill(C.goldS); doc.roundedRect(M, y, CW, 26, 6, 6, 'F'); font('b', 10); ink(C.ink); doc.text(T(`Total tax under ${c.name}`), M + 12, y + 17); font('x', 12); ink(C.goldT); doc.text(T(rs(c.totalTax)), W - M - 12, y + 17, { align: 'right' }); y += 38;
+    if (c.notes.length) for (const n of c.notes) { font('r', 8.4); ink(C.body); const l = doc.splitTextToSize(T('• ' + n), CW); need(l.length * 11 + 4); doc.text(l, M, y + 8); y += l.length * 11 + 4; }
+    y += 6;
+  }
+
+  /* ---- assumptions & notice ---- */
+  h2('Assumptions and important notice');
+  for (const a2 of r.assumptions) { font('r', 9); ink(C.body); const l = doc.splitTextToSize(T('• ' + a2), CW); need(l.length * 12 + 4); doc.text(l, M, y + 8); y += l.length * 12 + 4; }
+  y += 8; font('r', 9); ink(C.muted);
+  const disc = doc.splitTextToSize(T('Illustrative estimate for Tax Year 2026-27 (1 April 2026 - 31 March 2027) under the Income-tax Act, 2025 as amended by the Finance Act, 2026. Not legal, tax or professional advice. Rates are read from the Biz Matrix rules file, which is under professional review. Confirm with a Chartered Accountant before choosing a structure or filing.'), CW);
+  need(disc.length * 12); doc.text(disc, M, y + 8);
+
+  /* ---- headers & footers ---- */
+  const n = doc.getNumberOfPages(), dateStr = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  for (let i = 1; i <= n; i++) {
+    doc.setPage(i);
+    if (i > 1) { fill(C.gold); doc.rect(0, 0, W, 4, 'F'); font('b', 7.5); ink(C.muted); doc.text('BIZ MATRIX  ·  ENTITY TAX COMPARISON  ·  TAX YEAR 2026-27', M, 26); }
+    doc.setDrawColor(...C.line); doc.setLineWidth(0.5); doc.line(M, H - 40, W - M, H - 40);
+    font('r', 7.2); ink(C.muted); doc.text(T(`Prepared ${dateStr} · Decision support, not tax advice · www.bizmatrix.in/entity-tax-comparison/`), M, H - 26);
+    fill(C.gold); doc.roundedRect(W - M - 48, H - 35, 48, 14, 7, 7, 'F'); font('b', 7.5); ink(C.ink); doc.text(`${i} / ${n}`, W - M - 24, H - 25, { align: 'center' });
+  }
+  doc.setProperties({ title: 'Biz Matrix - Entity Tax Comparison', author: 'Biz Matrix', creator: 'Biz Matrix' });
   doc.save('Biz_Matrix_Entity_Tax_Comparison.pdf');
   track('report_download', { tool: 'entity_tax_comparison' });
 }
