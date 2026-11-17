@@ -69,3 +69,4 @@
 @media print{.g-side,.g-mid,.sticky-cta{display:none!important}.g-grid{display:block}}
 .g-grid>.g-side{align-self:stretch}
 @media(max-width:960px){.g-grid>.g-side{align-self:auto}}
+.g-toolcta{margin:16px 0 0;padding:14px 16px;border-radius:12px;background:var(--accent-soft);border-left:4px solid var(--accent);font-weight:500}

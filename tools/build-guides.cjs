@@ -2,7 +2,7 @@
 // Run: node tools/build-guides.cjs   (then node tools/bust-cache.cjs before pushing)
 const fs = require("fs"), path = require("path");
 const ROOT = path.join(__dirname, ".."), SITE = "https://www.bizmatrix.in";
-const G = require("./guides-content.cjs");
+const G = [...require("./guides-content.cjs"), ...require("./guides-content-2.cjs")];
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const strip = s => String(s).replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
 const TODAY = new Date().toISOString().slice(0, 10);
