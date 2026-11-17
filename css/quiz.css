@@ -91,3 +91,8 @@
 .cmp-card dt{font-size:.85rem;font-weight:600;color:var(--muted)}.cmp-card dd{margin:0;font-size:.92rem;color:var(--ink)}
 @media(max-width:760px){.compare-wrap{display:none}.compare-cards{display:grid}}
 @media(max-width:760px){body.has-sticky .bm-theme-btn{bottom:88px!important;transition:bottom .3s ease}}
+
+/* home: four tools in a 2 x 2 grid */
+.tool-grid:has(> .tool:nth-child(4)){grid-template-columns:1fr 1fr}
+.tool-grid:has(> .tool:nth-child(4)) > .tool:last-child{grid-column:auto}
+@media(max-width:860px){.tool-grid:has(> .tool:nth-child(4)){grid-template-columns:1fr}}
