@@ -8,14 +8,16 @@
     "typecheck": "tsc --noEmit",
     "lint:literals": "node scripts/lint-literals.mjs",
     "smoke": "node scripts/smoke.ts",
-    "test": "node --test tests/engine.test.ts tests/properties.test.ts",
+    "test": "node --test tests/engine.test.ts tests/properties.test.ts tests/compare.test.ts",
     "check": "npm run typecheck && npm run lint:literals && npm run smoke && npm test && npm run build",
     "render:review": "node scripts/render-review.cjs .",
     "render:cases": "node scripts/render-cases.ts",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "build:site": "npm run check && vite build --outDir ../income-tax-calculator --emptyOutDir"
+    "build:site": "npm run check && vite build --outDir ../income-tax-calculator --emptyOutDir && npm run build:compare",
+    "build:compare": "vite build --config vite.compare.config.ts",
+    "dev:compare": "vite --config vite.compare.config.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

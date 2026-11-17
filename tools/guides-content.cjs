@@ -42,6 +42,7 @@ module.exports = [
     { id: "tax", h2: "How the tax difference works", html: `
 <p>An LLP pays tax at 30% (plus surcharge above ₹1 crore of income, and cess). When partners take their share of the profit out, it is not taxed again. Interest on capital and remuneration paid to working partners are deductible for the LLP within the limits in the Income-tax Act, and are taxed in the partners' hands.</p>
 <p>A Private Limited Company that opts for the concessional regime pays 22%, about 25.17% with surcharge and cess. When it pays dividends, shareholders pay tax on them again at their own rates. Salaries paid to working directors are deductible for the company and taxed in the directors' hands.</p>
+<p><a href=\"../../entity-tax-comparison/\">Compare the total tax for your own profit and owners</a>, including partner remuneration and director salary.</p>
 <p>So, as a rule of thumb: <b>taking most of the profit out favours an LLP; keeping it in the business favours a company.</b> The real answer depends on your profit, how you pay yourselves and your personal tax slabs.</p>` },
     { id: "compliance", h2: "Yearly compliance compared", html: `
 <div class="g-two">
